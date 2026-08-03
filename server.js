@@ -386,4 +386,5 @@ app.post('/api/generate-model', modelUpload.fields([
   }
 });
 
-app.listen(3333, () => console.log('Vyser rodando em http://localhost:3333'));
+const PORT = process.env.PORT || 3333;
+app.listen(PORT, () => console.log(`Vyser rodando em http://localhost:${PORT}`));
