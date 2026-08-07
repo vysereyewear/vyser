@@ -309,7 +309,6 @@
       <input type="file" id="input-creative-reference" accept="image/*" onchange="handleCreativeReference(this.files[0])" />
       🖼️ Anexar foto de referência
     </div>
-    <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('reference')">📋 Colar da área de transferência</button>
     <div style="margin-bottom:20px;"></div>
 
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
@@ -333,7 +332,6 @@
         <input type="file" id="input-creative-outfit" accept="image/*" onchange="handleCreativeOutfit(this.files[0])" />
         👕 Anexar foto da roupa
       </div>
-      <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('outfit')">📋 Colar da área de transferência</button>
       <div style="margin-bottom:20px;"></div>
     </div>
 
@@ -347,7 +345,6 @@
     <div class="glasses-upload-area" id="upload-creative-glasses-area" onclick="openCreativeUpload('glasses')">
       📎 Anexar foto(s) dos óculos
     </div>
-    <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('glasses')">📋 Colar da área de transferência</button>
     <div class="glasses-thumbs" id="creative-glasses-thumbs"></div>
     <div style="margin-bottom:20px;"></div>
 
@@ -725,25 +722,6 @@
   function openCreativeUpload(target) {
     creativePasteTarget = target;
     document.getElementById(creativeUploadInputs[target]).click();
-  }
-
-  async function pasteFromClipboard(target) {
-    try {
-      const clipboardItems = await navigator.clipboard.read();
-      for (const item of clipboardItems) {
-        const imageType = item.types.find(t => t.startsWith('image/'));
-        if (!imageType) continue;
-        const blob = await item.getType(imageType);
-        const file = new File([blob], 'colado.png', { type: imageType });
-        if (target === 'glasses') handleCreativeGlassesFiles([file]);
-        else if (target === 'outfit') handleCreativeOutfit(file);
-        else handleCreativeReference(file);
-        return;
-      }
-      alert('Nenhuma imagem encontrada na área de transferência. Copie uma imagem primeiro (Ctrl+C ou "Copiar imagem").');
-    } catch (e) {
-      alert('Não foi possível acessar a área de transferência: ' + e.message);
-    }
   }
 
   function selectCreativeSize(size) {
