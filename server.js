@@ -170,6 +170,46 @@ function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx) 
   return lines.join('\n');
 }
 
+// Monta prompt para a seção "Criativos": recria a foto de referência trocando o modelo
+function buildCreativePrompt(glassesCount, keepOutfit, outfitIdx, expressionIdx, extraText) {
+  const modelIdx     = 2;
+  const glassesStart = 3;
+  const glassesEnd   = 2 + glassesCount;
+  const glassesRef   = glassesCount === 1
+    ? `Image ${glassesStart} shows the glasses`
+    : `Images ${glassesStart} to ${glassesEnd} show the glasses from different angles — use all of them as reference to understand the exact shape, color, lenses, and frame`;
+
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, and shadow style exactly. Image ${modelIdx} is the model reference photo. ${glassesRef}.`];
+  if (!keepOutfit && outfitIdx) header[0] += ` Image ${outfitIdx} shows the outfit to use.`;
+  if (expressionIdx) header[0] += ` Image ${expressionIdx} is a facial expression reference.`;
+
+  const lines = [...header, ''];
+
+  lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person in it with the model from Image ${modelIdx}.`);
+  lines.push(`- Preserve the model's face, skin, and hair exactly as in Image ${modelIdx}`);
+  lines.push('- Allow only very subtle natural variation: slight micro-expression shift and minor hair strand movement — to create a natural feel');
+
+  if (expressionIdx) {
+    lines.push(`- Replicate only the facial expression from Image ${expressionIdx} (mouth position, eye openness, brow shape) onto the model — do NOT copy the face, identity, skin tone or any other feature of the person in Image ${expressionIdx}`);
+  }
+
+  lines.push(`- Place the glasses naturally and precisely on the model's face, preserving their exact shape, color, lenses, and frame${glassesCount > 1 ? ' — cross-reference all glasses images to get the details right' : ''}, replacing whatever glasses (if any) appear in Image 1`);
+
+  if (keepOutfit) {
+    lines.push('- Keep the exact same clothing/outfit worn by the person in Image 1, now on the new model');
+  } else {
+    lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
+  }
+
+  lines.push('- Keep everything else from Image 1 identical: pose, camera angle, framing, background, lighting, and shadows');
+
+  if (extraText && extraText.trim()) {
+    lines.push(`- Additional instructions: ${extraText.trim()}`);
+  }
+
+  return lines.join('\n');
+}
+
 const PROMPT_SOMBRA = `Generate a clean professional product photo of the glasses shown in the images.
 - Glasses: front view, horizontally centered
 - Soft drop shadow directly beneath the glasses
@@ -378,6 +418,91 @@ app.post('/api/generate-model', modelUpload.fields([
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
     // Não aplica correção de fundo — foto com modelo tem muitos detalhes e o offset distorce as cores
+    res.json({ image: b64 });
+  } catch (err) {
+    uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const creativeUpload = multer({ dest: 'uploads/' });
+
+app.post('/api/generate-creative', creativeUpload.fields([
+  { name: 'reference', maxCount: 1 },
+  { name: 'glasses', maxCount: 5 },
+  { name: 'outfit', maxCount: 1 },
+]), async (req, res) => {
+  const referenceFile = req.files?.['reference']?.[0];
+  const glassesFiles   = req.files?.['glasses'] || [];
+  const outfitFile     = req.files?.['outfit']?.[0];
+  const uploadedPaths  = [referenceFile?.path, ...glassesFiles.map(f => f.path), outfitFile?.path].filter(Boolean);
+  try {
+    const { modelFile, pose, keepOutfit, expressionFile, extraText, size } = req.body;
+    if (!referenceFile)     return res.status(400).json({ error: 'Envie a foto de referência.' });
+    if (!glassesFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto dos óculos.' });
+    if (!modelFile)          return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    const allowedSizes = ['1024x1024', '1024x1536', '1536x1024'];
+    const imageSize = allowedSizes.includes(size) ? size : '1024x1024';
+
+    const keepOutfitBool = keepOutfit === 'true';
+    if (!keepOutfitBool && !outfitFile)
+      return res.status(400).json({ error: 'Envie a foto da roupa ou selecione "manter roupa da referência".' });
+
+    const modelPath = path.join(__dirname, 'public/models', modelFile);
+    if (!fs.existsSync(modelPath))
+      return res.status(400).json({ error: 'Modelo não encontrado.' });
+
+    const ext  = path.extname(modelFile).toLowerCase();
+    const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+
+    // Image 1: referência
+    const referenceRef = await fileToOpenAI(referenceFile.path, referenceFile.mimetype, 'reference.jpg');
+    const images = [referenceRef];
+
+    // Image 2: modelo
+    const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
+    images.push(modelRef);
+
+    // Images 3 a N+2: óculos (1 ou mais)
+    for (let i = 0; i < glassesFiles.length; i++) {
+      images.push(await fileToOpenAI(glassesFiles[i].path, glassesFiles[i].mimetype, `glasses-${i + 1}.jpg`));
+    }
+
+    let outfitIdx = null;
+    if (!keepOutfitBool && outfitFile) {
+      const outfitRef = await fileToOpenAI(outfitFile.path, outfitFile.mimetype, 'outfit.jpg');
+      images.push(outfitRef);
+      outfitIdx = images.length;
+    }
+
+    let expressionIdx = null;
+    if (expressionFile) {
+      const exprPath = path.join(__dirname, 'public/expressions', expressionFile);
+      if (fs.existsSync(exprPath)) {
+        const exprMime = path.extname(expressionFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+        images.push(await fileToOpenAI(exprPath, exprMime, 'expression.jpg'));
+        expressionIdx = images.length;
+      }
+    }
+
+    const prompt = buildCreativePrompt(glassesFiles.length, keepOutfitBool, outfitIdx, expressionIdx, extraText);
+    console.log(`[generate-creative] model=${modelFile} pose=${pose} glasses=${glassesFiles.length} keepOutfit=${keepOutfitBool} expr=${!!expressionFile} size=${imageSize}`);
+
+    uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2',
+      image: images,
+      prompt,
+      quality: 'medium',
+      size: imageSize,
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
     res.json({ image: b64 });
   } catch (err) {
     uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });

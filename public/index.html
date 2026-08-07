@@ -221,6 +221,7 @@
   <div class="mode-tabs">
     <button class="mode-tab active" onclick="setMode('oculos')">🕶️ Óculos</button>
     <button class="mode-tab" onclick="setMode('modelo')">📸 Modelo</button>
+    <button class="mode-tab" onclick="setMode('criativos')">🎨 Criativos</button>
   </div>
 
   <!-- Upload -->
@@ -297,6 +298,76 @@
   </div>
   </div><!-- /section-modelo -->
 
+  <div id="section-criativos" style="display:none;">
+  <!-- Criativos -->
+  <div class="upload-card">
+    <p class="section-title">🎨 Criativos</p>
+    <p class="section-sub">Anexe uma foto de referência, escolha o modelo e os óculos — a IA recria a cena trocando a pessoa</p>
+
+    <p class="section-label">Foto de referência</p>
+    <div class="mini-upload" id="upload-creative-reference" onclick="openCreativeUpload('reference')">
+      <input type="file" id="input-creative-reference" accept="image/*" onchange="handleCreativeReference(this.files[0])" />
+      🖼️ Anexar foto de referência
+    </div>
+    <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('reference')">📋 Colar da área de transferência</button>
+    <div style="margin-bottom:20px;"></div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <p class="section-label" style="margin-bottom:0;">Modelo</p>
+      <div class="pose-toggle" style="margin-bottom:0;">
+        <button class="pose-btn active" id="pose-frente-creative" onclick="selectCreativePose('frente')">De Frente</button>
+        <button class="pose-btn" id="pose-ladinho-creative" onclick="selectCreativePose('ladinho')">De Ladinho</button>
+      </div>
+    </div>
+    <div class="model-grid" id="model-grid-creative">
+      <span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>
+    </div>
+
+    <p class="section-label" style="margin-bottom:8px;">Roupa</p>
+    <div class="pose-toggle" style="margin-bottom:12px;">
+      <button class="pose-btn active" id="outfit-manter" onclick="selectCreativeOutfitMode(true)">Manter roupa da referência</button>
+      <button class="pose-btn" id="outfit-nova" onclick="selectCreativeOutfitMode(false)">Nova roupa</button>
+    </div>
+    <div id="creative-outfit-wrap" style="display:none;">
+      <div class="mini-upload" id="upload-creative-outfit" onclick="openCreativeUpload('outfit')">
+        <input type="file" id="input-creative-outfit" accept="image/*" onchange="handleCreativeOutfit(this.files[0])" />
+        👕 Anexar foto da roupa
+      </div>
+      <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('outfit')">📋 Colar da área de transferência</button>
+      <div style="margin-bottom:20px;"></div>
+    </div>
+
+    <p class="section-label" style="margin-bottom:8px;">Expressão <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <div class="expr-grid" id="expr-grid-creative">
+      <div class="expr-none selected" id="expr-none-creative" onclick="selectCreativeExpression(null)">Sem<br>expressão</div>
+    </div>
+
+    <p class="section-label">Óculos <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos, obrigatório)</span></p>
+    <input type="file" id="input-creative-glasses" accept="image/*" multiple style="display:none" onchange="handleCreativeGlassesFiles(this.files)" />
+    <div class="glasses-upload-area" id="upload-creative-glasses-area" onclick="openCreativeUpload('glasses')">
+      📎 Anexar foto(s) dos óculos
+    </div>
+    <button type="button" class="btn-secondary" style="margin-top:6px; padding:7px;" onclick="event.stopPropagation(); pasteFromClipboard('glasses')">📋 Colar da área de transferência</button>
+    <div class="glasses-thumbs" id="creative-glasses-thumbs"></div>
+    <div style="margin-bottom:20px;"></div>
+
+    <p class="section-label" style="margin-bottom:8px;">Tamanho</p>
+    <div class="pose-toggle" style="margin-bottom:20px;">
+      <button class="pose-btn active" id="size-square" onclick="selectCreativeSize('1024x1024')">◻️ Quadrado</button>
+      <button class="pose-btn" id="size-portrait" onclick="selectCreativeSize('1024x1536')">📱 Retrato</button>
+      <button class="pose-btn" id="size-landscape" onclick="selectCreativeSize('1536x1024')">🖼️ Paisagem</button>
+    </div>
+
+    <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <textarea id="creative-extra-text" placeholder="Ex: deixe a câmera mais próxima do rosto, remova o boné..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="creativeExtraText = this.value"></textarea>
+
+    <button class="btn-generate" id="btn-creative" onclick="gerarCriativo()" disabled>
+      🎨 Gerar criativo
+    </button>
+    <div class="status" id="status-creative"></div>
+  </div>
+  </div><!-- /section-criativos -->
+
   <!-- Resultados -->
   <div id="results-list"></div>
 
@@ -306,8 +377,12 @@
   function setMode(mode) {
     document.getElementById('section-oculos').style.display = mode === 'oculos' ? '' : 'none';
     document.getElementById('section-modelo').style.display = mode === 'modelo' ? '' : 'none';
+    document.getElementById('section-criativos').style.display = mode === 'criativos' ? '' : 'none';
     document.querySelectorAll('.mode-tab').forEach((t, i) => {
-      t.classList.toggle('active', (i === 0 && mode === 'oculos') || (i === 1 && mode === 'modelo'));
+      t.classList.toggle('active',
+        (i === 0 && mode === 'oculos') ||
+        (i === 1 && mode === 'modelo') ||
+        (i === 2 && mode === 'criativos'));
     });
   }
 
@@ -430,6 +505,7 @@
     const res = await fetch('/api/models');
     allModels = await res.json();
     renderModelGrid();
+    renderCreativeModelGrid();
   }
 
   function renderModelGrid() {
@@ -626,6 +702,292 @@
 
   loadModels();
   loadExpressions();
+  // ────────────────────────────────────────────────────────
+
+  // ── Seção Criativos ─────────────────────────────────────
+  let creativeReferenceFile = null;
+  let creativeSelectedModel = null;
+  let creativeSelectedPose  = 'frente';
+  let creativeKeepOutfit    = true;
+  let creativeOutfitFile    = null;
+  let creativeGlassesFiles  = [];
+  let creativeExpression    = null;
+  let creativeExtraText     = '';
+  let creativeSize          = '1024x1024';
+
+  // Rastreia qual área de upload foi clicada por último, pra saber onde colar (Ctrl+V)
+  let creativePasteTarget = 'reference';
+  const creativeUploadInputs = {
+    reference: 'input-creative-reference',
+    outfit: 'input-creative-outfit',
+    glasses: 'input-creative-glasses',
+  };
+  function openCreativeUpload(target) {
+    creativePasteTarget = target;
+    document.getElementById(creativeUploadInputs[target]).click();
+  }
+
+  async function pasteFromClipboard(target) {
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      for (const item of clipboardItems) {
+        const imageType = item.types.find(t => t.startsWith('image/'));
+        if (!imageType) continue;
+        const blob = await item.getType(imageType);
+        const file = new File([blob], 'colado.png', { type: imageType });
+        if (target === 'glasses') handleCreativeGlassesFiles([file]);
+        else if (target === 'outfit') handleCreativeOutfit(file);
+        else handleCreativeReference(file);
+        return;
+      }
+      alert('Nenhuma imagem encontrada na área de transferência. Copie uma imagem primeiro (Ctrl+C ou "Copiar imagem").');
+    } catch (e) {
+      alert('Não foi possível acessar a área de transferência: ' + e.message);
+    }
+  }
+
+  function selectCreativeSize(size) {
+    creativeSize = size;
+    document.getElementById('size-square').classList.toggle('active', size === '1024x1024');
+    document.getElementById('size-portrait').classList.toggle('active', size === '1024x1536');
+    document.getElementById('size-landscape').classList.toggle('active', size === '1536x1024');
+  }
+
+  function handleCreativeReference(file) {
+    if (!file) return;
+    creativeReferenceFile = file;
+    const el = document.getElementById('upload-creative-reference');
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="input-creative-reference" accept="image/*" onchange="handleCreativeReference(this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => openCreativeUpload('reference');
+    updateCreativeBtn();
+  }
+
+  function selectCreativePose(pose) {
+    creativeSelectedPose = pose;
+    document.getElementById('pose-frente-creative').classList.toggle('active', pose === 'frente');
+    document.getElementById('pose-ladinho-creative').classList.toggle('active', pose === 'ladinho');
+    renderCreativeModelGrid();
+  }
+
+  function renderCreativeModelGrid() {
+    const grid = document.getElementById('model-grid-creative');
+    if (!allModels.length) {
+      grid.innerHTML = '<span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>';
+      return;
+    }
+    grid.innerHTML = '';
+    allModels.forEach(m => {
+      const hasFile = creativeSelectedPose === 'ladinho' ? !!m.ladinho : !!m.frente;
+      const previewFile = (creativeSelectedPose === 'ladinho' && m.ladinho) ? m.ladinho : (m.frente || m.ladinho);
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (!hasFile ? ' no-pose' : '');
+      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`;
+      if (hasFile) {
+        div.onclick = () => {
+          document.querySelectorAll('#model-grid-creative .model-thumb').forEach(el => el.classList.remove('selected'));
+          div.classList.add('selected');
+          creativeSelectedModel = m;
+          updateCreativeBtn();
+        };
+      }
+      if (creativeSelectedModel && creativeSelectedModel.name === m.name && hasFile) {
+        div.classList.add('selected');
+      }
+      grid.appendChild(div);
+    });
+  }
+
+  function selectCreativeOutfitMode(keep) {
+    creativeKeepOutfit = keep;
+    document.getElementById('outfit-manter').classList.toggle('active', keep);
+    document.getElementById('outfit-nova').classList.toggle('active', !keep);
+    document.getElementById('creative-outfit-wrap').style.display = keep ? 'none' : '';
+    updateCreativeBtn();
+  }
+
+  function handleCreativeOutfit(file) {
+    if (!file) return;
+    creativeOutfitFile = file;
+    const el = document.getElementById('upload-creative-outfit');
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="input-creative-outfit" accept="image/*" onchange="handleCreativeOutfit(this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => openCreativeUpload('outfit');
+    updateCreativeBtn();
+  }
+
+  function handleCreativeGlassesFiles(files) {
+    for (const f of files) {
+      if (creativeGlassesFiles.length >= 5) break;
+      creativeGlassesFiles.push(f);
+    }
+    renderCreativeGlassesThumbs();
+    updateCreativeBtn();
+  }
+
+  function renderCreativeGlassesThumbs() {
+    const area = document.getElementById('upload-creative-glasses-area');
+    const thumbsEl = document.getElementById('creative-glasses-thumbs');
+    thumbsEl.innerHTML = '';
+
+    if (creativeGlassesFiles.length === 0) {
+      area.classList.remove('has-files');
+      area.style.display = '';
+      return;
+    }
+
+    area.classList.add('has-files');
+    area.style.display = 'none';
+
+    creativeGlassesFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        creativeGlassesFiles.splice(i, 1);
+        renderCreativeGlassesThumbs();
+        updateCreativeBtn();
+      };
+      div.appendChild(img);
+      div.appendChild(btn);
+      thumbsEl.appendChild(div);
+    });
+
+    if (creativeGlassesFiles.length < 5) {
+      const addBtn = document.createElement('div');
+      addBtn.className = 'glasses-add-btn';
+      addBtn.title = 'Adicionar mais fotos';
+      addBtn.textContent = '+';
+      addBtn.onclick = () => openCreativeUpload('glasses');
+      thumbsEl.appendChild(addBtn);
+    }
+  }
+
+  async function loadCreativeExpressions() {
+    const res = await fetch('/api/expressions');
+    const exprs = await res.json();
+    const grid = document.getElementById('expr-grid-creative');
+    exprs.forEach(e => {
+      const div = document.createElement('div');
+      div.className = 'expr-thumb';
+      div.dataset.file = e.file;
+      div.innerHTML = `<img src="/expressions/${e.file}" alt="${e.name}" title="${e.name}" />`;
+      div.onclick = () => selectCreativeExpression(e.file);
+      grid.appendChild(div);
+    });
+  }
+
+  function selectCreativeExpression(file) {
+    creativeExpression = file;
+    document.querySelectorAll('#expr-grid-creative .expr-thumb, #expr-grid-creative .expr-none').forEach(el => el.classList.remove('selected'));
+    if (!file) {
+      document.getElementById('expr-none-creative').classList.add('selected');
+    } else {
+      document.querySelector(`#expr-grid-creative .expr-thumb[data-file="${file}"]`)?.classList.add('selected');
+    }
+  }
+
+  function updateCreativeBtn() {
+    const modelFile = creativeSelectedModel
+      ? (creativeSelectedPose === 'ladinho' ? creativeSelectedModel.ladinho : creativeSelectedModel.frente)
+      : null;
+    const outfitOk = creativeKeepOutfit || !!creativeOutfitFile;
+    document.getElementById('btn-creative').disabled =
+      !(creativeReferenceFile && modelFile && creativeGlassesFiles.length > 0 && outfitOk);
+  }
+
+  async function gerarCriativo() {
+    const modelFile = creativeSelectedPose === 'ladinho' ? creativeSelectedModel.ladinho : creativeSelectedModel.frente;
+    const label = `${creativeSelectedModel.name} (${creativeSelectedPose})`;
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Criativo — ${label}</div>
+      <div class="results-grid results-grid--single">
+        <div class="result-card" id="card-criativo-${n}">
+          <h3>Criativo</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const referenceSnap = creativeReferenceFile;
+    const glassesSnap    = [...creativeGlassesFiles];
+    const outfitSnap     = creativeOutfitFile;
+    const keepOutfitSnap = creativeKeepOutfit;
+    const exprSnap        = creativeExpression;
+    const extraTextSnap   = creativeExtraText;
+    const sizeSnap         = creativeSize;
+
+    try {
+      const form = new FormData();
+      form.append('reference', referenceSnap);
+      form.append('modelFile', modelFile);
+      form.append('size', sizeSnap);
+      form.append('pose', creativeSelectedPose);
+      form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
+      glassesSnap.forEach(f => form.append('glasses', f));
+      if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
+      if (exprSnap) form.append('expressionFile', exprSnap);
+      if (extraTextSnap) form.append('extraText', extraTextSnap);
+
+      const res  = await fetch('/api/generate-creative', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const src = 'data:image/png;base64,' + data.image;
+      document.getElementById(`card-criativo-${n}`).innerHTML = `
+        <h3>Criativo</h3>
+        <img src="${src}" alt="Criativo ${n}" />
+        <div class="card-actions">
+          <a href="${src}" download="vyser-criativo-${n}.png">⬇ Baixar</a>
+          <button class="btn-retry" onclick="gerarCriativo()">↺ Gerar de novo</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById(`card-criativo-${n}`).innerHTML =
+        `<h3>Criativo</h3><div class="card-error">❌ ${e.message}</div>`;
+    }
+  }
+
+  loadCreativeExpressions();
+
+  // Cole uma imagem (Ctrl+V) direto na área de upload clicada por último, quando a aba Criativos estiver aberta
+  document.addEventListener('paste', (e) => {
+    const criativosVisible = document.getElementById('section-criativos').style.display !== 'none';
+    if (!criativosVisible) return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (creativePasteTarget === 'glasses') {
+          handleCreativeGlassesFiles([file]);
+        } else if (creativePasteTarget === 'outfit') {
+          handleCreativeOutfit(file);
+        } else {
+          handleCreativeReference(file);
+        }
+        e.preventDefault();
+        break;
+      }
+    }
+  });
   // ────────────────────────────────────────────────────────
 
   async function callGenerate(files, view) {
