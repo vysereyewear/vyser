@@ -134,8 +134,53 @@ Images 2+ show the glasses model to use.
 Generate a product photo of the glasses from Images 2+ in an ANGLED/3-QUARTER VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the glasses shape, color, and details precisely.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
+const PROMPT_BONE_FRENTE = `Image 1 is a style reference — follow its background, lighting, shadow, and FRONT-FACING composition exactly.
+Images 2+ show the cap to use.
+
+Generate a product photo of the cap from Images 2+ in a FRONT VIEW (straight at the camera), centered, with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, and hardware precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_BONE_LADINHO = `Image 1 is a style reference — follow its background, lighting, shadow, and ANGLED/3-QUARTER composition exactly.
+Images 2+ show the cap to use.
+
+Generate a product photo of the cap from Images 2+ in an ANGLED/3-QUARTER VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, and hardware precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_BONE_LADO = `Image 1 is a style reference — follow its background, lighting, shadow, and SIDE/PROFILE composition exactly.
+Images 2+ show the cap to use.
+
+Generate a product photo of the cap from Images 2+ in a SIDE/PROFILE VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, strap/buckle, and hardware precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_BONE_TRASEIRA = `Image 1 is a style reference — follow its background, lighting, shadow, and BACK-VIEW composition exactly.
+Images 2+ show the cap to use.
+
+Generate a product photo of the cap from Images 2+ in a BACK VIEW (showing the rear strap/closure, like Image 1), centered, with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, and the rear strap/buckle/snap hardware precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+// Configuração dos produtos disponíveis na aba "Óculos/Boné" — cada view tem seu prompt e imagem de referência
+const PRODUCTS = {
+  oculos: {
+    defaultView: 'frente',
+    views: {
+      frente:    { prompt: PROMPT_FRENTE,    refPath: 'public/references/frente.png',    label: 'VISTA FRONTAL' },
+      inclinado: { prompt: PROMPT_INCLINADO, refPath: 'public/references/inclinado.png', label: 'VISTA INCLINADA' },
+      lado:      { prompt: PROMPT_LADO,      refPath: 'public/references/lado.png',      label: 'VISTA LATERAL' },
+    },
+  },
+  bone: {
+    defaultView: 'frente',
+    views: {
+      frente:   { prompt: PROMPT_BONE_FRENTE,   refPath: 'public/references/bone-frente.png',   label: 'VISTA FRONTAL' },
+      ladinho:  { prompt: PROMPT_BONE_LADINHO,  refPath: 'public/references/bone-ladinho.png',  label: 'VISTA 3/4' },
+      lado:     { prompt: PROMPT_BONE_LADO,     refPath: 'public/references/bone-lado.png',     label: 'VISTA LATERAL' },
+      traseira: { prompt: PROMPT_BONE_TRASEIRA, refPath: 'public/references/bone-traseira.png', label: 'VISTA TRASEIRA' },
+    },
+  },
+};
+
 // Monta prompt dinamicamente conforme os extras selecionados
-function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx) {
+function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx, boneCount) {
   // Monta descrição dos índices de óculos (2 a 1+glassesCount)
   const glassesStart = 2;
   const glassesEnd   = 1 + glassesCount;
@@ -143,9 +188,14 @@ function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx) 
     ? `Image ${glassesStart} shows the glasses`
     : `Images ${glassesStart} to ${glassesEnd} show the glasses from different angles — use all of them as reference to understand the exact shape, color, lenses, and frame`;
 
+  const boneEnd = boneStartIdx ? boneStartIdx + boneCount - 1 : null;
+  const boneRef = boneStartIdx
+    ? (boneCount === 1 ? `Image ${boneStartIdx} shows the cap` : `Images ${boneStartIdx} to ${boneEnd} show the cap from different angles — use all of them`)
+    : null;
+
   const header = [`Image 1 is the model reference photo. ${glassesRef}. Image ${outfitIdx} shows the outfit.`];
   if (expressionIdx) header[0] += ` Image ${expressionIdx} is a facial expression reference.`;
-  if (boneStartIdx)  header[0] += ` Images ${boneStartIdx} and ${boneStartIdx + 1} show the cap from the front and side — use both to understand its full shape.`;
+  if (boneRef)        header[0] += ` ${boneRef} to understand its full shape.`;
 
   const lines = [...header, ''];
 
@@ -161,7 +211,8 @@ function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx) 
   lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
 
   if (boneStartIdx) {
-    lines.push(`- Place the cap shown in Images ${boneStartIdx} and ${boneStartIdx + 1} naturally on the model\'s head, fitting the pose and angle — preserve its exact shape, color, and details`);
+    const boneImgRef = boneCount === 1 ? `Image ${boneStartIdx}` : `Images ${boneStartIdx}-${boneEnd}`;
+    lines.push(`- Place the cap shown in ${boneImgRef} naturally on the model\'s head, fitting the pose and angle — preserve its exact shape, color, and details`);
   }
 
   lines.push('- Professional studio lighting, soft and clean');
@@ -219,33 +270,25 @@ IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no ot
 app.post('/api/generate', upload.array('images', 10), async (req, res) => {
   const uploadedPaths = (req.files || []).map(f => f.path);
   try {
-    const { view } = req.body;
+    const { view, produto } = req.body;
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ error: 'Nenhuma imagem enviada.' });
 
-    let prompt, refPath, refName;
-    if (view === 'lado') {
-      prompt = PROMPT_LADO;
-      refPath = path.join(__dirname, 'public/references/lado.png');
-      refName = 'ref-lado.png';
-    } else if (view === 'inclinado') {
-      prompt = PROMPT_INCLINADO;
-      refPath = path.join(__dirname, 'public/references/inclinado.png');
-      refName = 'ref-inclinado.png';
-    } else {
-      prompt = PROMPT_FRENTE;
-      refPath = path.join(__dirname, 'public/references/frente.png');
-      refName = 'ref-frente.png';
-    }
+    const product = PRODUCTS[produto] || PRODUCTS.oculos;
+    const viewConfig = product.views[view] || product.views[product.defaultView];
+    if (!viewConfig) return res.status(400).json({ error: 'Vista inválida para este produto.' });
 
-    const refFile = await fileToOpenAI(refPath, 'image/png', refName);
+    const prompt  = viewConfig.prompt;
+    const refPath = path.join(__dirname, viewConfig.refPath);
+
+    const refFile = await fileToOpenAI(refPath, 'image/png', `ref-${view}.png`);
     const productFiles = await Promise.all(
-      req.files.map((f, i) => fileToOpenAI(f.path, f.mimetype, `oculos-${i + 1}.${f.mimetype.split('/')[1] || 'jpg'}`))
+      req.files.map((f, i) => fileToOpenAI(f.path, f.mimetype, `produto-${i + 1}.${f.mimetype.split('/')[1] || 'jpg'}`))
     );
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
-    console.log(`[generate] view=${view} ref + ${productFiles.length} produto(s)`);
+    console.log(`[generate] produto=${produto || 'oculos'} view=${view} ref + ${productFiles.length} produto(s)`);
 
     const response = await client.images.edit({
       model: 'gpt-image-2',
@@ -264,6 +307,18 @@ app.post('/api/generate', upload.array('images', 10), async (req, res) => {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
+});
+
+// Expõe as views disponíveis por produto (chave + label), pra montar os botões no front
+app.get('/api/products', (req, res) => {
+  const result = {};
+  for (const [key, product] of Object.entries(PRODUCTS)) {
+    result[key] = {
+      defaultView: product.defaultView,
+      views: Object.entries(product.views).map(([viewKey, v]) => ({ key: viewKey, label: v.label })),
+    };
+  }
+  res.json(result);
 });
 
 app.post('/api/png-sombra', upload.array('images', 10), async (req, res) => {
@@ -345,10 +400,12 @@ const modelUpload = multer({ dest: 'uploads/' });
 app.post('/api/generate-model', modelUpload.fields([
   { name: 'glasses', maxCount: 5 },
   { name: 'clothing', maxCount: 1 },
+  { name: 'customBone', maxCount: 2 },
 ]), async (req, res) => {
   const glassesFiles = req.files?.['glasses'] || [];
   const clothingFile = req.files?.['clothing']?.[0];
-  const uploadedPaths = [...glassesFiles.map(f => f.path), clothingFile?.path].filter(Boolean);
+  const customBoneFiles = req.files?.['customBone'] || [];
+  const uploadedPaths = [...glassesFiles.map(f => f.path), clothingFile?.path, ...customBoneFiles.map(f => f.path)].filter(Boolean);
   try {
     const { modelFile, pose } = req.body;
     if (!glassesFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto dos óculos.' });
@@ -380,6 +437,7 @@ app.post('/api/generate-model', modelUpload.fields([
 
     let expressionIdx = null;
     let boneStartIdx  = null;
+    let boneCount     = 0;
 
     // Expressão (opcional)
     if (expressionFile) {
@@ -391,19 +449,26 @@ app.post('/api/generate-model', modelUpload.fields([
       }
     }
 
-    // Boné (opcional)
-    if (boneSelected === 'true') {
+    // Boné (opcional) — anexado pelo usuário tem prioridade sobre o boné embutido do site
+    if (customBoneFiles.length) {
+      for (let i = 0; i < customBoneFiles.length; i++) {
+        images.push(await fileToOpenAI(customBoneFiles[i].path, customBoneFiles[i].mimetype, `bone-custom-${i + 1}.jpg`));
+      }
+      boneStartIdx = images.length - customBoneFiles.length + 1;
+      boneCount = customBoneFiles.length;
+    } else if (boneSelected === 'true') {
       const boneFrente = path.join(__dirname, 'public/accessories/bone-frente.png');
       const boneLado   = path.join(__dirname, 'public/accessories/bone-lado.png');
       if (fs.existsSync(boneFrente) && fs.existsSync(boneLado)) {
         images.push(await fileToOpenAI(boneFrente, 'image/png', 'bone-frente.png'));
         boneStartIdx = images.length;
         images.push(await fileToOpenAI(boneLado,   'image/png', 'bone-lado.png'));
+        boneCount = 2;
       }
     }
 
-    const prompt = buildModelPrompt(glassesFiles.length, outfitIdx, expressionIdx, boneStartIdx);
-    console.log(`[generate-model] model=${modelFile} pose=${pose} glasses=${glassesFiles.length} expr=${!!expressionFile} bone=${boneSelected}`);
+    const prompt = buildModelPrompt(glassesFiles.length, outfitIdx, expressionIdx, boneStartIdx, boneCount);
+    console.log(`[generate-model] model=${modelFile} pose=${pose} glasses=${glassesFiles.length} expr=${!!expressionFile} bone=${customBoneFiles.length ? 'custom(' + customBoneFiles.length + ')' : boneSelected}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 

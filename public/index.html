@@ -89,6 +89,7 @@
     .result-row, .result-single { margin-bottom: 32px; }
     .result-row-label { font-size: 0.8rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
     .results-grid--single { grid-template-columns: 1fr; max-width: 340px; }
+    .results-grid--4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
     /* Ações do card */
     .card-actions { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 12px; }
@@ -227,17 +228,23 @@
   <!-- Upload -->
   <div id="section-oculos">
   <div class="upload-card">
+    <p class="section-label" style="margin-bottom:8px;">Produto</p>
+    <div class="pose-toggle" style="margin-bottom:16px;">
+      <button class="pose-btn active" id="produto-oculos" onclick="selectProduto('oculos')">🕶️ Óculos</button>
+      <button class="pose-btn" id="produto-bone" onclick="selectProduto('bone')">🧢 Boné</button>
+    </div>
+
     <div class="upload-area" onclick="document.getElementById('file-input').click()">
       <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)" />
-      <div class="icon">🕶️</div>
-      <p><strong>Clique para enviar fotos do óculos</strong></p>
+      <div class="icon" id="upload-icon">🕶️</div>
+      <p><strong id="upload-label">Clique para enviar fotos do óculos</strong></p>
       <span>Pode enviar várias fotos do mesmo modelo — todas serão usadas como referência</span>
     </div>
 
     <div class="thumbs" id="thumbs"></div>
 
     <button class="btn-generate" id="btn-generate" onclick="generate()" disabled>
-      Gerar frente, inclinado e lado padronizados
+      Gerar <span id="btn-generate-label">frente, inclinado e lado</span> padronizados
     </button>
     <div class="status" id="status"></div>
   </div>
@@ -262,11 +269,17 @@
     </div>
 
     <p class="section-label" style="margin-bottom:8px;">Acessórios <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
-    <div style="display:flex; gap:10px; margin-bottom:20px;">
-      <div class="model-thumb" id="thumb-bone" onclick="toggleBone()" title="Boné">
+    <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:6px;">
+      <div class="model-thumb" id="thumb-bone" onclick="toggleBoneSource('builtin')" title="Boné">
         <img src="/accessories/bone-frente.png" alt="Boné" />
       </div>
+      <div class="model-thumb" id="thumb-bone-custom" style="display:none;" onclick="toggleBoneSource('custom')" title="Boné anexado">
+        <img id="bone-custom-preview" src="" alt="Boné anexado" />
+      </div>
+      <div class="glasses-add-btn" id="btn-add-bone" title="Anexar outro boné" onclick="document.getElementById('input-custom-bone').click()">+</div>
+      <input type="file" id="input-custom-bone" accept="image/*" multiple style="display:none" onchange="handleCustomBoneFiles(this.files)" />
     </div>
+    <span style="display:block; font-size:0.78rem; color:#999; margin-bottom:20px;">Pode anexar até 2 fotos do seu boné (frente e lado)</span>
 
     <p class="section-label" style="margin-bottom:8px;">Expressão <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
     <div class="expr-grid" id="expr-grid">
@@ -384,6 +397,26 @@
   }
 
   let selectedFiles = [];
+  let selectedProduto = 'oculos';
+  let productViews = {}; // preenchido por loadProducts()
+
+  async function loadProducts() {
+    const res = await fetch('/api/products');
+    productViews = await res.json();
+  }
+
+  function selectProduto(produto) {
+    selectedProduto = produto;
+    document.getElementById('produto-oculos').classList.toggle('active', produto === 'oculos');
+    document.getElementById('produto-bone').classList.toggle('active', produto === 'bone');
+
+    const isOculos = produto === 'oculos';
+    document.getElementById('upload-icon').textContent = isOculos ? '🕶️' : '🧢';
+    document.getElementById('upload-label').textContent = isOculos ? 'Clique para enviar fotos do óculos' : 'Clique para enviar fotos do boné';
+
+    const views = productViews[produto]?.views || [];
+    document.getElementById('btn-generate-label').textContent = views.map(v => v.label.replace('VISTA ', '').toLowerCase()).join(', ');
+  }
 
   function handleFiles(files) {
     for (const f of files) selectedFiles.push(f);
@@ -412,39 +445,40 @@
   async function generate() {
     if (selectedFiles.length === 0) return;
 
+    const produtoSnap = selectedProduto;
+    const views = productViews[produtoSnap]?.views || [];
+    if (!views.length) return;
+
     // Cria linha com spinners imediatamente
     const n = document.querySelectorAll('.result-row').length + 1;
     const row = document.createElement('div');
     row.className = 'result-row';
+    const gridClass = views.length === 4 ? 'results-grid results-grid--4' : 'results-grid';
     row.innerHTML = `
       <div class="result-row-label">Geração ${n}</div>
-      <div class="results-grid">
-        <div class="result-card" id="card-frente-${n}"><h3>VISTA FRONTAL</h3><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div></div>
-        <div class="result-card" id="card-inclinado-${n}"><h3>VISTA INCLINADA</h3><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div></div>
-        <div class="result-card" id="card-lado-${n}"><h3>VISTA LATERAL</h3><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div></div>
+      <div class="${gridClass}">
+        ${views.map(v => `<div class="result-card" id="card-${v.key}-${n}"><h3>${v.label}</h3><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div></div>`).join('')}
       </div>`;
     document.getElementById('results-list').prepend(row);
     row.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Gera os 3 em paralelo, cada um preenche seu card quando terminar
+    // Gera todas as vistas em paralelo, cada uma preenche seu card quando terminar
     const fill = (cardId, view, title) =>
-      callGenerate(selectedFiles, view)
+      callGenerate(selectedFiles, view, produtoSnap)
         .then(b64 => {
           const src = 'data:image/png;base64,' + b64;
           document.getElementById(cardId).innerHTML =
-            `<h3>${title}</h3><img src="${src}" alt="${title}" /><div class="card-actions"><a href="${src}" download="vyser-${view}-${n}.png">⬇ Baixar</a><button class="btn-retry" onclick="retrySingle(this,'${view}')">↺ Gerar de novo</button></div>`;
+            `<h3>${title}</h3><img src="${src}" alt="${title}" /><div class="card-actions"><a href="${src}" download="vyser-${view}-${n}.png">⬇ Baixar</a><button class="btn-retry" onclick="retrySingle(this,'${view}','${produtoSnap}')">↺ Gerar de novo</button></div>`;
         })
         .catch(e => {
           document.getElementById(cardId).innerHTML =
             `<h3>${title}</h3><div class="card-error">❌ ${e.message}</div>`;
         });
 
-    fill(`card-frente-${n}`,    'frente',    'VISTA FRONTAL');
-    fill(`card-inclinado-${n}`, 'inclinado', 'VISTA INCLINADA');
-    fill(`card-lado-${n}`,      'lado',      'VISTA LATERAL');
+    views.forEach(v => fill(`card-${v.key}-${n}`, v.key, v.label));
   }
 
-  function makeCard(src, title, n, view) {
+  function makeCard(src, title, n, view, produto) {
     const dl = `vyser-${view}-${n}.png`;
     return `
       <div class="result-card">
@@ -452,19 +486,19 @@
         <img src="${src}" alt="${title}" />
         <div class="card-actions">
           <a href="${src}" download="${dl}">⬇ Baixar</a>
-          <button class="btn-retry" onclick="retrySingle(this, '${view}')">↺ Gerar de novo</button>
+          <button class="btn-retry" onclick="retrySingle(this, '${view}', '${produto}')">↺ Gerar de novo</button>
         </div>
       </div>`;
   }
 
-  async function retrySingle(btn, view) {
+  async function retrySingle(btn, view, produto) {
     if (selectedFiles.length === 0) { alert('Selecione as imagens primeiro.'); return; }
     btn.disabled = true;
     btn.textContent = '⏳ Gerando...';
     try {
-      const result = await callGenerate(selectedFiles, view);
+      const result = await callGenerate(selectedFiles, view, produto);
       const src = 'data:image/png;base64,' + result;
-      const title = view === 'frente' ? 'Vista Frontal' : view === 'inclinado' ? 'Vista Inclinada' : 'Vista Lateral';
+      const title = productViews[produto]?.views.find(v => v.key === view)?.label || view;
       const n = document.querySelectorAll('.result-row, .result-single').length + 1;
 
       const wrap = document.createElement('div');
@@ -472,7 +506,7 @@
       wrap.innerHTML = `
         <div class="result-row-label">Retry — ${title}</div>
         <div class="results-grid results-grid--single">
-          ${makeCard(src, title, n, view)}
+          ${makeCard(src, title, n, view, produto)}
         </div>`;
       document.getElementById('results-list').prepend(wrap);
       wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -642,7 +676,11 @@
       glassesSnap.forEach(f => form.append('glasses', f));
       form.append('clothing', clothingSnap);
       if (exprSnap) form.append('expressionFile', exprSnap);
-      if (boneSelected) form.append('boneSelected', 'true');
+      if (boneMode === 'builtin') {
+        form.append('boneSelected', 'true');
+      } else if (boneMode === 'custom') {
+        customBoneFiles.forEach(f => form.append('customBone', f));
+      }
 
       const res  = await fetch('/api/generate-model', { method: 'POST', body: form });
       const data = await res.json();
@@ -663,11 +701,27 @@
   }
 
   // ── Boné ─────────────────────────────────────────────────
-  let boneSelected = false;
+  let boneMode = 'none'; // 'none' | 'builtin' | 'custom'
+  let customBoneFiles = [];
 
-  function toggleBone() {
-    boneSelected = !boneSelected;
-    document.getElementById('thumb-bone').classList.toggle('selected', boneSelected);
+  function toggleBoneSource(mode) {
+    boneMode = (boneMode === mode) ? 'none' : mode;
+    document.getElementById('thumb-bone').classList.toggle('selected', boneMode === 'builtin');
+    document.getElementById('thumb-bone-custom').classList.toggle('selected', boneMode === 'custom');
+  }
+
+  function handleCustomBoneFiles(files) {
+    customBoneFiles = [];
+    for (const f of files) {
+      if (customBoneFiles.length >= 2) break;
+      customBoneFiles.push(f);
+    }
+    if (!customBoneFiles.length) return;
+    document.getElementById('bone-custom-preview').src = URL.createObjectURL(customBoneFiles[0]);
+    document.getElementById('thumb-bone-custom').style.display = '';
+    boneMode = 'custom';
+    document.getElementById('thumb-bone').classList.remove('selected');
+    document.getElementById('thumb-bone-custom').classList.add('selected');
   }
 
   // ── Expressões ───────────────────────────────────────────
@@ -968,15 +1022,18 @@
   });
   // ────────────────────────────────────────────────────────
 
-  async function callGenerate(files, view) {
+  async function callGenerate(files, view, produto) {
     const form = new FormData();
     for (const f of files) form.append('images', f);
     form.append('view', view);
+    form.append('produto', produto || selectedProduto);
     const res = await fetch('/api/generate', { method: 'POST', body: form });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     return data.image;
   }
+
+  loadProducts().then(() => selectProduto('oculos'));
 </script>
 
 </body>
