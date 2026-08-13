@@ -374,7 +374,7 @@ function buildCreativePrompt(glassesCount, keepOutfit, outfitIdx, expressionIdx,
 
 // Monta prompt para "Corrente com Modelo": recria a cena de referência trocando a pessoa
 // e substituindo TODAS as correntes da foto original por uma única (a anexada)
-function buildCorrenteModeloPrompt(chainCount, extraText) {
+function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText) {
   const modelIdx   = 2;
   const chainStart = 3;
   const chainEnd   = 2 + chainCount;
@@ -382,16 +382,23 @@ function buildCorrenteModeloPrompt(chainCount, extraText) {
     ? `Image ${chainStart} shows the chain`
     : `Images ${chainStart} to ${chainEnd} show the chain from different angles — use all of them as reference to understand its exact shape, color, and finish`;
 
-  const lines = [
-    `Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, clothing, and shadow style exactly. Image ${modelIdx} is the model reference photo (skin tone, build). ${chainRef}.`,
-    '',
-    `Generate a photo that recreates Image 1 exactly, but replace the person's skin/neck/body with the model from Image ${modelIdx}, matching their skin tone and build naturally.`,
-    `- Keep the exact same clothing/outfit shown in Image 1`,
-    `- IMPORTANT: if Image 1 shows more than one chain/necklace layered together, replace ALL of them with a single chain — do not keep any of the original chains from Image 1, only the new one from ${chainCount === 1 ? `Image ${chainStart}` : `Images ${chainStart}-${chainEnd}`}`,
-    `- Place the new chain naturally around the neck, following the same drape, length, and position style as the original chain(s) in Image 1`,
-    `- Preserve the chain's exact link pattern, metal finish, color, clasp, and pendant (if any) precisely`,
-    `- Keep everything else from Image 1 identical: pose, camera angle, framing, background, lighting, and shadows`,
-  ];
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, and shadow style exactly. Image ${modelIdx} is the model reference photo (skin tone, build). ${chainRef}.`];
+  if (!keepOutfit && outfitIdx) header[0] += ` Image ${outfitIdx} shows the outfit to use.`;
+
+  const lines = [...header, ''];
+
+  lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person's skin/neck/body with the model from Image ${modelIdx}, matching their skin tone and build naturally.`);
+
+  if (keepOutfit) {
+    lines.push('- Keep the exact same clothing/outfit worn by the person in Image 1, now on the new model');
+  } else {
+    lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
+  }
+
+  lines.push(`- IMPORTANT: if Image 1 shows more than one chain/necklace layered together, replace ALL of them with a single chain — do not keep any of the original chains from Image 1, only the new one from ${chainCount === 1 ? `Image ${chainStart}` : `Images ${chainStart}-${chainEnd}`}`);
+  lines.push('- Place the new chain naturally around the neck, following the same drape, length, and position style as the original chain(s) in Image 1');
+  lines.push('- Preserve the chain\'s exact link pattern, metal finish, color, clasp, and pendant (if any) precisely');
+  lines.push('- Keep everything else from Image 1 identical: pose, camera angle, framing, background, lighting, and shadows');
 
   if (extraText && extraText.trim()) {
     lines.push(`- Additional instructions: ${extraText.trim()}`);
@@ -737,15 +744,21 @@ app.get('/api/corrente-refs', (req, res) => {
 
 app.post('/api/generate-corrente-modelo', creativeUpload.fields([
   { name: 'chain', maxCount: 5 },
+  { name: 'outfit', maxCount: 1 },
 ]), async (req, res) => {
   const chainFiles = req.files?.['chain'] || [];
-  const uploadedPaths = chainFiles.map(f => f.path);
+  const outfitFile = req.files?.['outfit']?.[0];
+  const uploadedPaths = [...chainFiles.map(f => f.path), outfitFile?.path].filter(Boolean);
   try {
-    const { modelFile, referenceKey, extraText } = req.body;
+    const { modelFile, referenceKey, extraText, keepOutfit } = req.body;
     if (!referenceKey || !CORRENTE_MODELO_REFS[referenceKey])
       return res.status(400).json({ error: 'Selecione uma referência.' });
     if (!chainFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto da corrente.' });
     if (!modelFile)         return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    const keepOutfitBool = keepOutfit !== 'false'; // padrão: manter roupa da referência
+    if (!keepOutfitBool && !outfitFile)
+      return res.status(400).json({ error: 'Envie a foto da roupa ou selecione "manter roupa da referência".' });
 
     const modelPath = path.join(__dirname, 'public/models', modelFile);
     if (!fs.existsSync(modelPath))
@@ -765,8 +778,15 @@ app.post('/api/generate-corrente-modelo', creativeUpload.fields([
       images.push(await fileToOpenAI(chainFiles[i].path, chainFiles[i].mimetype, `chain-${i + 1}.jpg`));
     }
 
-    const prompt = buildCorrenteModeloPrompt(chainFiles.length, extraText);
-    console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length}`);
+    let outfitIdx = null;
+    if (!keepOutfitBool && outfitFile) {
+      const outfitRef = await fileToOpenAI(outfitFile.path, outfitFile.mimetype, 'outfit.jpg');
+      images.push(outfitRef);
+      outfitIdx = images.length;
+    }
+
+    const prompt = buildCorrenteModeloPrompt(chainFiles.length, keepOutfitBool, outfitIdx, extraText);
+    console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length} keepOutfit=${keepOutfitBool}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 

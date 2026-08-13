@@ -441,6 +441,19 @@
     <div class="glasses-thumbs" id="corrente-chain-thumbs"></div>
     <div style="margin-bottom:20px;"></div>
 
+    <p class="section-label" style="margin-bottom:8px;">Roupa</p>
+    <div class="pose-toggle" style="margin-bottom:12px;">
+      <button class="pose-btn active" id="corrente-outfit-manter" onclick="selectCorrenteOutfitMode(true)">Manter roupa da referência</button>
+      <button class="pose-btn" id="corrente-outfit-nova" onclick="selectCorrenteOutfitMode(false)">Roupa do modelo</button>
+    </div>
+    <div id="corrente-outfit-wrap" style="display:none;">
+      <div class="mini-upload" id="upload-corrente-outfit" onclick="document.getElementById('input-corrente-outfit').click()">
+        <input type="file" id="input-corrente-outfit" accept="image/*" onchange="handleCorrenteOutfit(this.files[0])" />
+        👕 Anexar foto da roupa
+      </div>
+      <div style="margin-bottom:20px;"></div>
+    </div>
+
     <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
     <textarea id="corrente-extra-text" placeholder="Ex: deixe a corrente mais justa, remova o colar de fundo..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="correnteExtraText = this.value"></textarea>
 
@@ -1311,6 +1324,30 @@
   let selectedCorrenteModel = null;
   let correnteChainFiles  = [];
   let correnteExtraText   = '';
+  let correnteKeepOutfit  = true;
+  let correnteOutfitFile  = null;
+
+  function selectCorrenteOutfitMode(keep) {
+    correnteKeepOutfit = keep;
+    document.getElementById('corrente-outfit-manter').classList.toggle('active', keep);
+    document.getElementById('corrente-outfit-nova').classList.toggle('active', !keep);
+    document.getElementById('corrente-outfit-wrap').style.display = keep ? 'none' : '';
+    updateCorrenteModeloBtn();
+  }
+
+  function handleCorrenteOutfit(file) {
+    if (!file) return;
+    correnteOutfitFile = file;
+    const el = document.getElementById('upload-corrente-outfit');
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="input-corrente-outfit" accept="image/*" onchange="handleCorrenteOutfit(this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => document.getElementById('input-corrente-outfit').click();
+    updateCorrenteModeloBtn();
+  }
 
   async function loadCorrenteRefs() {
     const res = await fetch('/api/corrente-refs');
@@ -1410,8 +1447,9 @@
   }
 
   function updateCorrenteModeloBtn() {
+    const outfitOk = correnteKeepOutfit || !!correnteOutfitFile;
     document.getElementById('btn-corrente-modelo').disabled =
-      !(selectedCorrenteRef && selectedCorrenteModel && correnteChainFiles.length > 0);
+      !(selectedCorrenteRef && selectedCorrenteModel && correnteChainFiles.length > 0 && outfitOk);
   }
 
   async function gerarCorrenteModelo() {
@@ -1432,15 +1470,19 @@
     document.getElementById('results-list').prepend(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    const referenceSnap = selectedCorrenteRef;
+    const referenceSnap  = selectedCorrenteRef;
     const chainSnap      = [...correnteChainFiles];
     const extraTextSnap  = correnteExtraText;
+    const keepOutfitSnap = correnteKeepOutfit;
+    const outfitSnap     = correnteOutfitFile;
 
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
       form.append('modelFile', modelFile);
       chainSnap.forEach(f => form.append('chain', f));
+      form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
+      if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
       if (extraTextSnap) form.append('extraText', extraTextSnap);
 
       const res  = await fetch('/api/generate-corrente-modelo', { method: 'POST', body: form });
