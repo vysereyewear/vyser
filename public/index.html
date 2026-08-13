@@ -134,6 +134,8 @@
     }
     .pose-btn:hover { border-color: #6366f1; color: #6366f1; }
     .pose-btn.active { border-color: #6366f1; background: #6366f1; color: #fff; }
+    .pose-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pose-btn:disabled:hover { border-color: #e5e7eb; color: #555; }
     .model-thumb.no-pose { opacity: 0.35; pointer-events: none; }
 
     .expr-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -223,6 +225,7 @@
     <button class="mode-tab active" onclick="setMode('oculos')">🕶️ Óculos</button>
     <button class="mode-tab" onclick="setMode('modelo')">📸 Modelo</button>
     <button class="mode-tab" onclick="setMode('criativos')">🎨 Criativos</button>
+    <button class="mode-tab" onclick="setMode('joias')">💎 Joias</button>
   </div>
 
   <!-- Upload -->
@@ -233,6 +236,12 @@
       <button class="pose-btn active" id="produto-oculos" onclick="selectProduto('oculos')">🕶️ Óculos</button>
       <button class="pose-btn" id="produto-bone" onclick="selectProduto('bone')">🧢 Boné</button>
     </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <p class="section-label" style="margin-bottom:0;">Vistas <span style="font-weight:400;text-transform:none;color:#bbb;">(clique pra incluir/excluir da geração)</span></p>
+      <a href="#" style="font-size:0.78rem; color:#6366f1; font-weight:600; text-decoration:none;" onclick="event.preventDefault(); toggleAllViews()">Selecionar/desmarcar todas</a>
+    </div>
+    <div class="model-grid" id="view-select-grid" style="margin-bottom:20px;"></div>
 
     <div class="upload-area" onclick="document.getElementById('file-input').click()">
       <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)" />
@@ -378,6 +387,70 @@
   </div>
   </div><!-- /section-criativos -->
 
+  <div id="section-joias" style="display:none;">
+  <!-- Joias -->
+  <div class="upload-card">
+    <p class="section-title">💎 Joias</p>
+    <p class="section-sub">Selecione o tipo de joia, anexe fotos do produto real — e gere as vistas padronizadas</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Tipo de joia</p>
+    <div class="pose-toggle" style="margin-bottom:20px;">
+      <button class="pose-btn active" id="joia-corrente" onclick="selectJoiaTipo('corrente')">⛓️ Correntes</button>
+      <button class="pose-btn" id="joia-bracelete" onclick="selectJoiaTipo('bracelete')" disabled title="Em breve">🔗 Braceletes</button>
+      <button class="pose-btn" id="joia-anel" onclick="selectJoiaTipo('anel')" disabled title="Em breve">💍 Anéis</button>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+      <p class="section-label" style="margin-bottom:0;">Vistas <span style="font-weight:400;text-transform:none;color:#bbb;">(clique pra incluir/excluir da geração)</span></p>
+      <a href="#" style="font-size:0.78rem; color:#6366f1; font-weight:600; text-decoration:none;" onclick="event.preventDefault(); toggleAllViewsJoia()">Selecionar/desmarcar todas</a>
+    </div>
+    <div class="model-grid" id="view-select-grid-joia" style="margin-bottom:20px;"></div>
+
+    <div class="upload-area" onclick="document.getElementById('file-input-joia').click()">
+      <input type="file" id="file-input-joia" accept="image/*" multiple onchange="handleFilesJoia(this.files)" />
+      <div class="icon" id="upload-icon-joia">⛓️</div>
+      <p><strong id="upload-label-joia">Clique para enviar fotos da corrente</strong></p>
+      <span>Pode enviar várias fotos do mesmo produto — todas serão usadas como referência</span>
+    </div>
+
+    <div class="thumbs" id="thumbs-joia"></div>
+
+    <button class="btn-generate" id="btn-generate-joia" onclick="generateJoia()" disabled>
+      Gerar <span id="btn-generate-joia-label">pendurada, vista completa, textura</span> padronizados
+    </button>
+    <div class="status" id="status-joia"></div>
+  </div>
+
+  <div class="upload-card" id="corrente-modelo-block">
+    <p class="section-title">📸 Corrente com Modelo</p>
+    <p class="section-sub">Escolha a cena de referência, o modelo e a corrente — a IA recria a foto com o produto real</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Referência</p>
+    <div class="model-grid" id="corrente-ref-grid"></div>
+
+    <p class="section-label" style="margin-bottom:8px;">Modelo</p>
+    <div class="model-grid" id="model-grid-corrente">
+      <span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>
+    </div>
+
+    <p class="section-label">Corrente <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos, obrigatório)</span></p>
+    <input type="file" id="input-corrente-chain" accept="image/*" multiple style="display:none" onchange="handleCorrenteChainFiles(this.files)" />
+    <div class="glasses-upload-area" id="upload-corrente-chain-area" onclick="document.getElementById('input-corrente-chain').click()">
+      📎 Anexar foto(s) da corrente
+    </div>
+    <div class="glasses-thumbs" id="corrente-chain-thumbs"></div>
+    <div style="margin-bottom:20px;"></div>
+
+    <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <textarea id="corrente-extra-text" placeholder="Ex: deixe a corrente mais justa, remova o colar de fundo..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="correnteExtraText = this.value"></textarea>
+
+    <button class="btn-generate" id="btn-corrente-modelo" onclick="gerarCorrenteModelo()" disabled>
+      📸 Gerar corrente com modelo
+    </button>
+    <div class="status" id="status-corrente-modelo"></div>
+  </div>
+  </div><!-- /section-joias -->
+
   <!-- Resultados -->
   <div id="results-list"></div>
 
@@ -388,11 +461,13 @@
     document.getElementById('section-oculos').style.display = mode === 'oculos' ? '' : 'none';
     document.getElementById('section-modelo').style.display = mode === 'modelo' ? '' : 'none';
     document.getElementById('section-criativos').style.display = mode === 'criativos' ? '' : 'none';
+    document.getElementById('section-joias').style.display = mode === 'joias' ? '' : 'none';
     document.querySelectorAll('.mode-tab').forEach((t, i) => {
       t.classList.toggle('active',
         (i === 0 && mode === 'oculos') ||
         (i === 1 && mode === 'modelo') ||
-        (i === 2 && mode === 'criativos'));
+        (i === 2 && mode === 'criativos') ||
+        (i === 3 && mode === 'joias'));
     });
   }
 
@@ -405,6 +480,8 @@
     productViews = await res.json();
   }
 
+  let selectedViewsOculos = new Set();
+
   function selectProduto(produto) {
     selectedProduto = produto;
     document.getElementById('produto-oculos').classList.toggle('active', produto === 'oculos');
@@ -415,13 +492,48 @@
     document.getElementById('upload-label').textContent = isOculos ? 'Clique para enviar fotos do óculos' : 'Clique para enviar fotos do boné';
 
     const views = productViews[produto]?.views || [];
-    document.getElementById('btn-generate-label').textContent = views.map(v => v.label.replace('VISTA ', '').toLowerCase()).join(', ');
+    selectedViewsOculos = new Set(views.map(v => v.key)); // começa com todas selecionadas
+    renderViewSelectGrid();
+    updateGenerateLabel();
+  }
+
+  function renderViewSelectGrid() {
+    const grid = document.getElementById('view-select-grid');
+    const views = productViews[selectedProduto]?.views || [];
+    grid.innerHTML = '';
+    views.forEach(v => {
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (selectedViewsOculos.has(v.key) ? ' selected' : '');
+      div.innerHTML = `<img src="${v.thumb}" alt="${v.label}" /><span>${v.label}</span>`;
+      div.onclick = () => {
+        if (selectedViewsOculos.has(v.key)) selectedViewsOculos.delete(v.key);
+        else selectedViewsOculos.add(v.key);
+        div.classList.toggle('selected');
+        updateGenerateLabel();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function toggleAllViews() {
+    const views = productViews[selectedProduto]?.views || [];
+    if (selectedViewsOculos.size === views.length) selectedViewsOculos.clear();
+    else selectedViewsOculos = new Set(views.map(v => v.key));
+    renderViewSelectGrid();
+    updateGenerateLabel();
+  }
+
+  function updateGenerateLabel() {
+    const views = (productViews[selectedProduto]?.views || []).filter(v => selectedViewsOculos.has(v.key));
+    document.getElementById('btn-generate-label').textContent = views.length
+      ? views.map(v => v.label.replace('VISTA ', '').toLowerCase()).join(', ')
+      : 'nenhuma vista selecionada';
+    document.getElementById('btn-generate').disabled = selectedFiles.length === 0 || views.length === 0;
   }
 
   function handleFiles(files) {
     for (const f of files) selectedFiles.push(f);
     renderThumbs();
-    document.getElementById('btn-generate').disabled = selectedFiles.length === 0;
   }
 
   function renderThumbs() {
@@ -434,19 +546,19 @@
       img.src = URL.createObjectURL(f);
       const btn = document.createElement('button');
       btn.textContent = '×';
-      btn.onclick = (e) => { e.stopPropagation(); selectedFiles.splice(i, 1); renderThumbs(); document.getElementById('btn-generate').disabled = selectedFiles.length === 0; };
+      btn.onclick = (e) => { e.stopPropagation(); selectedFiles.splice(i, 1); renderThumbs(); };
       div.appendChild(img);
       div.appendChild(btn);
       container.appendChild(div);
     });
-    document.getElementById('btn-generate').disabled = selectedFiles.length === 0;
+    updateGenerateLabel();
   }
 
   async function generate() {
     if (selectedFiles.length === 0) return;
 
     const produtoSnap = selectedProduto;
-    const views = productViews[produtoSnap]?.views || [];
+    const views = (productViews[produtoSnap]?.views || []).filter(v => selectedViewsOculos.has(v.key));
     if (!views.length) return;
 
     // Cria linha com spinners imediatamente
@@ -537,6 +649,7 @@
     allModels = await res.json();
     renderModelGrid();
     renderCreativeModelGrid();
+    renderCorrenteModelGrid();
   }
 
   function renderModelGrid() {
@@ -1033,7 +1146,323 @@
     return data.image;
   }
 
-  loadProducts().then(() => selectProduto('oculos'));
+  loadProducts().then(() => { selectProduto('oculos'); selectJoiaTipo('corrente'); });
+
+  // ── Seção Joias ──────────────────────────────────────────
+  let selectedFilesJoia = [];
+  let selectedJoiaTipo  = 'corrente';
+  const JOIA_ICONS = { corrente: '⛓️', bracelete: '🔗', anel: '💍' };
+  const JOIA_LABELS = { corrente: 'corrente', bracelete: 'bracelete', anel: 'anel' };
+
+  let selectedViewsJoia = new Set();
+
+  function selectJoiaTipo(tipo) {
+    if (!productViews[tipo]) return; // ainda não configurado (bracelete/anel)
+    selectedJoiaTipo = tipo;
+    document.getElementById('joia-corrente').classList.toggle('active', tipo === 'corrente');
+    document.getElementById('joia-bracelete').classList.toggle('active', tipo === 'bracelete');
+    document.getElementById('joia-anel').classList.toggle('active', tipo === 'anel');
+
+    const views = productViews[tipo]?.views || [];
+    selectedViewsJoia = new Set(views.map(v => v.key));
+    renderViewSelectGridJoia();
+    updateJoiaLabels();
+  }
+
+  function renderViewSelectGridJoia() {
+    const grid = document.getElementById('view-select-grid-joia');
+    const views = productViews[selectedJoiaTipo]?.views || [];
+    grid.innerHTML = '';
+    views.forEach(v => {
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (selectedViewsJoia.has(v.key) ? ' selected' : '');
+      div.innerHTML = `<img src="${v.thumb}" alt="${v.label}" /><span>${v.label}</span>`;
+      div.onclick = () => {
+        if (selectedViewsJoia.has(v.key)) selectedViewsJoia.delete(v.key);
+        else selectedViewsJoia.add(v.key);
+        div.classList.toggle('selected');
+        updateJoiaLabels();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function toggleAllViewsJoia() {
+    const views = productViews[selectedJoiaTipo]?.views || [];
+    if (selectedViewsJoia.size === views.length) selectedViewsJoia.clear();
+    else selectedViewsJoia = new Set(views.map(v => v.key));
+    renderViewSelectGridJoia();
+    updateJoiaLabels();
+  }
+
+  function updateJoiaLabels() {
+    const tipo = selectedJoiaTipo;
+    document.getElementById('upload-icon-joia').textContent = JOIA_ICONS[tipo] || '💎';
+    document.getElementById('upload-label-joia').textContent = `Clique para enviar fotos ${tipo === 'corrente' ? 'da corrente' : tipo === 'bracelete' ? 'do bracelete' : 'do anel'}`;
+    const views = (productViews[tipo]?.views || []).filter(v => selectedViewsJoia.has(v.key));
+    document.getElementById('btn-generate-joia-label').textContent = views.length
+      ? views.map(v => v.label.toLowerCase()).join(', ')
+      : 'nenhuma vista selecionada';
+    document.getElementById('btn-generate-joia').disabled = selectedFilesJoia.length === 0 || views.length === 0;
+  }
+
+  function handleFilesJoia(files) {
+    for (const f of files) selectedFilesJoia.push(f);
+    renderThumbsJoia();
+  }
+
+  function renderThumbsJoia() {
+    const container = document.getElementById('thumbs-joia');
+    container.innerHTML = '';
+    selectedFilesJoia.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'thumb';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.onclick = (e) => { e.stopPropagation(); selectedFilesJoia.splice(i, 1); renderThumbsJoia(); };
+      div.appendChild(img);
+      div.appendChild(btn);
+      container.appendChild(div);
+    });
+    updateJoiaLabels();
+  }
+
+  async function generateJoia() {
+    if (selectedFilesJoia.length === 0) return;
+
+    const produtoSnap = selectedJoiaTipo;
+    const views = (productViews[produtoSnap]?.views || []).filter(v => selectedViewsJoia.has(v.key));
+    if (!views.length) return;
+
+    const n = document.querySelectorAll('.result-row').length + 1;
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    const gridClass = views.length === 4 ? 'results-grid results-grid--4' : 'results-grid';
+    row.innerHTML = `
+      <div class="result-row-label">Geração ${n}</div>
+      <div class="${gridClass}">
+        ${views.map(v => `<div class="result-card" id="card-joia-${v.key}-${n}"><h3>${v.label}</h3><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div></div>`).join('')}
+      </div>`;
+    document.getElementById('results-list').prepend(row);
+    row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const filesSnap = [...selectedFilesJoia];
+    const fill = (cardId, view, title) =>
+      callGenerate(filesSnap, view, produtoSnap)
+        .then(b64 => {
+          const src = 'data:image/png;base64,' + b64;
+          document.getElementById(cardId).innerHTML =
+            `<h3>${title}</h3><img src="${src}" alt="${title}" /><div class="card-actions"><a href="${src}" download="vyser-joia-${view}-${n}.png">⬇ Baixar</a><button class="btn-retry" onclick="retrySingleJoia(this,'${view}','${produtoSnap}')">↺ Gerar de novo</button></div>`;
+        })
+        .catch(e => {
+          document.getElementById(cardId).innerHTML =
+            `<h3>${title}</h3><div class="card-error">❌ ${e.message}</div>`;
+        });
+
+    views.forEach(v => fill(`card-joia-${v.key}-${n}`, v.key, v.label));
+  }
+
+  function makeCardJoia(src, title, n, view, produto) {
+    const dl = `vyser-joia-${view}-${n}.png`;
+    return `
+      <div class="result-card">
+        <h3>${title}</h3>
+        <img src="${src}" alt="${title}" />
+        <div class="card-actions">
+          <a href="${src}" download="${dl}">⬇ Baixar</a>
+          <button class="btn-retry" onclick="retrySingleJoia(this, '${view}', '${produto}')">↺ Gerar de novo</button>
+        </div>
+      </div>`;
+  }
+
+  async function retrySingleJoia(btn, view, produto) {
+    if (selectedFilesJoia.length === 0) { alert('Selecione as imagens primeiro.'); return; }
+    btn.disabled = true;
+    btn.textContent = '⏳ Gerando...';
+    try {
+      const result = await callGenerate(selectedFilesJoia, view, produto);
+      const src = 'data:image/png;base64,' + result;
+      const title = productViews[produto]?.views.find(v => v.key === view)?.label || view;
+      const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'result-single';
+      wrap.innerHTML = `
+        <div class="result-row-label">Retry — ${title}</div>
+        <div class="results-grid results-grid--single">
+          ${makeCardJoia(src, title, n, view, produto)}
+        </div>`;
+      document.getElementById('results-list').prepend(wrap);
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch(e) {
+      alert('Erro: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '↺ Gerar de novo';
+    }
+  }
+  // ────────────────────────────────────────────────────────
+
+  // ── Seção Corrente com Modelo ───────────────────────────
+  let correnteRefs        = [];
+  let selectedCorrenteRef = null;
+  let selectedCorrenteModel = null;
+  let correnteChainFiles  = [];
+  let correnteExtraText   = '';
+
+  async function loadCorrenteRefs() {
+    const res = await fetch('/api/corrente-refs');
+    correnteRefs = await res.json();
+    renderCorrenteRefGrid();
+  }
+
+  function renderCorrenteRefGrid() {
+    const grid = document.getElementById('corrente-ref-grid');
+    grid.innerHTML = '';
+    correnteRefs.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (selectedCorrenteRef === r.key ? ' selected' : '');
+      div.innerHTML = `<img src="${r.thumb}" alt="${r.key}" />`;
+      div.onclick = () => {
+        selectedCorrenteRef = r.key;
+        document.querySelectorAll('#corrente-ref-grid .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        updateCorrenteModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function renderCorrenteModelGrid() {
+    const grid = document.getElementById('model-grid-corrente');
+    if (!allModels.length) {
+      grid.innerHTML = '<span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>';
+      return;
+    }
+    grid.innerHTML = '';
+    allModels.forEach(m => {
+      const previewFile = m.frente || m.ladinho;
+      const div = document.createElement('div');
+      div.className = 'model-thumb';
+      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`;
+      div.onclick = () => {
+        document.querySelectorAll('#model-grid-corrente .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedCorrenteModel = m;
+        updateCorrenteModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function handleCorrenteChainFiles(files) {
+    for (const f of files) {
+      if (correnteChainFiles.length >= 5) break;
+      correnteChainFiles.push(f);
+    }
+    renderCorrenteChainThumbs();
+    updateCorrenteModeloBtn();
+  }
+
+  function renderCorrenteChainThumbs() {
+    const area = document.getElementById('upload-corrente-chain-area');
+    const thumbsEl = document.getElementById('corrente-chain-thumbs');
+    thumbsEl.innerHTML = '';
+
+    if (correnteChainFiles.length === 0) {
+      area.classList.remove('has-files');
+      area.style.display = '';
+      return;
+    }
+
+    area.classList.add('has-files');
+    area.style.display = 'none';
+
+    correnteChainFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        correnteChainFiles.splice(i, 1);
+        renderCorrenteChainThumbs();
+        updateCorrenteModeloBtn();
+      };
+      div.appendChild(img);
+      div.appendChild(btn);
+      thumbsEl.appendChild(div);
+    });
+
+    if (correnteChainFiles.length < 5) {
+      const addBtn = document.createElement('div');
+      addBtn.className = 'glasses-add-btn';
+      addBtn.title = 'Adicionar mais fotos';
+      addBtn.textContent = '+';
+      addBtn.onclick = () => document.getElementById('input-corrente-chain').click();
+      thumbsEl.appendChild(addBtn);
+    }
+  }
+
+  function updateCorrenteModeloBtn() {
+    document.getElementById('btn-corrente-modelo').disabled =
+      !(selectedCorrenteRef && selectedCorrenteModel && correnteChainFiles.length > 0);
+  }
+
+  async function gerarCorrenteModelo() {
+    const modelFile = selectedCorrenteModel.frente || selectedCorrenteModel.ladinho;
+    const label = `${selectedCorrenteModel.name} — ${selectedCorrenteRef}`;
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Corrente c/ Modelo — ${label}</div>
+      <div class="results-grid results-grid--single">
+        <div class="result-card" id="card-corrente-modelo-${n}">
+          <h3>Corrente com Modelo</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const referenceSnap = selectedCorrenteRef;
+    const chainSnap      = [...correnteChainFiles];
+    const extraTextSnap  = correnteExtraText;
+
+    try {
+      const form = new FormData();
+      form.append('referenceKey', referenceSnap);
+      form.append('modelFile', modelFile);
+      chainSnap.forEach(f => form.append('chain', f));
+      if (extraTextSnap) form.append('extraText', extraTextSnap);
+
+      const res  = await fetch('/api/generate-corrente-modelo', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const src = 'data:image/png;base64,' + data.image;
+      document.getElementById(`card-corrente-modelo-${n}`).innerHTML = `
+        <h3>Corrente com Modelo</h3>
+        <img src="${src}" alt="Corrente com modelo ${n}" />
+        <div class="card-actions">
+          <a href="${src}" download="vyser-corrente-modelo-${n}.png">⬇ Baixar</a>
+          <button class="btn-retry" onclick="gerarCorrenteModelo()">↺ Gerar de novo</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById(`card-corrente-modelo-${n}`).innerHTML =
+        `<h3>Corrente com Modelo</h3><div class="card-error">❌ ${e.message}</div>`;
+    }
+  }
+
+  loadCorrenteRefs();
+  // ────────────────────────────────────────────────────────
 </script>
 
 </body>

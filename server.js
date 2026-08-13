@@ -9,11 +9,11 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 async function fileToOpenAI(filePath, mimetype, name) {
   const buffer = fs.readFileSync(filePath);
@@ -244,6 +244,24 @@ ${BONE_BRIM_WARNING}
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 // Configuração dos produtos disponíveis na aba "Óculos/Boné" — cada view tem seu prompt e imagem de referência
+const PROMPT_CORRENTE_PENDURADA = `Image 1 is a style reference — follow its background, lighting, shadow, and HANGING/DRAPED composition exactly (chain hanging naturally with the pendant at the bottom).
+Images 2+ show the chain/necklace to use.
+
+Generate a product photo of the chain from Images 2+ hanging naturally like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the chain's link pattern, metal finish, color, clasp, and pendant (if any) precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_CORRENTE_COMPLETA = `Image 1 is a style reference — follow its background, lighting, shadow, and FULL FLAT-LAY COMPOSITION exactly (chain laid out in a full circle/loop, viewed from directly above).
+Images 2+ show the chain/necklace to use.
+
+Generate a product photo of the chain from Images 2+ laid out flat in a full circle like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the chain's link pattern, metal finish, color, clasp, and pendant (if any) precisely, including the full length of the chain.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_CORRENTE_TEXTURA = `Image 1 is a style reference — follow its background, lighting, shadow, and CLOSE-UP MACRO composition exactly (tight close-up on a diagonal segment of the chain, showing link texture in detail).
+Images 2+ show the chain/necklace to use.
+
+Generate a close-up macro product photo of the chain from Images 2+ like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the chain's exact link pattern, metal finish, color, and texture in fine detail.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
 const PRODUCTS = {
   oculos: {
     defaultView: 'frente',
@@ -260,6 +278,14 @@ const PRODUCTS = {
       ladinho:  { prompt: PROMPT_BONE_LADINHO,  refPath: 'public/references/bone-ladinho.png',  label: 'VISTA 3/4' },
       lado:     { prompt: PROMPT_BONE_LADO,     refPath: 'public/references/bone-lado.png',     label: 'VISTA LATERAL' },
       traseira: { prompt: PROMPT_BONE_TRASEIRA, refPath: 'public/references/bone-traseira.png', label: 'VISTA TRASEIRA' },
+    },
+  },
+  corrente: {
+    defaultView: 'pendurada',
+    views: {
+      pendurada: { prompt: PROMPT_CORRENTE_PENDURADA, refPath: 'public/references/corrente-pendurada.png', label: 'PENDURADA' },
+      completa:  { prompt: PROMPT_CORRENTE_COMPLETA,  refPath: 'public/references/corrente-completa.png',  label: 'VISTA COMPLETA' },
+      textura:   { prompt: PROMPT_CORRENTE_TEXTURA,   refPath: 'public/references/corrente-textura.png',   label: 'TEXTURA (CLOSE-UP)' },
     },
   },
 };
@@ -346,6 +372,41 @@ function buildCreativePrompt(glassesCount, keepOutfit, outfitIdx, expressionIdx,
   return lines.join('\n');
 }
 
+// Monta prompt para "Corrente com Modelo": recria a cena de referência trocando a pessoa
+// e substituindo TODAS as correntes da foto original por uma única (a anexada)
+function buildCorrenteModeloPrompt(chainCount, extraText) {
+  const modelIdx   = 2;
+  const chainStart = 3;
+  const chainEnd   = 2 + chainCount;
+  const chainRef   = chainCount === 1
+    ? `Image ${chainStart} shows the chain`
+    : `Images ${chainStart} to ${chainEnd} show the chain from different angles — use all of them as reference to understand its exact shape, color, and finish`;
+
+  const lines = [
+    `Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, clothing, and shadow style exactly. Image ${modelIdx} is the model reference photo (skin tone, build). ${chainRef}.`,
+    '',
+    `Generate a photo that recreates Image 1 exactly, but replace the person's skin/neck/body with the model from Image ${modelIdx}, matching their skin tone and build naturally.`,
+    `- Keep the exact same clothing/outfit shown in Image 1`,
+    `- IMPORTANT: if Image 1 shows more than one chain/necklace layered together, replace ALL of them with a single chain — do not keep any of the original chains from Image 1, only the new one from ${chainCount === 1 ? `Image ${chainStart}` : `Images ${chainStart}-${chainEnd}`}`,
+    `- Place the new chain naturally around the neck, following the same drape, length, and position style as the original chain(s) in Image 1`,
+    `- Preserve the chain's exact link pattern, metal finish, color, clasp, and pendant (if any) precisely`,
+    `- Keep everything else from Image 1 identical: pose, camera angle, framing, background, lighting, and shadows`,
+  ];
+
+  if (extraText && extraText.trim()) {
+    lines.push(`- Additional instructions: ${extraText.trim()}`);
+  }
+
+  return lines.join('\n');
+}
+
+const CORRENTE_MODELO_REFS = {
+  colar1: 'public/references/corrente-modelo-1.jpg',
+  colar2: 'public/references/corrente-modelo-2.jpg',
+  colar3: 'public/references/corrente-modelo-3.jpg',
+  colar4: 'public/references/corrente-modelo-4.jpg',
+};
+
 const PROMPT_SOMBRA = `Generate a clean professional product photo of the glasses shown in the images.
 - Glasses: front view, horizontally centered
 - Soft drop shadow directly beneath the glasses
@@ -400,7 +461,11 @@ app.get('/api/products', (req, res) => {
   for (const [key, product] of Object.entries(PRODUCTS)) {
     result[key] = {
       defaultView: product.defaultView,
-      views: Object.entries(product.views).map(([viewKey, v]) => ({ key: viewKey, label: v.label })),
+      views: Object.entries(product.views).map(([viewKey, v]) => ({
+        key: viewKey,
+        label: v.label,
+        thumb: '/' + v.refPath.replace(/^public\//, ''),
+      })),
     };
   }
   res.json(result);
@@ -480,7 +545,7 @@ app.get('/api/expressions', (req, res) => {
   res.json(files);
 });
 
-const modelUpload = multer({ dest: 'uploads/' });
+const modelUpload = multer({ dest: path.join(__dirname, 'uploads') });
 
 app.post('/api/generate-model', modelUpload.fields([
   { name: 'glasses', maxCount: 5 },
@@ -577,7 +642,7 @@ app.post('/api/generate-model', modelUpload.fields([
   }
 });
 
-const creativeUpload = multer({ dest: 'uploads/' });
+const creativeUpload = multer({ dest: path.join(__dirname, 'uploads') });
 
 app.post('/api/generate-creative', creativeUpload.fields([
   { name: 'reference', maxCount: 1 },
@@ -649,6 +714,67 @@ app.post('/api/generate-creative', creativeUpload.fields([
       prompt,
       quality: 'medium',
       size: imageSize,
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: b64 });
+  } catch (err) {
+    uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Lista as referências fixas de "Corrente com Modelo" disponíveis
+app.get('/api/corrente-refs', (req, res) => {
+  res.json(Object.keys(CORRENTE_MODELO_REFS).map(key => ({
+    key,
+    thumb: '/' + CORRENTE_MODELO_REFS[key].replace(/^public\//, ''),
+  })));
+});
+
+app.post('/api/generate-corrente-modelo', creativeUpload.fields([
+  { name: 'chain', maxCount: 5 },
+]), async (req, res) => {
+  const chainFiles = req.files?.['chain'] || [];
+  const uploadedPaths = chainFiles.map(f => f.path);
+  try {
+    const { modelFile, referenceKey, extraText } = req.body;
+    if (!referenceKey || !CORRENTE_MODELO_REFS[referenceKey])
+      return res.status(400).json({ error: 'Selecione uma referência.' });
+    if (!chainFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto da corrente.' });
+    if (!modelFile)         return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    const modelPath = path.join(__dirname, 'public/models', modelFile);
+    if (!fs.existsSync(modelPath))
+      return res.status(400).json({ error: 'Modelo não encontrado.' });
+
+    const ext  = path.extname(modelFile).toLowerCase();
+    const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+
+    const refPath = path.join(__dirname, CORRENTE_MODELO_REFS[referenceKey]);
+    const referenceRef = await fileToOpenAI(refPath, 'image/jpeg', 'reference.jpg');
+    const images = [referenceRef];
+
+    const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
+    images.push(modelRef);
+
+    for (let i = 0; i < chainFiles.length; i++) {
+      images.push(await fileToOpenAI(chainFiles[i].path, chainFiles[i].mimetype, `chain-${i + 1}.jpg`));
+    }
+
+    const prompt = buildCorrenteModeloPrompt(chainFiles.length, extraText);
+    console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length}`);
+
+    uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2',
+      image: images,
+      prompt,
+      quality: 'medium',
     });
 
     const b64 = response.data[0].b64_json;
