@@ -400,8 +400,9 @@ function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText,
     if (jacketMode === 'replace') {
       lines.push(`- Replace the outer clothing/garment the person is currently wearing with the jacket/coat shown in Image ${jacketIdx} — swap it in completely, matching its exact color, fabric, texture, and design`);
     } else {
-      lines.push(`- Add the jacket/coat shown in Image ${jacketIdx} on top of the existing outfit, worn open or naturally layered over it — matching its exact color, fabric, texture, and design`);
+      lines.push(`- Add the jacket/coat shown in Image ${jacketIdx} on top of the existing outfit, layered over it — matching its exact color, fabric, texture, and design`);
     }
+    lines.push('- IMPORTANT: the jacket/coat must always be worn OPEN/unzipped/unbuttoned, never closed, so the clothing/chain underneath stays fully visible');
     lines.push('- Fit the jacket/coat naturally to the model\'s pose and body, with realistic drape, folds, and shadows');
   }
 
