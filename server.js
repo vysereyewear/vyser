@@ -134,28 +134,34 @@ Images 2+ show the glasses model to use.
 Generate a product photo of the glasses from Images 2+ in an ANGLED/3-QUARTER VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the glasses shape, color, and details precisely.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
+const BONE_BRIM_WARNING = `CRITICAL: do NOT shorten, shrink, or alter the length/curvature of the cap's brim (bico/aba) in any way — reproduce the brim at its exact original length and shape as shown in Images 2+. The brim must look normal-length and proportional to the cap, never cropped or truncated short.`;
+
 const PROMPT_BONE_FRENTE = `Image 1 is a style reference — follow its background, lighting, shadow, and FRONT-FACING composition exactly.
 Images 2+ show the cap to use.
 
 Generate a product photo of the cap from Images 2+ in a FRONT VIEW (straight at the camera), centered, with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, and hardware precisely.
+${BONE_BRIM_WARNING}
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 const PROMPT_BONE_LADINHO = `Image 1 is a style reference — follow its background, lighting, shadow, and ANGLED/3-QUARTER composition exactly.
 Images 2+ show the cap to use.
 
 Generate a product photo of the cap from Images 2+ in an ANGLED/3-QUARTER VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, and hardware precisely.
+${BONE_BRIM_WARNING}
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 const PROMPT_BONE_LADO = `Image 1 is a style reference — follow its background, lighting, shadow, and SIDE/PROFILE composition exactly.
 Images 2+ show the cap to use.
 
 Generate a product photo of the cap from Images 2+ in a SIDE/PROFILE VIEW (like Image 1), with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, logo, strap/buckle, and hardware precisely.
+${BONE_BRIM_WARNING} The side view especially must show the brim extending forward at its full, natural length — this is the view where brim length is most visible, so it is critical to get right.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 const PROMPT_BONE_TRASEIRA = `Image 1 is a style reference — follow its background, lighting, shadow, and BACK-VIEW composition exactly.
 Images 2+ show the cap to use.
 
 Generate a product photo of the cap from Images 2+ in a BACK VIEW (showing the rear strap/closure, like Image 1), centered, with soft studio lighting and shadow style as Image 1. Reproduce the cap's shape, fabric texture, color, stitching, and the rear strap/buckle/snap hardware precisely.
+${BONE_BRIM_WARNING}
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 // Configuração dos produtos disponíveis na aba "Óculos/Boné" — cada view tem seu prompt e imagem de referência
