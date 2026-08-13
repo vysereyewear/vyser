@@ -396,29 +396,31 @@
     <p class="section-label" style="margin-bottom:8px;">Tipo de joia</p>
     <div class="pose-toggle" style="margin-bottom:20px;">
       <button class="pose-btn active" id="joia-corrente" onclick="selectJoiaTipo('corrente')">⛓️ Correntes</button>
-      <button class="pose-btn" id="joia-bracelete" onclick="selectJoiaTipo('bracelete')" disabled title="Em breve">🔗 Braceletes</button>
+      <button class="pose-btn" id="joia-bracelete" onclick="selectJoiaTipo('bracelete')">🔗 Braceletes</button>
       <button class="pose-btn" id="joia-anel" onclick="selectJoiaTipo('anel')" disabled title="Em breve">💍 Anéis</button>
     </div>
 
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-      <p class="section-label" style="margin-bottom:0;">Vistas <span style="font-weight:400;text-transform:none;color:#bbb;">(clique pra incluir/excluir da geração)</span></p>
-      <a href="#" style="font-size:0.78rem; color:#6366f1; font-weight:600; text-decoration:none;" onclick="event.preventDefault(); toggleAllViewsJoia()">Selecionar/desmarcar todas</a>
+    <div id="joia-vistas-wrap">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <p class="section-label" style="margin-bottom:0;">Vistas <span style="font-weight:400;text-transform:none;color:#bbb;">(clique pra incluir/excluir da geração)</span></p>
+        <a href="#" style="font-size:0.78rem; color:#6366f1; font-weight:600; text-decoration:none;" onclick="event.preventDefault(); toggleAllViewsJoia()">Selecionar/desmarcar todas</a>
+      </div>
+      <div class="model-grid" id="view-select-grid-joia" style="margin-bottom:20px;"></div>
+
+      <div class="upload-area" onclick="document.getElementById('file-input-joia').click()">
+        <input type="file" id="file-input-joia" accept="image/*" multiple onchange="handleFilesJoia(this.files)" />
+        <div class="icon" id="upload-icon-joia">⛓️</div>
+        <p><strong id="upload-label-joia">Clique para enviar fotos da corrente</strong></p>
+        <span>Pode enviar várias fotos do mesmo produto — todas serão usadas como referência</span>
+      </div>
+
+      <div class="thumbs" id="thumbs-joia"></div>
+
+      <button class="btn-generate" id="btn-generate-joia" onclick="generateJoia()" disabled>
+        Gerar <span id="btn-generate-joia-label">pendurada, vista completa, textura</span> padronizados
+      </button>
+      <div class="status" id="status-joia"></div>
     </div>
-    <div class="model-grid" id="view-select-grid-joia" style="margin-bottom:20px;"></div>
-
-    <div class="upload-area" onclick="document.getElementById('file-input-joia').click()">
-      <input type="file" id="file-input-joia" accept="image/*" multiple onchange="handleFilesJoia(this.files)" />
-      <div class="icon" id="upload-icon-joia">⛓️</div>
-      <p><strong id="upload-label-joia">Clique para enviar fotos da corrente</strong></p>
-      <span>Pode enviar várias fotos do mesmo produto — todas serão usadas como referência</span>
-    </div>
-
-    <div class="thumbs" id="thumbs-joia"></div>
-
-    <button class="btn-generate" id="btn-generate-joia" onclick="generateJoia()" disabled>
-      Gerar <span id="btn-generate-joia-label">pendurada, vista completa, textura</span> padronizados
-    </button>
-    <div class="status" id="status-joia"></div>
   </div>
 
   <div class="upload-card" id="corrente-modelo-block">
@@ -468,6 +470,78 @@
       📸 Gerar corrente com modelo
     </button>
     <div class="status" id="status-corrente-modelo"></div>
+  </div>
+
+  <div class="upload-card" id="bracelete-modelo-block" style="display:none;">
+    <p class="section-title">📸 Bracelete com Modelo</p>
+    <p class="section-sub">Escolha a cena de referência, o modelo e o bracelete — troque também fundo, camisa e calça se quiser</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Referência</p>
+    <div class="model-grid" id="bracelete-ref-grid"></div>
+
+    <p class="section-label" style="margin-bottom:8px;">Modelo</p>
+    <div class="model-grid" id="model-grid-bracelete">
+      <span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>
+    </div>
+
+    <p class="section-label">Bracelete <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos, obrigatório)</span></p>
+    <input type="file" id="input-bracelete-item" accept="image/*" multiple style="display:none" onchange="handleBraceleteItemFiles(this.files)" />
+    <div class="glasses-upload-area" id="upload-bracelete-item-area" onclick="document.getElementById('input-bracelete-item').click()">
+      📎 Anexar foto(s) do bracelete
+    </div>
+    <div class="glasses-thumbs" id="bracelete-item-thumbs"></div>
+    <div style="margin-bottom:20px;"></div>
+
+    <p class="section-label" style="margin-bottom:8px;">Fundo</p>
+    <div class="pose-toggle" style="margin-bottom:12px;">
+      <button class="pose-btn active" id="bracelete-bg-manter" onclick="selectBraceleteSwapMode('bg', true)">Manter fundo da referência</button>
+      <button class="pose-btn" id="bracelete-bg-novo" onclick="selectBraceleteSwapMode('bg', false)">Novo fundo</button>
+    </div>
+    <div id="bracelete-bg-wrap" style="display:none;">
+      <div class="mini-upload" id="upload-bracelete-bg" onclick="document.getElementById('input-bracelete-bg').click()">
+        <input type="file" id="input-bracelete-bg" accept="image/*" onchange="handleBraceleteExtra('bg', this.files[0])" />
+        🖼️ Anexar foto do fundo
+      </div>
+      <div style="margin-bottom:20px;"></div>
+    </div>
+
+    <div id="bracelete-shirt-section">
+      <p class="section-label" style="margin-bottom:8px;">Camisa</p>
+      <div class="pose-toggle" style="margin-bottom:12px;">
+        <button class="pose-btn active" id="bracelete-shirt-manter" onclick="selectBraceleteSwapMode('shirt', true)">Manter camisa da referência</button>
+        <button class="pose-btn" id="bracelete-shirt-nova" onclick="selectBraceleteSwapMode('shirt', false)">Nova camisa</button>
+      </div>
+      <div id="bracelete-shirt-wrap" style="display:none;">
+        <div class="mini-upload" id="upload-bracelete-shirt" onclick="document.getElementById('input-bracelete-shirt').click()">
+          <input type="file" id="input-bracelete-shirt" accept="image/*" onchange="handleBraceleteExtra('shirt', this.files[0])" />
+          👕 Anexar foto da camisa
+        </div>
+        <div style="margin-bottom:20px;"></div>
+      </div>
+    </div>
+
+    <div id="bracelete-pants-section">
+      <p class="section-label" style="margin-bottom:8px;">Calça</p>
+      <div class="pose-toggle" style="margin-bottom:12px;">
+        <button class="pose-btn active" id="bracelete-pants-manter" onclick="selectBraceleteSwapMode('pants', true)">Manter calça da referência</button>
+        <button class="pose-btn" id="bracelete-pants-nova" onclick="selectBraceleteSwapMode('pants', false)">Nova calça</button>
+      </div>
+      <div id="bracelete-pants-wrap" style="display:none;">
+        <div class="mini-upload" id="upload-bracelete-pants" onclick="document.getElementById('input-bracelete-pants').click()">
+          <input type="file" id="input-bracelete-pants" accept="image/*" onchange="handleBraceleteExtra('pants', this.files[0])" />
+          👖 Anexar foto da calça
+        </div>
+        <div style="margin-bottom:20px;"></div>
+      </div>
+    </div>
+
+    <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <textarea id="bracelete-extra-text" placeholder="Ex: deixe o bracelete mais justo..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="braceleteExtraText = this.value"></textarea>
+
+    <button class="btn-generate" id="btn-bracelete-modelo" onclick="gerarBraceleteModelo()" disabled>
+      📸 Gerar bracelete com modelo
+    </button>
+    <div class="status" id="status-bracelete-modelo"></div>
   </div>
   </div><!-- /section-joias -->
 
@@ -670,6 +744,7 @@
     renderModelGrid();
     renderCreativeModelGrid();
     renderCorrenteModelGrid();
+    renderBraceleteModelGrid();
   }
 
   function renderModelGrid() {
@@ -1177,16 +1252,23 @@
   let selectedViewsJoia = new Set();
 
   function selectJoiaTipo(tipo) {
-    if (!productViews[tipo]) return; // ainda não configurado (bracelete/anel)
+    if (tipo === 'anel') return; // ainda não configurado
+
     selectedJoiaTipo = tipo;
     document.getElementById('joia-corrente').classList.toggle('active', tipo === 'corrente');
     document.getElementById('joia-bracelete').classList.toggle('active', tipo === 'bracelete');
     document.getElementById('joia-anel').classList.toggle('active', tipo === 'anel');
 
-    const views = productViews[tipo]?.views || [];
-    selectedViewsJoia = new Set(views.map(v => v.key));
-    renderViewSelectGridJoia();
-    updateJoiaLabels();
+    document.getElementById('joia-vistas-wrap').style.display = tipo === 'corrente' ? '' : 'none';
+    document.getElementById('corrente-modelo-block').style.display = tipo === 'corrente' ? '' : 'none';
+    document.getElementById('bracelete-modelo-block').style.display = tipo === 'bracelete' ? '' : 'none';
+
+    if (tipo === 'corrente') {
+      const views = productViews[tipo]?.views || [];
+      selectedViewsJoia = new Set(views.map(v => v.key));
+      renderViewSelectGridJoia();
+      updateJoiaLabels();
+    }
   }
 
   function renderViewSelectGridJoia() {
@@ -1528,6 +1610,207 @@
   }
 
   loadCorrenteRefs();
+  // ────────────────────────────────────────────────────────
+
+  // ── Seção Bracelete com Modelo ──────────────────────────
+  let braceleteRefs         = [];
+  let selectedBraceleteRef  = null;
+  let selectedBraceleteModel = null;
+  let braceleteItemFiles    = [];
+  let braceleteExtraText    = '';
+  let braceleteSwap = {
+    bg:    { keep: true, file: null },
+    shirt: { keep: true, file: null },
+    pants: { keep: true, file: null },
+  };
+
+  function selectBraceleteSwapMode(field, keep) {
+    braceleteSwap[field].keep = keep;
+    document.getElementById(`bracelete-${field}-manter`).classList.toggle('active', keep);
+    document.getElementById(`bracelete-${field}-${field === 'bg' ? 'novo' : (field === 'shirt' ? 'nova' : 'nova')}`).classList.toggle('active', !keep);
+    document.getElementById(`bracelete-${field}-wrap`).style.display = keep ? 'none' : '';
+    updateBraceleteModeloBtn();
+  }
+
+  function handleBraceleteExtra(field, file) {
+    if (!file) return;
+    braceleteSwap[field].file = file;
+    const el = document.getElementById(`upload-bracelete-${field}`);
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    const icon = field === 'bg' ? '🖼️' : (field === 'shirt' ? '👕' : '👖');
+    el.innerHTML = `
+      <input type="file" id="input-bracelete-${field}" accept="image/*" onchange="handleBraceleteExtra('${field}', this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => document.getElementById(`input-bracelete-${field}`).click();
+    updateBraceleteModeloBtn();
+  }
+
+  async function loadBraceleteRefs() {
+    const res = await fetch('/api/bracelete-refs');
+    braceleteRefs = await res.json();
+    renderBraceleteRefGrid();
+  }
+
+  function renderBraceleteRefGrid() {
+    const grid = document.getElementById('bracelete-ref-grid');
+    grid.innerHTML = '';
+    braceleteRefs.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (selectedBraceleteRef === r.key ? ' selected' : '');
+      div.innerHTML = `<img src="${r.thumb}" alt="${r.key}" />`;
+      div.onclick = () => {
+        selectedBraceleteRef = r.key;
+        document.querySelectorAll('#bracelete-ref-grid .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        const visible = r.visible || { shirt: true, pants: true };
+        document.getElementById('bracelete-shirt-section').style.display = visible.shirt ? '' : 'none';
+        document.getElementById('bracelete-pants-section').style.display = visible.pants ? '' : 'none';
+        if (!visible.shirt) selectBraceleteSwapMode('shirt', true);
+        if (!visible.pants) selectBraceleteSwapMode('pants', true);
+        updateBraceleteModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function renderBraceleteModelGrid() {
+    const grid = document.getElementById('model-grid-bracelete');
+    if (!allModels.length) {
+      grid.innerHTML = '<span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>';
+      return;
+    }
+    grid.innerHTML = '';
+    allModels.forEach(m => {
+      const previewFile = m.frente || m.ladinho;
+      const div = document.createElement('div');
+      div.className = 'model-thumb';
+      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`;
+      div.onclick = () => {
+        document.querySelectorAll('#model-grid-bracelete .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedBraceleteModel = m;
+        updateBraceleteModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function handleBraceleteItemFiles(files) {
+    for (const f of files) {
+      if (braceleteItemFiles.length >= 5) break;
+      braceleteItemFiles.push(f);
+    }
+    renderBraceleteItemThumbs();
+    updateBraceleteModeloBtn();
+  }
+
+  function renderBraceleteItemThumbs() {
+    const area = document.getElementById('upload-bracelete-item-area');
+    const thumbsEl = document.getElementById('bracelete-item-thumbs');
+    thumbsEl.innerHTML = '';
+
+    if (braceleteItemFiles.length === 0) {
+      area.classList.remove('has-files');
+      area.style.display = '';
+      return;
+    }
+
+    area.classList.add('has-files');
+    area.style.display = 'none';
+
+    braceleteItemFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        braceleteItemFiles.splice(i, 1);
+        renderBraceleteItemThumbs();
+        updateBraceleteModeloBtn();
+      };
+      div.appendChild(img);
+      div.appendChild(btn);
+      thumbsEl.appendChild(div);
+    });
+
+    if (braceleteItemFiles.length < 5) {
+      const addBtn = document.createElement('div');
+      addBtn.className = 'glasses-add-btn';
+      addBtn.title = 'Adicionar mais fotos';
+      addBtn.textContent = '+';
+      addBtn.onclick = () => document.getElementById('input-bracelete-item').click();
+      thumbsEl.appendChild(addBtn);
+    }
+  }
+
+  function updateBraceleteModeloBtn() {
+    const bgOk    = braceleteSwap.bg.keep    || !!braceleteSwap.bg.file;
+    const shirtOk = braceleteSwap.shirt.keep || !!braceleteSwap.shirt.file;
+    const pantsOk = braceleteSwap.pants.keep || !!braceleteSwap.pants.file;
+    document.getElementById('btn-bracelete-modelo').disabled =
+      !(selectedBraceleteRef && selectedBraceleteModel && braceleteItemFiles.length > 0 && bgOk && shirtOk && pantsOk);
+  }
+
+  async function gerarBraceleteModelo() {
+    const modelFile = selectedBraceleteModel.frente || selectedBraceleteModel.ladinho;
+    const label = `${selectedBraceleteModel.name} — ${selectedBraceleteRef}`;
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Bracelete c/ Modelo — ${label}</div>
+      <div class="results-grid results-grid--single">
+        <div class="result-card" id="card-bracelete-modelo-${n}">
+          <h3>Bracelete com Modelo</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const referenceSnap = selectedBraceleteRef;
+    const itemSnap       = [...braceleteItemFiles];
+    const extraTextSnap  = braceleteExtraText;
+    const bgFileSnap    = braceleteSwap.bg.keep    ? null : braceleteSwap.bg.file;
+    const shirtFileSnap = braceleteSwap.shirt.keep ? null : braceleteSwap.shirt.file;
+    const pantsFileSnap = braceleteSwap.pants.keep ? null : braceleteSwap.pants.file;
+
+    try {
+      const form = new FormData();
+      form.append('referenceKey', referenceSnap);
+      form.append('modelFile', modelFile);
+      itemSnap.forEach(f => form.append('bracelet', f));
+      if (bgFileSnap)    form.append('background', bgFileSnap);
+      if (shirtFileSnap) form.append('shirt', shirtFileSnap);
+      if (pantsFileSnap) form.append('pants', pantsFileSnap);
+      if (extraTextSnap) form.append('extraText', extraTextSnap);
+
+      const res  = await fetch('/api/generate-bracelete-modelo', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const src = 'data:image/png;base64,' + data.image;
+      document.getElementById(`card-bracelete-modelo-${n}`).innerHTML = `
+        <h3>Bracelete com Modelo</h3>
+        <img src="${src}" alt="Bracelete com modelo ${n}" />
+        <div class="card-actions">
+          <a href="${src}" download="vyser-bracelete-modelo-${n}.png">⬇ Baixar</a>
+          <button class="btn-retry" onclick="gerarBraceleteModelo()">↺ Gerar de novo</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById(`card-bracelete-modelo-${n}`).innerHTML =
+        `<h3>Bracelete com Modelo</h3><div class="card-error">❌ ${e.message}</div>`;
+    }
+  }
+
+  loadBraceleteRefs();
   // ────────────────────────────────────────────────────────
 </script>
 

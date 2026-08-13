@@ -435,6 +435,67 @@ const CORRENTE_MODELO_REFS = {
   colar4: 'public/references/corrente-modelo-4.jpg',
 };
 
+// Monta prompt para "Bracelete com Modelo": recria a cena de referência trocando a pessoa
+// (para variar o braço/mão) e substituindo o bracelete original pelo anexado.
+// Permite ainda trocar fundo, camisa e calça — mantendo o da referência se nada for anexado.
+function buildBraceleteModeloPrompt(braceletCount, bgIdx, shirtIdx, pantsIdx, extraText) {
+  const modelIdx      = 2;
+  const braceletStart = 3;
+  const braceletEnd   = 2 + braceletCount;
+  const braceletRef   = braceletCount === 1
+    ? `Image ${braceletStart} shows the bracelet`
+    : `Images ${braceletStart} to ${braceletEnd} show the bracelet from different angles — use all of them as reference to understand its exact shape, color, and finish`;
+
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, and lighting exactly. Image ${modelIdx} is the model reference photo (skin tone, hand/arm build). ${braceletRef}.`];
+  if (bgIdx)    header[0] += ` Image ${bgIdx} shows the background to use.`;
+  if (shirtIdx) header[0] += ` Image ${shirtIdx} shows the shirt/clothing to use.`;
+  if (pantsIdx) header[0] += ` Image ${pantsIdx} shows the pants to use.`;
+
+  const lines = [...header, ''];
+
+  lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person's hand/arm/skin with the model from Image ${modelIdx}, matching their skin tone and build naturally.`);
+
+  lines.push(bgIdx
+    ? `- Replace the background with the one shown in Image ${bgIdx}, adapting lighting and shadows to match it naturally`
+    : '- Keep the exact same background from Image 1');
+
+  if (shirtIdx) {
+    lines.push(`- Dress the model in the exact shirt/clothing shown in Image ${shirtIdx}`);
+  } else {
+    lines.push('- If Image 1 shows clothing (shirt/sleeve), keep the exact same clothing on the new model; if no clothing is visible in Image 1, do not add any');
+  }
+
+  if (pantsIdx) {
+    lines.push(`- Dress the model in the exact pants shown in Image ${pantsIdx}`);
+  } else {
+    lines.push('- If Image 1 shows pants/legs, keep the exact same pants on the new model; if no pants are visible in Image 1, do not add any');
+  }
+
+  lines.push(`- IMPORTANT: replace the bracelet the person is wearing in Image 1 entirely with the one from ${braceletCount === 1 ? `Image ${braceletStart}` : `Images ${braceletStart}-${braceletEnd}`} — do not keep any part of the original bracelet`);
+  lines.push('- Place the new bracelet naturally around the wrist, following the same position and fit style as the original bracelet in Image 1');
+  lines.push('- Preserve the bracelet\'s exact link pattern, metal finish, color, and clasp precisely');
+  lines.push('- If Image 1 shows other jewelry (rings, chains) not being replaced, keep them exactly as they are');
+  lines.push('- Keep everything else from Image 1 identical: pose, camera angle, framing, and shadow style');
+
+  if (extraText && extraText.trim()) {
+    lines.push(`- Additional instructions: ${extraText.trim()}`);
+  }
+
+  return lines.join('\n');
+}
+
+// visible: quais elementos (camisa/calça) aparecem em cada foto de referência,
+// usado pelo front pra só mostrar a opção de trocar quando fizer sentido.
+const BRACELETE_MODELO_VISIBLE = {
+  pulso1: { shirt: true,  pants: false },
+  pulso2: { shirt: false, pants: false },
+};
+
+const BRACELETE_MODELO_REFS = {
+  pulso1: 'public/references/bracelete-modelo-1.png',
+  pulso2: 'public/references/bracelete-modelo-2.png',
+};
+
 const PROMPT_SOMBRA = `Generate a clean professional product photo of the glasses shown in the images.
 - Glasses: front view, horizontally centered
 - Soft drop shadow directly beneath the glasses
@@ -818,6 +879,92 @@ app.post('/api/generate-corrente-modelo', creativeUpload.fields([
 
     const prompt = buildCorrenteModeloPrompt(chainFiles.length, keepOutfitBool, outfitIdx, extraText, jacketIdx, jacketMode);
     console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length} keepOutfit=${keepOutfitBool} jacket=${!!jacketFile}(${jacketMode})`);
+
+    uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2',
+      image: images,
+      prompt,
+      quality: 'medium',
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: b64 });
+  } catch (err) {
+    uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Lista as referências fixas de "Bracelete com Modelo" disponíveis
+app.get('/api/bracelete-refs', (req, res) => {
+  res.json(Object.keys(BRACELETE_MODELO_REFS).map(key => ({
+    key,
+    thumb: '/' + BRACELETE_MODELO_REFS[key].replace(/^public\//, ''),
+    visible: BRACELETE_MODELO_VISIBLE[key] || { shirt: true, pants: true },
+  })));
+});
+
+app.post('/api/generate-bracelete-modelo', creativeUpload.fields([
+  { name: 'bracelet', maxCount: 5 },
+  { name: 'background', maxCount: 1 },
+  { name: 'shirt', maxCount: 1 },
+  { name: 'pants', maxCount: 1 },
+]), async (req, res) => {
+  const braceletFiles = req.files?.['bracelet'] || [];
+  const bgFile     = req.files?.['background']?.[0];
+  const shirtFile  = req.files?.['shirt']?.[0];
+  const pantsFile  = req.files?.['pants']?.[0];
+  const uploadedPaths = [...braceletFiles.map(f => f.path), bgFile?.path, shirtFile?.path, pantsFile?.path].filter(Boolean);
+  try {
+    const { modelFile, referenceKey, extraText } = req.body;
+    if (!referenceKey || !BRACELETE_MODELO_REFS[referenceKey])
+      return res.status(400).json({ error: 'Selecione uma referência.' });
+    if (!braceletFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto do bracelete.' });
+    if (!modelFile)            return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    const modelPath = path.join(__dirname, 'public/models', modelFile);
+    if (!fs.existsSync(modelPath))
+      return res.status(400).json({ error: 'Modelo não encontrado.' });
+
+    const ext  = path.extname(modelFile).toLowerCase();
+    const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+
+    const refPath = path.join(__dirname, BRACELETE_MODELO_REFS[referenceKey]);
+    const referenceRef = await fileToOpenAI(refPath, 'image/jpeg', 'reference.jpg');
+    const images = [referenceRef];
+
+    const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
+    images.push(modelRef);
+
+    for (let i = 0; i < braceletFiles.length; i++) {
+      images.push(await fileToOpenAI(braceletFiles[i].path, braceletFiles[i].mimetype, `bracelet-${i + 1}.jpg`));
+    }
+
+    let bgIdx = null;
+    if (bgFile) {
+      images.push(await fileToOpenAI(bgFile.path, bgFile.mimetype, 'background.jpg'));
+      bgIdx = images.length;
+    }
+
+    let shirtIdx = null;
+    if (shirtFile) {
+      images.push(await fileToOpenAI(shirtFile.path, shirtFile.mimetype, 'shirt.jpg'));
+      shirtIdx = images.length;
+    }
+
+    let pantsIdx = null;
+    if (pantsFile) {
+      images.push(await fileToOpenAI(pantsFile.path, pantsFile.mimetype, 'pants.jpg'));
+      pantsIdx = images.length;
+    }
+
+    const prompt = buildBraceleteModeloPrompt(braceletFiles.length, bgIdx, shirtIdx, pantsIdx, extraText);
+    console.log(`[generate-bracelete-modelo] ref=${referenceKey} model=${modelFile} bracelets=${braceletFiles.length} bg=${!!bgFile} shirt=${!!shirtFile} pants=${!!pantsFile}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
