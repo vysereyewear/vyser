@@ -116,6 +116,85 @@ async function correctBackground(imageBuffer) {
   return sharp(raw, { raw: { width, height, channels: 3 } }).png().toBuffer();
 }
 
+// Versão mais conservadora: só trava em #F3F4F6 os pixels confirmados como fundo puro
+// (margem de erosão maior). NÃO aplica offset no resto da imagem — evita distorcer
+// pele/cabelo/roupa em fotos com modelo, que têm muito mais detalhe que fotos de produto.
+async function lockBackgroundOnly(imageBuffer) {
+  const { width, height } = await sharp(imageBuffer).metadata();
+  const TARGET = [243, 244, 246];
+  const THRESHOLD = 14;
+
+  const raw = await sharp(imageBuffer).removeAlpha().raw().toBuffer();
+
+  const sz = 40;
+  let sum = [0, 0, 0], count = 0;
+  for (const [cx, cy] of [[0,0],[width-sz,0],[0,height-sz],[width-sz,height-sz]]) {
+    for (let dy = 0; dy < sz; dy++) {
+      for (let dx = 0; dx < sz; dx++) {
+        const i = ((cy + dy) * width + (cx + dx)) * 3;
+        sum[0] += raw[i]; sum[1] += raw[i+1]; sum[2] += raw[i+2];
+        count++;
+      }
+    }
+  }
+  const bgRef = sum.map(s => s / count);
+
+  const isBg = new Uint8Array(width * height);
+  const queue = [];
+  const seed = (x, y) => {
+    const idx = y * width + x;
+    if (isBg[idx]) return;
+    const i = idx * 3;
+    const dist = Math.max(Math.abs(raw[i]-bgRef[0]), Math.abs(raw[i+1]-bgRef[1]), Math.abs(raw[i+2]-bgRef[2]));
+    if (dist <= THRESHOLD) { isBg[idx] = 1; queue.push(idx); }
+  };
+  for (let x = 0; x < width;  x++) { seed(x, 0); seed(x, height - 1); }
+  for (let y = 0; y < height; y++) { seed(0, y); seed(width - 1, y); }
+
+  let head = 0;
+  while (head < queue.length) {
+    const idx = queue[head++];
+    const x = idx % width, y = Math.floor(idx / width);
+    for (const [dx, dy] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+      const nidx = ny * width + nx;
+      if (isBg[nidx]) continue;
+      const ni = nidx * 3;
+      const dist = Math.max(Math.abs(raw[ni]-bgRef[0]), Math.abs(raw[ni+1]-bgRef[1]), Math.abs(raw[ni+2]-bgRef[2]));
+      if (dist <= THRESHOLD) { isBg[nidx] = 1; queue.push(nidx); }
+    }
+  }
+
+  // Erosão forte (8 passes = 8px de margem) — protege bordas de cabelo/roupa contra vazamento
+  const erode = (mask) => {
+    const out = new Uint8Array(mask);
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = y * width + x;
+        if (!mask[idx]) continue;
+        for (const [dx, dy] of [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,-1],[-1,1],[1,1]]) {
+          const nx = x+dx, ny = y+dy;
+          if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+          if (!mask[ny * width + nx]) { out[idx] = 0; break; }
+        }
+      }
+    }
+    return out;
+  };
+  let eroded = isBg;
+  for (let i = 0; i < 8; i++) eroded = erode(eroded);
+
+  for (let idx = 0; idx < width * height; idx++) {
+    if (eroded[idx]) {
+      const i = idx * 3;
+      raw[i] = TARGET[0]; raw[i+1] = TARGET[1]; raw[i+2] = TARGET[2];
+    }
+  }
+
+  return sharp(raw, { raw: { width, height, channels: 3 } }).png().toBuffer();
+}
+
 const PROMPT_FRENTE = `Image 1 is a style reference — follow its background, lighting, shadow, and FRONT-FACING composition exactly.
 Images 2+ show the glasses model to use.
 
@@ -488,8 +567,9 @@ app.post('/api/generate-model', modelUpload.fields([
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
-    // Não aplica correção de fundo — foto com modelo tem muitos detalhes e o offset distorce as cores
-    res.json({ image: b64 });
+    // Trava só o fundo confirmado em #F3F4F6 (sem distorcer pele/cabelo/roupa)
+    const corrected = await lockBackgroundOnly(Buffer.from(b64, 'base64'));
+    res.json({ image: corrected.toString('base64') });
   } catch (err) {
     uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
     console.error(err);
