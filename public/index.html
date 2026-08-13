@@ -454,6 +454,13 @@
       <div style="margin-bottom:20px;"></div>
     </div>
 
+    <p class="section-label" style="margin-bottom:8px;">Casaco/Jaqueta <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <div class="mini-upload" id="upload-corrente-jacket" onclick="document.getElementById('input-corrente-jacket').click()">
+      <input type="file" id="input-corrente-jacket" accept="image/*" onchange="handleCorrenteJacket(this.files[0])" />
+      🧥 Anexar foto do casaco/jaqueta
+    </div>
+    <div style="margin-bottom:20px;"></div>
+
     <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
     <textarea id="corrente-extra-text" placeholder="Ex: deixe a corrente mais justa, remova o colar de fundo..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="correnteExtraText = this.value"></textarea>
 
@@ -1326,6 +1333,7 @@
   let correnteExtraText   = '';
   let correnteKeepOutfit  = true;
   let correnteOutfitFile  = null;
+  let correnteJacketFile  = null;
 
   function selectCorrenteOutfitMode(keep) {
     correnteKeepOutfit = keep;
@@ -1346,6 +1354,20 @@
       <img class="preview-img" src="${src}" />
       <div class="change-hint">🔄 Clique para trocar</div>`;
     el.onclick = () => document.getElementById('input-corrente-outfit').click();
+    updateCorrenteModeloBtn();
+  }
+
+  function handleCorrenteJacket(file) {
+    if (!file) return;
+    correnteJacketFile = file;
+    const el = document.getElementById('upload-corrente-jacket');
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="input-corrente-jacket" accept="image/*" onchange="handleCorrenteJacket(this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => document.getElementById('input-corrente-jacket').click();
     updateCorrenteModeloBtn();
   }
 
@@ -1475,6 +1497,7 @@
     const extraTextSnap  = correnteExtraText;
     const keepOutfitSnap = correnteKeepOutfit;
     const outfitSnap     = correnteOutfitFile;
+    const jacketSnap     = correnteJacketFile;
 
     try {
       const form = new FormData();
@@ -1483,6 +1506,7 @@
       chainSnap.forEach(f => form.append('chain', f));
       form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
       if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
+      if (jacketSnap) form.append('jacket', jacketSnap);
       if (extraTextSnap) form.append('extraText', extraTextSnap);
 
       const res  = await fetch('/api/generate-corrente-modelo', { method: 'POST', body: form });

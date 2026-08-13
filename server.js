@@ -374,7 +374,7 @@ function buildCreativePrompt(glassesCount, keepOutfit, outfitIdx, expressionIdx,
 
 // Monta prompt para "Corrente com Modelo": recria a cena de referência trocando a pessoa
 // e substituindo TODAS as correntes da foto original por uma única (a anexada)
-function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText) {
+function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText, jacketIdx, jacketMode) {
   const modelIdx   = 2;
   const chainStart = 3;
   const chainEnd   = 2 + chainCount;
@@ -384,6 +384,7 @@ function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText)
 
   const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, and shadow style exactly. Image ${modelIdx} is the model reference photo (skin tone, build). ${chainRef}.`];
   if (!keepOutfit && outfitIdx) header[0] += ` Image ${outfitIdx} shows the outfit to use.`;
+  if (jacketIdx) header[0] += ` Image ${jacketIdx} shows a jacket/coat to add to the outfit.`;
 
   const lines = [...header, ''];
 
@@ -393,6 +394,15 @@ function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText)
     lines.push('- Keep the exact same clothing/outfit worn by the person in Image 1, now on the new model');
   } else {
     lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
+  }
+
+  if (jacketIdx) {
+    if (jacketMode === 'replace') {
+      lines.push(`- Replace the outer clothing/garment the person is currently wearing with the jacket/coat shown in Image ${jacketIdx} — swap it in completely, matching its exact color, fabric, texture, and design`);
+    } else {
+      lines.push(`- Add the jacket/coat shown in Image ${jacketIdx} on top of the existing outfit, worn open or naturally layered over it — matching its exact color, fabric, texture, and design`);
+    }
+    lines.push('- Fit the jacket/coat naturally to the model\'s pose and body, with realistic drape, folds, and shadows');
   }
 
   lines.push(`- IMPORTANT: if Image 1 shows more than one chain/necklace layered together, replace ALL of them with a single chain — do not keep any of the original chains from Image 1, only the new one from ${chainCount === 1 ? `Image ${chainStart}` : `Images ${chainStart}-${chainEnd}`}`);
@@ -406,6 +416,16 @@ function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText)
 
   return lines.join('\n');
 }
+
+// Para cada referência: como o casaco/jaqueta deve entrar quando anexado.
+// 'replace' = troca a peça externa atual pelo casaco anexado (ex: foto 2)
+// 'add'     = coloca o casaco por cima da roupa já existente (ex: fotos 1 e 3)
+const CORRENTE_MODELO_JACKET_MODE = {
+  colar1: 'add',
+  colar2: 'replace',
+  colar3: 'add',
+  colar4: 'add',
+};
 
 const CORRENTE_MODELO_REFS = {
   colar1: 'public/references/corrente-modelo-1.jpg',
@@ -745,10 +765,12 @@ app.get('/api/corrente-refs', (req, res) => {
 app.post('/api/generate-corrente-modelo', creativeUpload.fields([
   { name: 'chain', maxCount: 5 },
   { name: 'outfit', maxCount: 1 },
+  { name: 'jacket', maxCount: 1 },
 ]), async (req, res) => {
   const chainFiles = req.files?.['chain'] || [];
   const outfitFile = req.files?.['outfit']?.[0];
-  const uploadedPaths = [...chainFiles.map(f => f.path), outfitFile?.path].filter(Boolean);
+  const jacketFile = req.files?.['jacket']?.[0];
+  const uploadedPaths = [...chainFiles.map(f => f.path), outfitFile?.path, jacketFile?.path].filter(Boolean);
   try {
     const { modelFile, referenceKey, extraText, keepOutfit } = req.body;
     if (!referenceKey || !CORRENTE_MODELO_REFS[referenceKey])
@@ -785,8 +807,16 @@ app.post('/api/generate-corrente-modelo', creativeUpload.fields([
       outfitIdx = images.length;
     }
 
-    const prompt = buildCorrenteModeloPrompt(chainFiles.length, keepOutfitBool, outfitIdx, extraText);
-    console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length} keepOutfit=${keepOutfitBool}`);
+    let jacketIdx = null;
+    const jacketMode = CORRENTE_MODELO_JACKET_MODE[referenceKey] || 'add';
+    if (jacketFile) {
+      const jacketRef = await fileToOpenAI(jacketFile.path, jacketFile.mimetype, 'jacket.jpg');
+      images.push(jacketRef);
+      jacketIdx = images.length;
+    }
+
+    const prompt = buildCorrenteModeloPrompt(chainFiles.length, keepOutfitBool, outfitIdx, extraText, jacketIdx, jacketMode);
+    console.log(`[generate-corrente-modelo] ref=${referenceKey} model=${modelFile} chains=${chainFiles.length} keepOutfit=${keepOutfitBool} jacket=${!!jacketFile}(${jacketMode})`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
