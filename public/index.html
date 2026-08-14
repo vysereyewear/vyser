@@ -518,6 +518,53 @@
     </button>
     <div class="status" id="status-bracelete-modelo"></div>
   </div>
+
+  <div class="upload-card" id="anel-modelo-block" style="display:none;">
+    <p class="section-title">📸 Anel com Modelo</p>
+    <p class="section-sub">Escolha a cena de referência, o modelo e o anel — troque também camisa e calça se quiser</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Referência</p>
+    <div class="model-grid" id="anel-ref-grid"></div>
+
+    <p class="section-label" style="margin-bottom:8px;">Modelo</p>
+    <div class="model-grid" id="model-grid-anel">
+      <span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>
+    </div>
+
+    <p class="section-label">Anel <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos, obrigatório)</span></p>
+    <input type="file" id="input-anel-item" accept="image/*" multiple style="display:none" onchange="handleAnelItemFiles(this.files)" />
+    <div class="glasses-upload-area" id="upload-anel-item-area" onclick="document.getElementById('input-anel-item').click()">
+      📎 Anexar foto(s) do anel
+    </div>
+    <div class="glasses-thumbs" id="anel-item-thumbs"></div>
+    <div style="margin-bottom:20px;"></div>
+
+    <div id="anel-shirt-section">
+      <p class="section-label" style="margin-bottom:8px;">Camisa <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional — se não anexar, mantém a da referência)</span></p>
+      <div class="mini-upload" id="upload-anel-shirt" onclick="document.getElementById('input-anel-shirt').click()">
+        <input type="file" id="input-anel-shirt" accept="image/*" onchange="handleAnelExtra('shirt', this.files[0])" />
+        👕 Anexar foto da camisa
+      </div>
+      <div style="margin-bottom:20px;"></div>
+    </div>
+
+    <div id="anel-pants-section">
+      <p class="section-label" style="margin-bottom:8px;">Calça <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional — se não anexar, mantém a da referência)</span></p>
+      <div class="mini-upload" id="upload-anel-pants" onclick="document.getElementById('input-anel-pants').click()">
+        <input type="file" id="input-anel-pants" accept="image/*" onchange="handleAnelExtra('pants', this.files[0])" />
+        👖 Anexar foto da calça
+      </div>
+      <div style="margin-bottom:20px;"></div>
+    </div>
+
+    <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <textarea id="anel-extra-text" placeholder="Ex: deixe o anel mais justo..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="anelExtraText = this.value"></textarea>
+
+    <button class="btn-generate" id="btn-anel-modelo" onclick="gerarAnelModelo()" disabled>
+      📸 Gerar anel com modelo
+    </button>
+    <div class="status" id="status-anel-modelo"></div>
+  </div>
   </div><!-- /section-joias -->
 
   <!-- Resultados -->
@@ -720,6 +767,7 @@
     renderCreativeModelGrid();
     renderCorrenteModelGrid();
     renderBraceleteModelGrid();
+    renderAnelModelGrid();
   }
 
   function renderModelGrid() {
@@ -1235,6 +1283,7 @@
     document.getElementById('joia-vistas-wrap').style.display = (tipo === 'corrente' || tipo === 'bracelete' || tipo === 'anel') ? '' : 'none';
     document.getElementById('corrente-modelo-block').style.display = tipo === 'corrente' ? '' : 'none';
     document.getElementById('bracelete-modelo-block').style.display = tipo === 'bracelete' ? '' : 'none';
+    document.getElementById('anel-modelo-block').style.display = tipo === 'anel' ? '' : 'none';
 
     if (productViews[tipo]) {
       const views = productViews[tipo]?.views || [];
@@ -1767,6 +1816,190 @@
   }
 
   loadBraceleteRefs();
+  // ────────────────────────────────────────────────────────
+
+  // ── Seção Anel com Modelo ───────────────────────────────
+  let anelRefs         = [];
+  let selectedAnelRef  = null;
+  let selectedAnelModel = null;
+  let anelItemFiles    = [];
+  let anelExtraText    = '';
+  let anelSwap = {
+    shirt: { file: null },
+    pants: { file: null },
+  };
+
+  function handleAnelExtra(field, file) {
+    if (!file) return;
+    anelSwap[field].file = file;
+    const el = document.getElementById(`upload-anel-${field}`);
+    const src = URL.createObjectURL(file);
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="input-anel-${field}" accept="image/*" onchange="handleAnelExtra('${field}', this.files[0])" style="display:none" />
+      <img class="preview-img" src="${src}" />
+      <div class="change-hint">🔄 Clique para trocar</div>`;
+    el.onclick = () => document.getElementById(`input-anel-${field}`).click();
+    updateAnelModeloBtn();
+  }
+
+  async function loadAnelRefs() {
+    const res = await fetch('/api/anel-refs');
+    anelRefs = await res.json();
+    renderAnelRefGrid();
+  }
+
+  function renderAnelRefGrid() {
+    const grid = document.getElementById('anel-ref-grid');
+    grid.innerHTML = '';
+    anelRefs.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (selectedAnelRef === r.key ? ' selected' : '');
+      div.innerHTML = `<img src="${r.thumb}" alt="${r.key}" />`;
+      div.onclick = () => {
+        selectedAnelRef = r.key;
+        document.querySelectorAll('#anel-ref-grid .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        const visible = r.visible || { shirt: true, pants: true };
+        document.getElementById('anel-shirt-section').style.display = visible.shirt ? '' : 'none';
+        document.getElementById('anel-pants-section').style.display = visible.pants ? '' : 'none';
+        updateAnelModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function renderAnelModelGrid() {
+    const grid = document.getElementById('model-grid-anel');
+    if (!allModels.length) {
+      grid.innerHTML = '<span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>';
+      return;
+    }
+    grid.innerHTML = '';
+    allModels.forEach(m => {
+      const previewFile = m.frente || m.ladinho;
+      const div = document.createElement('div');
+      div.className = 'model-thumb';
+      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`;
+      div.onclick = () => {
+        document.querySelectorAll('#model-grid-anel .model-thumb').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedAnelModel = m;
+        updateAnelModeloBtn();
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  function handleAnelItemFiles(files) {
+    for (const f of files) {
+      if (anelItemFiles.length >= 5) break;
+      anelItemFiles.push(f);
+    }
+    renderAnelItemThumbs();
+    updateAnelModeloBtn();
+  }
+
+  function renderAnelItemThumbs() {
+    const area = document.getElementById('upload-anel-item-area');
+    const thumbsEl = document.getElementById('anel-item-thumbs');
+    thumbsEl.innerHTML = '';
+
+    if (anelItemFiles.length === 0) {
+      area.classList.remove('has-files');
+      area.style.display = '';
+      return;
+    }
+
+    area.classList.add('has-files');
+    area.style.display = 'none';
+
+    anelItemFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        anelItemFiles.splice(i, 1);
+        renderAnelItemThumbs();
+        updateAnelModeloBtn();
+      };
+      div.appendChild(img);
+      div.appendChild(btn);
+      thumbsEl.appendChild(div);
+    });
+
+    if (anelItemFiles.length < 5) {
+      const addBtn = document.createElement('div');
+      addBtn.className = 'glasses-add-btn';
+      addBtn.title = 'Adicionar mais fotos';
+      addBtn.textContent = '+';
+      addBtn.onclick = () => document.getElementById('input-anel-item').click();
+      thumbsEl.appendChild(addBtn);
+    }
+  }
+
+  function updateAnelModeloBtn() {
+    document.getElementById('btn-anel-modelo').disabled =
+      !(selectedAnelRef && selectedAnelModel && anelItemFiles.length > 0);
+  }
+
+  async function gerarAnelModelo() {
+    const modelFile = selectedAnelModel.frente || selectedAnelModel.ladinho;
+    const label = `${selectedAnelModel.name} — ${selectedAnelRef}`;
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Anel c/ Modelo — ${label}</div>
+      <div class="results-grid results-grid--single">
+        <div class="result-card" id="card-anel-modelo-${n}">
+          <h3>Anel com Modelo</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const referenceSnap = selectedAnelRef;
+    const itemSnap       = [...anelItemFiles];
+    const extraTextSnap  = anelExtraText;
+    const shirtFileSnap = anelSwap.shirt.file;
+    const pantsFileSnap = anelSwap.pants.file;
+
+    try {
+      const form = new FormData();
+      form.append('referenceKey', referenceSnap);
+      form.append('modelFile', modelFile);
+      itemSnap.forEach(f => form.append('ring', f));
+      if (shirtFileSnap) form.append('shirt', shirtFileSnap);
+      if (pantsFileSnap) form.append('pants', pantsFileSnap);
+      if (extraTextSnap) form.append('extraText', extraTextSnap);
+
+      const res  = await fetch('/api/generate-anel-modelo', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const src = 'data:image/png;base64,' + data.image;
+      document.getElementById(`card-anel-modelo-${n}`).innerHTML = `
+        <h3>Anel com Modelo</h3>
+        <img src="${src}" alt="Anel com modelo ${n}" />
+        <div class="card-actions">
+          <a href="${src}" download="vyser-anel-modelo-${n}.png">⬇ Baixar</a>
+          <button class="btn-retry" onclick="gerarAnelModelo()">↺ Gerar de novo</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById(`card-anel-modelo-${n}`).innerHTML =
+        `<h3>Anel com Modelo</h3><div class="card-error">❌ ${e.message}</div>`;
+    }
+  }
+
+  loadAnelRefs();
   // ────────────────────────────────────────────────────────
 </script>
 

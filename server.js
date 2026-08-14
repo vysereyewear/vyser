@@ -518,11 +518,69 @@ function buildBraceleteModeloPrompt(braceletCount, shirtIdx, pantsIdx, extraText
 const BRACELETE_MODELO_VISIBLE = {
   pulso1: { shirt: true,  pants: false },
   pulso2: { shirt: false, pants: false },
+  pulso3: { shirt: true,  pants: true  },
+  pulso4: { shirt: true,  pants: false },
 };
 
 const BRACELETE_MODELO_REFS = {
   pulso1: 'public/references/bracelete-modelo-1.png',
   pulso2: 'public/references/bracelete-modelo-2.png',
+  pulso3: 'public/references/bracelete-modelo-3.png',
+  pulso4: 'public/references/bracelete-modelo-4.png',
+};
+
+// Monta prompt para "Anel com Modelo": recria a cena de referência trocando a pessoa
+// (para variar a mão) e substituindo o anel original pelo anexado.
+// Permite ainda trocar camisa e/ou calça — só entra instrução se algo for anexado.
+function buildAnelModeloPrompt(ringCount, shirtIdx, pantsIdx, extraText) {
+  const modelIdx  = 2;
+  const ringStart = 3;
+  const ringEnd   = 2 + ringCount;
+  const ringRef   = ringCount === 1
+    ? `Image ${ringStart} shows the ring`
+    : `Images ${ringStart} to ${ringEnd} show the ring from different angles — use all of them as reference to understand its exact shape, color, and finish`;
+
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, and lighting exactly. Image ${modelIdx} is the model reference photo (skin tone, hand build). ${ringRef}.`];
+  if (shirtIdx) header[0] += ` Image ${shirtIdx} shows the shirt/clothing to use.`;
+  if (pantsIdx) header[0] += ` Image ${pantsIdx} shows the pants to use.`;
+
+  const lines = [...header, ''];
+
+  lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person's hand/skin with the model from Image ${modelIdx}, matching their skin tone and build naturally.`);
+
+  if (shirtIdx) {
+    lines.push(`- Dress the model in the exact shirt/clothing shown in Image ${shirtIdx}`);
+  }
+
+  if (pantsIdx) {
+    lines.push(`- Dress the model in the exact pants shown in Image ${pantsIdx}`);
+  }
+
+  lines.push(`- IMPORTANT: replace the ring the person is wearing in Image 1 entirely with the one from ${ringCount === 1 ? `Image ${ringStart}` : `Images ${ringStart}-${ringEnd}`} — do not keep any part of the original ring`);
+  lines.push('- Place the new ring naturally on the same finger, following the same position and fit style as the original ring in Image 1');
+  lines.push('- Preserve the ring\'s exact shape, metal finish, color, and any engraving or texture precisely');
+  lines.push('- If Image 1 shows other jewelry (bracelets, chains) not being replaced, keep them exactly as they are');
+  lines.push('- Keep everything else from Image 1 identical: pose, camera angle, framing, and shadow style');
+
+  if (extraText && extraText.trim()) {
+    lines.push(`- Additional instructions: ${extraText.trim()}`);
+  }
+
+  return lines.join('\n');
+}
+
+const ANEL_MODELO_VISIBLE = {
+  anel1: { shirt: true,  pants: true  },
+  anel2: { shirt: false, pants: false },
+  anel3: { shirt: true,  pants: false },
+  anel4: { shirt: true,  pants: false },
+};
+
+const ANEL_MODELO_REFS = {
+  anel1: 'public/references/anel-modelo-1.png',
+  anel2: 'public/references/anel-modelo-2.png',
+  anel3: 'public/references/anel-modelo-3.png',
+  anel4: 'public/references/anel-modelo-4.png',
 };
 
 const PROMPT_SOMBRA = `Generate a clean professional product photo of the glasses shown in the images.
@@ -986,6 +1044,84 @@ app.post('/api/generate-bracelete-modelo', creativeUpload.fields([
 
     const prompt = buildBraceleteModeloPrompt(braceletFiles.length, shirtIdx, pantsIdx, extraText);
     console.log(`[generate-bracelete-modelo] ref=${referenceKey} model=${modelFile} bracelets=${braceletFiles.length} shirt=${!!shirtFile} pants=${!!pantsFile}`);
+
+    uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2',
+      image: images,
+      prompt,
+      quality: 'medium',
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: b64 });
+  } catch (err) {
+    uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Lista as referências fixas de "Anel com Modelo" disponíveis
+app.get('/api/anel-refs', (req, res) => {
+  res.json(Object.keys(ANEL_MODELO_REFS).map(key => ({
+    key,
+    thumb: '/' + ANEL_MODELO_REFS[key].replace(/^public\//, ''),
+    visible: ANEL_MODELO_VISIBLE[key] || { shirt: true, pants: true },
+  })));
+});
+
+app.post('/api/generate-anel-modelo', creativeUpload.fields([
+  { name: 'ring', maxCount: 5 },
+  { name: 'shirt', maxCount: 1 },
+  { name: 'pants', maxCount: 1 },
+]), async (req, res) => {
+  const ringFiles = req.files?.['ring'] || [];
+  const shirtFile = req.files?.['shirt']?.[0];
+  const pantsFile = req.files?.['pants']?.[0];
+  const uploadedPaths = [...ringFiles.map(f => f.path), shirtFile?.path, pantsFile?.path].filter(Boolean);
+  try {
+    const { modelFile, referenceKey, extraText } = req.body;
+    if (!referenceKey || !ANEL_MODELO_REFS[referenceKey])
+      return res.status(400).json({ error: 'Selecione uma referência.' });
+    if (!ringFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto do anel.' });
+    if (!modelFile)        return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    const modelPath = path.join(__dirname, 'public/models', modelFile);
+    if (!fs.existsSync(modelPath))
+      return res.status(400).json({ error: 'Modelo não encontrado.' });
+
+    const ext  = path.extname(modelFile).toLowerCase();
+    const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+
+    const refPath = path.join(__dirname, ANEL_MODELO_REFS[referenceKey]);
+    const referenceRef = await fileToOpenAI(refPath, 'image/jpeg', 'reference.jpg');
+    const images = [referenceRef];
+
+    const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
+    images.push(modelRef);
+
+    for (let i = 0; i < ringFiles.length; i++) {
+      images.push(await fileToOpenAI(ringFiles[i].path, ringFiles[i].mimetype, `ring-${i + 1}.jpg`));
+    }
+
+    let shirtIdx = null;
+    if (shirtFile) {
+      images.push(await fileToOpenAI(shirtFile.path, shirtFile.mimetype, 'shirt.jpg'));
+      shirtIdx = images.length;
+    }
+
+    let pantsIdx = null;
+    if (pantsFile) {
+      images.push(await fileToOpenAI(pantsFile.path, pantsFile.mimetype, 'pants.jpg'));
+      pantsIdx = images.length;
+    }
+
+    const prompt = buildAnelModeloPrompt(ringFiles.length, shirtIdx, pantsIdx, extraText);
+    console.log(`[generate-anel-modelo] ref=${referenceKey} model=${modelFile} rings=${ringFiles.length} shirt=${!!shirtFile} pants=${!!pantsFile}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
