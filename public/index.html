@@ -492,47 +492,22 @@
     <div class="glasses-thumbs" id="bracelete-item-thumbs"></div>
     <div style="margin-bottom:20px;"></div>
 
-    <p class="section-label" style="margin-bottom:8px;">Fundo</p>
-    <div class="pose-toggle" style="margin-bottom:12px;">
-      <button class="pose-btn active" id="bracelete-bg-manter" onclick="selectBraceleteSwapMode('bg', true)">Manter fundo da referência</button>
-      <button class="pose-btn" id="bracelete-bg-novo" onclick="selectBraceleteSwapMode('bg', false)">Novo fundo</button>
-    </div>
-    <div id="bracelete-bg-wrap" style="display:none;">
-      <div class="mini-upload" id="upload-bracelete-bg" onclick="document.getElementById('input-bracelete-bg').click()">
-        <input type="file" id="input-bracelete-bg" accept="image/*" onchange="handleBraceleteExtra('bg', this.files[0])" />
-        🖼️ Anexar foto do fundo
+    <div id="bracelete-shirt-section">
+      <p class="section-label" style="margin-bottom:8px;">Camisa <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional — se não anexar, mantém a da referência)</span></p>
+      <div class="mini-upload" id="upload-bracelete-shirt" onclick="document.getElementById('input-bracelete-shirt').click()">
+        <input type="file" id="input-bracelete-shirt" accept="image/*" onchange="handleBraceleteExtra('shirt', this.files[0])" />
+        👕 Anexar foto da camisa
       </div>
       <div style="margin-bottom:20px;"></div>
     </div>
 
-    <div id="bracelete-shirt-section">
-      <p class="section-label" style="margin-bottom:8px;">Camisa</p>
-      <div class="pose-toggle" style="margin-bottom:12px;">
-        <button class="pose-btn active" id="bracelete-shirt-manter" onclick="selectBraceleteSwapMode('shirt', true)">Manter camisa da referência</button>
-        <button class="pose-btn" id="bracelete-shirt-nova" onclick="selectBraceleteSwapMode('shirt', false)">Nova camisa</button>
-      </div>
-      <div id="bracelete-shirt-wrap" style="display:none;">
-        <div class="mini-upload" id="upload-bracelete-shirt" onclick="document.getElementById('input-bracelete-shirt').click()">
-          <input type="file" id="input-bracelete-shirt" accept="image/*" onchange="handleBraceleteExtra('shirt', this.files[0])" />
-          👕 Anexar foto da camisa
-        </div>
-        <div style="margin-bottom:20px;"></div>
-      </div>
-    </div>
-
     <div id="bracelete-pants-section">
-      <p class="section-label" style="margin-bottom:8px;">Calça</p>
-      <div class="pose-toggle" style="margin-bottom:12px;">
-        <button class="pose-btn active" id="bracelete-pants-manter" onclick="selectBraceleteSwapMode('pants', true)">Manter calça da referência</button>
-        <button class="pose-btn" id="bracelete-pants-nova" onclick="selectBraceleteSwapMode('pants', false)">Nova calça</button>
+      <p class="section-label" style="margin-bottom:8px;">Calça <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional — se não anexar, mantém a da referência)</span></p>
+      <div class="mini-upload" id="upload-bracelete-pants" onclick="document.getElementById('input-bracelete-pants').click()">
+        <input type="file" id="input-bracelete-pants" accept="image/*" onchange="handleBraceleteExtra('pants', this.files[0])" />
+        👖 Anexar foto da calça
       </div>
-      <div id="bracelete-pants-wrap" style="display:none;">
-        <div class="mini-upload" id="upload-bracelete-pants" onclick="document.getElementById('input-bracelete-pants').click()">
-          <input type="file" id="input-bracelete-pants" accept="image/*" onchange="handleBraceleteExtra('pants', this.files[0])" />
-          👖 Anexar foto da calça
-        </div>
-        <div style="margin-bottom:20px;"></div>
-      </div>
+      <div style="margin-bottom:20px;"></div>
     </div>
 
     <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
@@ -1619,18 +1594,9 @@
   let braceleteItemFiles    = [];
   let braceleteExtraText    = '';
   let braceleteSwap = {
-    bg:    { keep: true, file: null },
-    shirt: { keep: true, file: null },
-    pants: { keep: true, file: null },
+    shirt: { file: null },
+    pants: { file: null },
   };
-
-  function selectBraceleteSwapMode(field, keep) {
-    braceleteSwap[field].keep = keep;
-    document.getElementById(`bracelete-${field}-manter`).classList.toggle('active', keep);
-    document.getElementById(`bracelete-${field}-${field === 'bg' ? 'novo' : (field === 'shirt' ? 'nova' : 'nova')}`).classList.toggle('active', !keep);
-    document.getElementById(`bracelete-${field}-wrap`).style.display = keep ? 'none' : '';
-    updateBraceleteModeloBtn();
-  }
 
   function handleBraceleteExtra(field, file) {
     if (!file) return;
@@ -1638,7 +1604,6 @@
     const el = document.getElementById(`upload-bracelete-${field}`);
     const src = URL.createObjectURL(file);
     el.classList.add('has-file');
-    const icon = field === 'bg' ? '🖼️' : (field === 'shirt' ? '👕' : '👖');
     el.innerHTML = `
       <input type="file" id="input-bracelete-${field}" accept="image/*" onchange="handleBraceleteExtra('${field}', this.files[0])" style="display:none" />
       <img class="preview-img" src="${src}" />
@@ -1667,8 +1632,6 @@
         const visible = r.visible || { shirt: true, pants: true };
         document.getElementById('bracelete-shirt-section').style.display = visible.shirt ? '' : 'none';
         document.getElementById('bracelete-pants-section').style.display = visible.pants ? '' : 'none';
-        if (!visible.shirt) selectBraceleteSwapMode('shirt', true);
-        if (!visible.pants) selectBraceleteSwapMode('pants', true);
         updateBraceleteModeloBtn();
       };
       grid.appendChild(div);
@@ -1750,11 +1713,8 @@
   }
 
   function updateBraceleteModeloBtn() {
-    const bgOk    = braceleteSwap.bg.keep    || !!braceleteSwap.bg.file;
-    const shirtOk = braceleteSwap.shirt.keep || !!braceleteSwap.shirt.file;
-    const pantsOk = braceleteSwap.pants.keep || !!braceleteSwap.pants.file;
     document.getElementById('btn-bracelete-modelo').disabled =
-      !(selectedBraceleteRef && selectedBraceleteModel && braceleteItemFiles.length > 0 && bgOk && shirtOk && pantsOk);
+      !(selectedBraceleteRef && selectedBraceleteModel && braceleteItemFiles.length > 0);
   }
 
   async function gerarBraceleteModelo() {
@@ -1778,16 +1738,14 @@
     const referenceSnap = selectedBraceleteRef;
     const itemSnap       = [...braceleteItemFiles];
     const extraTextSnap  = braceleteExtraText;
-    const bgFileSnap    = braceleteSwap.bg.keep    ? null : braceleteSwap.bg.file;
-    const shirtFileSnap = braceleteSwap.shirt.keep ? null : braceleteSwap.shirt.file;
-    const pantsFileSnap = braceleteSwap.pants.keep ? null : braceleteSwap.pants.file;
+    const shirtFileSnap = braceleteSwap.shirt.file;
+    const pantsFileSnap = braceleteSwap.pants.file;
 
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
       form.append('modelFile', modelFile);
       itemSnap.forEach(f => form.append('bracelet', f));
-      if (bgFileSnap)    form.append('background', bgFileSnap);
       if (shirtFileSnap) form.append('shirt', shirtFileSnap);
       if (pantsFileSnap) form.append('pants', pantsFileSnap);
       if (extraTextSnap) form.append('extraText', extraTextSnap);

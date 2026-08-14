@@ -437,8 +437,8 @@ const CORRENTE_MODELO_REFS = {
 
 // Monta prompt para "Bracelete com Modelo": recria a cena de referência trocando a pessoa
 // (para variar o braço/mão) e substituindo o bracelete original pelo anexado.
-// Permite ainda trocar fundo, camisa e calça — mantendo o da referência se nada for anexado.
-function buildBraceleteModeloPrompt(braceletCount, bgIdx, shirtIdx, pantsIdx, extraText) {
+// Permite ainda trocar camisa e/ou calça — só entra instrução se algo for anexado.
+function buildBraceleteModeloPrompt(braceletCount, shirtIdx, pantsIdx, extraText) {
   const modelIdx      = 2;
   const braceletStart = 3;
   const braceletEnd   = 2 + braceletCount;
@@ -446,8 +446,7 @@ function buildBraceleteModeloPrompt(braceletCount, bgIdx, shirtIdx, pantsIdx, ex
     ? `Image ${braceletStart} shows the bracelet`
     : `Images ${braceletStart} to ${braceletEnd} show the bracelet from different angles — use all of them as reference to understand its exact shape, color, and finish`;
 
-  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, and lighting exactly. Image ${modelIdx} is the model reference photo (skin tone, hand/arm build). ${braceletRef}.`];
-  if (bgIdx)    header[0] += ` Image ${bgIdx} shows the background to use.`;
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, and lighting exactly. Image ${modelIdx} is the model reference photo (skin tone, hand/arm build). ${braceletRef}.`];
   if (shirtIdx) header[0] += ` Image ${shirtIdx} shows the shirt/clothing to use.`;
   if (pantsIdx) header[0] += ` Image ${pantsIdx} shows the pants to use.`;
 
@@ -455,20 +454,12 @@ function buildBraceleteModeloPrompt(braceletCount, bgIdx, shirtIdx, pantsIdx, ex
 
   lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person's hand/arm/skin with the model from Image ${modelIdx}, matching their skin tone and build naturally.`);
 
-  lines.push(bgIdx
-    ? `- Replace the background with the one shown in Image ${bgIdx}, adapting lighting and shadows to match it naturally`
-    : '- Keep the exact same background from Image 1');
-
   if (shirtIdx) {
     lines.push(`- Dress the model in the exact shirt/clothing shown in Image ${shirtIdx}`);
-  } else {
-    lines.push('- If Image 1 shows clothing (shirt/sleeve), keep the exact same clothing on the new model; if no clothing is visible in Image 1, do not add any');
   }
 
   if (pantsIdx) {
     lines.push(`- Dress the model in the exact pants shown in Image ${pantsIdx}`);
-  } else {
-    lines.push('- If Image 1 shows pants/legs, keep the exact same pants on the new model; if no pants are visible in Image 1, do not add any');
   }
 
   lines.push(`- IMPORTANT: replace the bracelet the person is wearing in Image 1 entirely with the one from ${braceletCount === 1 ? `Image ${braceletStart}` : `Images ${braceletStart}-${braceletEnd}`} — do not keep any part of the original bracelet`);
@@ -911,15 +902,13 @@ app.get('/api/bracelete-refs', (req, res) => {
 
 app.post('/api/generate-bracelete-modelo', creativeUpload.fields([
   { name: 'bracelet', maxCount: 5 },
-  { name: 'background', maxCount: 1 },
   { name: 'shirt', maxCount: 1 },
   { name: 'pants', maxCount: 1 },
 ]), async (req, res) => {
   const braceletFiles = req.files?.['bracelet'] || [];
-  const bgFile     = req.files?.['background']?.[0];
   const shirtFile  = req.files?.['shirt']?.[0];
   const pantsFile  = req.files?.['pants']?.[0];
-  const uploadedPaths = [...braceletFiles.map(f => f.path), bgFile?.path, shirtFile?.path, pantsFile?.path].filter(Boolean);
+  const uploadedPaths = [...braceletFiles.map(f => f.path), shirtFile?.path, pantsFile?.path].filter(Boolean);
   try {
     const { modelFile, referenceKey, extraText } = req.body;
     if (!referenceKey || !BRACELETE_MODELO_REFS[referenceKey])
@@ -945,12 +934,6 @@ app.post('/api/generate-bracelete-modelo', creativeUpload.fields([
       images.push(await fileToOpenAI(braceletFiles[i].path, braceletFiles[i].mimetype, `bracelet-${i + 1}.jpg`));
     }
 
-    let bgIdx = null;
-    if (bgFile) {
-      images.push(await fileToOpenAI(bgFile.path, bgFile.mimetype, 'background.jpg'));
-      bgIdx = images.length;
-    }
-
     let shirtIdx = null;
     if (shirtFile) {
       images.push(await fileToOpenAI(shirtFile.path, shirtFile.mimetype, 'shirt.jpg'));
@@ -963,8 +946,8 @@ app.post('/api/generate-bracelete-modelo', creativeUpload.fields([
       pantsIdx = images.length;
     }
 
-    const prompt = buildBraceleteModeloPrompt(braceletFiles.length, bgIdx, shirtIdx, pantsIdx, extraText);
-    console.log(`[generate-bracelete-modelo] ref=${referenceKey} model=${modelFile} bracelets=${braceletFiles.length} bg=${!!bgFile} shirt=${!!shirtFile} pants=${!!pantsFile}`);
+    const prompt = buildBraceleteModeloPrompt(braceletFiles.length, shirtIdx, pantsIdx, extraText);
+    console.log(`[generate-bracelete-modelo] ref=${referenceKey} model=${modelFile} bracelets=${braceletFiles.length} shirt=${!!shirtFile} pants=${!!pantsFile}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
