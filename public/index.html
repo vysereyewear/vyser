@@ -397,7 +397,7 @@
     <div class="pose-toggle" style="margin-bottom:20px;">
       <button class="pose-btn active" id="joia-corrente" onclick="selectJoiaTipo('corrente')">⛓️ Correntes</button>
       <button class="pose-btn" id="joia-bracelete" onclick="selectJoiaTipo('bracelete')">🔗 Braceletes</button>
-      <button class="pose-btn" id="joia-anel" onclick="selectJoiaTipo('anel')" disabled title="Em breve">💍 Anéis</button>
+      <button class="pose-btn" id="joia-anel" onclick="selectJoiaTipo('anel')">💍 Anéis</button>
     </div>
 
     <div id="joia-vistas-wrap">
@@ -1227,14 +1227,12 @@
   let selectedViewsJoia = new Set();
 
   function selectJoiaTipo(tipo) {
-    if (tipo === 'anel') return; // ainda não configurado
-
     selectedJoiaTipo = tipo;
     document.getElementById('joia-corrente').classList.toggle('active', tipo === 'corrente');
     document.getElementById('joia-bracelete').classList.toggle('active', tipo === 'bracelete');
     document.getElementById('joia-anel').classList.toggle('active', tipo === 'anel');
 
-    document.getElementById('joia-vistas-wrap').style.display = (tipo === 'corrente' || tipo === 'bracelete') ? '' : 'none';
+    document.getElementById('joia-vistas-wrap').style.display = (tipo === 'corrente' || tipo === 'bracelete' || tipo === 'anel') ? '' : 'none';
     document.getElementById('corrente-modelo-block').style.display = tipo === 'corrente' ? '' : 'none';
     document.getElementById('bracelete-modelo-block').style.display = tipo === 'bracelete' ? '' : 'none';
 

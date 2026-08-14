@@ -274,6 +274,18 @@ Images 2+ show the bracelet to use.
 Generate a close-up macro product photo of the bracelet from Images 2+ like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the bracelet's exact link pattern, metal finish, color, clasp, and texture in fine detail.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
+const PROMPT_ANEL_ANGULO1 = `Image 1 is a style reference — follow its background, lighting, shadow, camera angle, and framing exactly (ring standing upright, viewed from a 3/4 angle showing the front and side of the band).
+Images 2+ show the ring to use.
+
+Generate a product photo of the ring from Images 2+ positioned and angled exactly like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the ring's exact shape, metal finish, color, and any engraving or texture precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_ANEL_ANGULO2 = `Image 1 is a style reference — follow its background, lighting, shadow, camera angle, and framing exactly (ring standing upright, viewed from a lower front angle showing the inner engraving detail).
+Images 2+ show the ring to use.
+
+Generate a product photo of the ring from Images 2+ positioned and angled exactly like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the ring's exact shape, metal finish, color, and any engraving or texture precisely.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
 const PRODUCTS = {
   oculos: {
     defaultView: 'frente',
@@ -305,6 +317,13 @@ const PRODUCTS = {
     views: {
       completa: { prompt: PROMPT_BRACELETE_COMPLETA, refPath: 'public/references/bracelete-completa.png', label: 'VISTA COMPLETA' },
       textura:  { prompt: PROMPT_BRACELETE_TEXTURA,  refPath: 'public/references/bracelete-textura.png',  label: 'TEXTURA (CLOSE-UP)' },
+    },
+  },
+  anel: {
+    defaultView: 'angulo1',
+    views: {
+      angulo1: { prompt: PROMPT_ANEL_ANGULO1, refPath: 'public/references/anel-1.png', label: 'ÂNGULO 1' },
+      angulo2: { prompt: PROMPT_ANEL_ANGULO2, refPath: 'public/references/anel-2.png', label: 'ÂNGULO 2' },
     },
   },
 };
