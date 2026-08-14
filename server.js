@@ -262,6 +262,18 @@ Images 2+ show the chain/necklace to use.
 Generate a close-up macro product photo of the chain from Images 2+ like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the chain's exact link pattern, metal finish, color, and texture in fine detail.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
+const PROMPT_BRACELETE_COMPLETA = `Image 1 is a style reference — follow its background, lighting, shadow, and FULL FLAT-LAY COMPOSITION exactly (bracelet laid out in a full circle/loop, viewed from directly above).
+Images 2+ show the bracelet to use.
+
+Generate a product photo of the bracelet from Images 2+ laid out flat in a full circle like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the bracelet's link pattern, metal finish, color, and clasp precisely, including the full length of the bracelet.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
+const PROMPT_BRACELETE_TEXTURA = `Image 1 is a style reference — follow its background, lighting, shadow, and CLOSE-UP MACRO composition exactly (tight close-up on the clasp/lobster-clasp area of the bracelet, showing link texture in detail).
+Images 2+ show the bracelet to use.
+
+Generate a close-up macro product photo of the bracelet from Images 2+ like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the bracelet's exact link pattern, metal finish, color, clasp, and texture in fine detail.
+IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
+
 const PRODUCTS = {
   oculos: {
     defaultView: 'frente',
@@ -286,6 +298,13 @@ const PRODUCTS = {
       pendurada: { prompt: PROMPT_CORRENTE_PENDURADA, refPath: 'public/references/corrente-pendurada.png', label: 'PENDURADA' },
       completa:  { prompt: PROMPT_CORRENTE_COMPLETA,  refPath: 'public/references/corrente-completa.png',  label: 'VISTA COMPLETA' },
       textura:   { prompt: PROMPT_CORRENTE_TEXTURA,   refPath: 'public/references/corrente-textura.png',   label: 'TEXTURA (CLOSE-UP)' },
+    },
+  },
+  bracelete: {
+    defaultView: 'completa',
+    views: {
+      completa: { prompt: PROMPT_BRACELETE_COMPLETA, refPath: 'public/references/bracelete-completa.png', label: 'VISTA COMPLETA' },
+      textura:  { prompt: PROMPT_BRACELETE_TEXTURA,  refPath: 'public/references/bracelete-textura.png',  label: 'TEXTURA (CLOSE-UP)' },
     },
   },
 };

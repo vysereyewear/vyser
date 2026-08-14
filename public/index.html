@@ -1234,11 +1234,11 @@
     document.getElementById('joia-bracelete').classList.toggle('active', tipo === 'bracelete');
     document.getElementById('joia-anel').classList.toggle('active', tipo === 'anel');
 
-    document.getElementById('joia-vistas-wrap').style.display = tipo === 'corrente' ? '' : 'none';
+    document.getElementById('joia-vistas-wrap').style.display = (tipo === 'corrente' || tipo === 'bracelete') ? '' : 'none';
     document.getElementById('corrente-modelo-block').style.display = tipo === 'corrente' ? '' : 'none';
     document.getElementById('bracelete-modelo-block').style.display = tipo === 'bracelete' ? '' : 'none';
 
-    if (tipo === 'corrente') {
+    if (productViews[tipo]) {
       const views = productViews[tipo]?.views || [];
       selectedViewsJoia = new Set(views.map(v => v.key));
       renderViewSelectGridJoia();
