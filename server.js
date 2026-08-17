@@ -284,6 +284,7 @@ const PROMPT_ANEL_ANGULO2 = `Image 1 is a style reference — follow its backgro
 Images 2+ show the ring to use.
 
 Generate a product photo of the ring from Images 2+ positioned and angled exactly like Image 1, with soft studio lighting and shadow style as Image 1. Reproduce the ring's exact shape, metal finish, color, and any engraving or texture precisely.
+IMPORTANT: Image 1 has text engraved on the inner band of ITS ring (e.g. "STAINLESS STEEL") — this text belongs only to the reference ring and must NOT be copied. Do not add any text or inscription to the inner band unless it is actually present on the ring from Images 2+.
 IMPORTANT: the background MUST be solid #F3F4F6. No gradients, no texture, no other color.`;
 
 const PRODUCTS = {
