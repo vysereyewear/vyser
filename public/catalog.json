@@ -1,0 +1,2039 @@
+{
+  "loja": "vyser-eyewear.com",
+  "sincronizadoEm": "2026-08-25T02:56:38.493Z",
+  "produtos": [
+    {
+      "id": "10710103883941",
+      "titulo": "Liquid Ring",
+      "handle": "liquid-ring",
+      "grupo": "joia",
+      "subtipo": "anel",
+      "cores": [
+        {
+          "id": "10710103883941",
+          "nome": "51MM",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_46e54094-2a71-4c1c-9313-0096760635e7.jpg?v=1787006098",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_c738ba6e-6cbd-4233-9034-7826372e4807.jpg?v=1787006098"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_46e54094-2a71-4c1c-9313-0096760635e7.jpg?v=1787006098",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_c738ba6e-6cbd-4233-9034-7826372e4807.jpg?v=1787006098",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_40445b19-ee12-4bf8-8252-a0ff5547c5ba.jpg?v=1787006098"
+      ]
+    },
+    {
+      "id": "10710067576997",
+      "titulo": "Cuban Ring - Silver",
+      "handle": "cuban-ring-silver",
+      "grupo": "joia",
+      "subtipo": "anel",
+      "cores": [
+        {
+          "id": "10710067576997",
+          "nome": "S - 58MM",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_5c3a033a-fd0a-4541-9c3f-4b65a14c08bd.jpg?v=1787004861",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8f265494-0fc1-4fde-b06c-c39207ff0a2b.jpg?v=1787004861"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_5c3a033a-fd0a-4541-9c3f-4b65a14c08bd.jpg?v=1787004861",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8f265494-0fc1-4fde-b06c-c39207ff0a2b.jpg?v=1787004861",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_e39248ee-5775-4cf3-9ff4-dfc96a24b514.jpg?v=1787004861"
+      ]
+    },
+    {
+      "id": "10710066364581",
+      "titulo": "Wave Ring",
+      "handle": "wave-ring",
+      "grupo": "joia",
+      "subtipo": "anel",
+      "cores": [
+        {
+          "id": "10710066364581",
+          "nome": "S - 55MM",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_57fed7e5-81b7-445e-ae38-860d06387847.jpg?v=1787004149",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_543846a3-f928-40e0-bf11-98cea6f7a784.jpg?v=1787004149"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_57fed7e5-81b7-445e-ae38-860d06387847.jpg?v=1787004149",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_543846a3-f928-40e0-bf11-98cea6f7a784.jpg?v=1787004149",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_6cac41d1-2089-4b08-97d2-6e4938bf6b9e.jpg?v=1787004150"
+      ]
+    },
+    {
+      "id": "10710066135205",
+      "titulo": "Lava Ring",
+      "handle": "lava-ring",
+      "grupo": "joia",
+      "subtipo": "anel",
+      "cores": [
+        {
+          "id": "10710066135205",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_fff5bc50-047f-4e12-ad8e-1dc9f364ecfb.jpg?v=1787003838",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_79e374cc-3dec-4af2-bff0-69041098d585.jpg?v=1787003838"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_fff5bc50-047f-4e12-ad8e-1dc9f364ecfb.jpg?v=1787003838",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_79e374cc-3dec-4af2-bff0-69041098d585.jpg?v=1787003838",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_5f841c87-f85f-4f0b-a594-25c0891ea63b.jpg?v=1787003838"
+      ]
+    },
+    {
+      "id": "10710049292453",
+      "titulo": "Signet Star Ring - Silver",
+      "handle": "signet-star-ring-silver",
+      "grupo": "joia",
+      "subtipo": "anel",
+      "cores": [
+        {
+          "id": "10710049292453",
+          "nome": "S - 58MM",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_88ad512b-d862-402d-bab3-1221b38f619c.jpg?v=1787002996",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_b8fa7033-ff8b-4a6d-be4b-5825f30e68c2.jpg?v=1787002996"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_88ad512b-d862-402d-bab3-1221b38f619c.jpg?v=1787002996",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_b8fa7033-ff8b-4a6d-be4b-5825f30e68c2.jpg?v=1787002996",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8a89db7d-3afb-43f9-bc53-4ba3373633a4.jpg?v=1787002995"
+      ]
+    },
+    {
+      "id": "10710044410021",
+      "titulo": "Cael Armband",
+      "handle": "snake-bracelet",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "10710044410021",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_0feb4545-3280-49ef-8b20-a6e994a98620.jpg?v=1787006401",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_d9159ded-d6b8-40e1-86cd-839f0806cffa.jpg?v=1787006401"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_0feb4545-3280-49ef-8b20-a6e994a98620.jpg?v=1787006401",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_d9159ded-d6b8-40e1-86cd-839f0806cffa.jpg?v=1787006401",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_0fa2b7da-97d2-4f95-8316-686a13c7025d.jpg?v=1787006402",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_ec28c6a8-ff3f-4012-a3fc-e3c9a48c793e.jpg?v=1787006401"
+      ]
+    },
+    {
+      "id": "10710043426981",
+      "titulo": "Star Bracelet - Silver",
+      "handle": "star-bracelet-silver",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "10710043426981",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_dd12b61a-1584-4618-b1f9-f87093dcfffc.jpg?v=1787005957",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_647c5f56-2bb9-4a93-a51d-4af4721c8129.jpg?v=1787005957"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_dd12b61a-1584-4618-b1f9-f87093dcfffc.jpg?v=1787005957",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_647c5f56-2bb9-4a93-a51d-4af4721c8129.jpg?v=1787005957",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_b6f8126e-4981-40b3-b703-67690cd03985.jpg?v=1787005957"
+      ]
+    },
+    {
+      "id": "10710036644005",
+      "titulo": "Butterfly Halskette",
+      "handle": "micro-butterfly-chain",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "10710036644005",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_b8258464-f57e-429d-afd2-c41e11c18169.jpg?v=1787005554",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_a5157bcc-ea8b-42ec-b581-c6118492e521.jpg?v=1787005554"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_b8258464-f57e-429d-afd2-c41e11c18169.jpg?v=1787005554",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_a5157bcc-ea8b-42ec-b581-c6118492e521.jpg?v=1787005554",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_6633b909-7505-462d-b685-bef0b8296a6e.jpg?v=1787005554",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_18e1d3c6-6c0a-4817-86b3-6ef11e2f904f.jpg?v=1787005554"
+      ]
+    },
+    {
+      "id": "10710036480165",
+      "titulo": "Star Chain - Silver",
+      "handle": "star-necklace-silver",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "10710036480165",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_c8e05818-2b6f-4381-acd1-ca7ab58dcc01.jpg?v=1787005373",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_ed78d398-e56f-4909-aab8-cc7214ecd99c.jpg?v=1787005373"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_c8e05818-2b6f-4381-acd1-ca7ab58dcc01.jpg?v=1787005373",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_ed78d398-e56f-4909-aab8-cc7214ecd99c.jpg?v=1787005373",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_5bb52866-e57d-48ba-9124-4ed445fe808a.jpg?v=1787005373",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_680574a4-930d-4a3f-be47-51858233413f.jpg?v=1787005373"
+      ]
+    },
+    {
+      "id": "10710036316325",
+      "titulo": "Jesus Cross Box Chain (2.5mm)",
+      "handle": "jesus-cross-box-chain",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48159621087397",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_0d5eca21-c97e-4266-a710-71f24fa24616.jpg?v=1787012977",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_bd8cac1e-d892-488f-9608-f4d3bcdabe4e.jpg?v=1787012985"
+        },
+        {
+          "id": "48159693504677",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_cfb3ac02-b2fb-401d-96cb-4998e9ac6d83.jpg?v=1787013733",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_78149d42-be4b-49e9-a11e-da58690d72a9.jpg?v=1787012943"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_0d5eca21-c97e-4266-a710-71f24fa24616.jpg?v=1787012977",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_bd8cac1e-d892-488f-9608-f4d3bcdabe4e.jpg?v=1787012985",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_35a373fb-23e0-4452-8c25-4d55e31a12b8.jpg?v=1787004770",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_3a525cfb-2556-4ef8-a13f-04433bfdc4f5.jpg?v=1787012969",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_cfb3ac02-b2fb-401d-96cb-4998e9ac6d83.jpg?v=1787013733",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_78149d42-be4b-49e9-a11e-da58690d72a9.jpg?v=1787012943",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_f63c2a53-951b-4857-b292-f521d5687270.jpg?v=1787005031",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_6c2425d8-da10-4578-b00c-0b3332b4c5a9.jpg?v=1787012954"
+      ]
+    },
+    {
+      "id": "10710036021413",
+      "titulo": "Box Chain (2.5mm)",
+      "handle": "box-chain",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48159620628645",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_809177e2-3843-46b8-9eec-c29845a20f40.jpg?v=1787003982",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_be2e5974-586a-446a-9874-633d553187c7.jpg?v=1787003982"
+        },
+        {
+          "id": "48159693308069",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_42fb6c9c-f4c9-43a8-a8fb-cb141af27092.jpg?v=1787004480",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_3bae6df7-55f9-4143-ae59-814bbd7c62f1.jpg?v=1787004480"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_809177e2-3843-46b8-9eec-c29845a20f40.jpg?v=1787003982",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_be2e5974-586a-446a-9874-633d553187c7.jpg?v=1787003982",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_325e25c1-ca4e-49dc-b088-c2bd591a8cc3.jpg?v=1787003982",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_03a80613-055f-4844-847f-e7266ae5d391.jpg?v=1787003982",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_8ad77180-27f6-4f43-9c30-3c636a01627d.jpg?v=1787003982",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_42fb6c9c-f4c9-43a8-a8fb-cb141af27092.jpg?v=1787004480",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_3bae6df7-55f9-4143-ae59-814bbd7c62f1.jpg?v=1787004480",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_f5cc9b53-49f8-47cc-9f89-12deed3fc89b.jpg?v=1787004481",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_90eaa715-e097-4b10-bcd6-c81c93b065e6.jpg?v=1787004531",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_c0df2595-8ccd-42c0-b741-985eb68e6359.jpg?v=1787004480"
+      ]
+    },
+    {
+      "id": "10701462503589",
+      "titulo": "3MM Cuban Bracelet",
+      "handle": "cuban-bracelet",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "48143143764133",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_32cdccc8-97d1-4112-b707-1fbc29a82886.jpg?v=1787002287",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_6bc7ef5a-d0ba-43c4-bc03-c64d0a0cf7d7.jpg?v=1787002287"
+        },
+        {
+          "id": "48159692357797",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_54a12f18-2391-4585-a560-a6e562c21e4d.jpg?v=1787003495",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_0c209ab2-32fe-4f9e-af5c-562bc6db8ba1.jpg?v=1787003495"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_32cdccc8-97d1-4112-b707-1fbc29a82886.jpg?v=1787002287",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_6bc7ef5a-d0ba-43c4-bc03-c64d0a0cf7d7.jpg?v=1787002287",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_38d35ea6-8c20-4f14-ba47-627f2ecc9222.jpg?v=1787002287",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_54a12f18-2391-4585-a560-a6e562c21e4d.jpg?v=1787003495",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_0c209ab2-32fe-4f9e-af5c-562bc6db8ba1.jpg?v=1787003495",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_1b9433ae-28aa-42b4-8197-b4bba456b27b.jpg?v=1787003495"
+      ]
+    },
+    {
+      "id": "10701459783845",
+      "titulo": "3MM Rope Bracelet",
+      "handle": "3mm-rope-bracelet",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "48143140159653",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3397e44d-025f-4aba-a590-7561da407d8d.jpg?v=1787002088",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_b76c5642-e9c6-4c90-8e39-72bc8efbfc9b.jpg?v=1787002089"
+        },
+        {
+          "id": "48159691767973",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_757c177b-e923-48ee-8491-592f2337c20e.jpg?v=1786755801",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_a99681c9-c2a0-4b4a-be73-d2e8b3b66be3.jpg?v=1786755801"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3397e44d-025f-4aba-a590-7561da407d8d.jpg?v=1787002088",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_b76c5642-e9c6-4c90-8e39-72bc8efbfc9b.jpg?v=1787002089",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_c338d2a2-6616-4087-88d4-f6689e849541.jpg?v=1787002088",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_757c177b-e923-48ee-8491-592f2337c20e.jpg?v=1786755801",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_a99681c9-c2a0-4b4a-be73-d2e8b3b66be3.jpg?v=1786755801",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_7db20f51-b4ef-4861-a787-44507f220600.jpg?v=1786755801",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c62f3444-d495-48b0-b9e7-490d4ec1b61e.jpg?v=1786755801"
+      ]
+    },
+    {
+      "id": "10701116768421",
+      "titulo": "Cross Bracelet",
+      "handle": "cross-bracelet",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "48142693073061",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_4ddf0b3a-ec3a-4bf1-b67c-07b8447c4580.jpg?v=1786754547",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_fb3fcf13-dab7-4bd3-82af-cef9292bb7f8.jpg?v=1786754547"
+        },
+        {
+          "id": "48159692062885",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_e6360203-2285-4c69-ac4f-0fe8e293cf47.jpg?v=1787002780",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1a1e1bfd-e8ff-4d51-b01a-db972d6980fc.jpg?v=1787002780"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_4ddf0b3a-ec3a-4bf1-b67c-07b8447c4580.jpg?v=1786754547",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_fb3fcf13-dab7-4bd3-82af-cef9292bb7f8.jpg?v=1786754547",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_3882fdda-3fb2-4e31-a356-cf5bd9109161.jpg?v=1786754547",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_49a2066e-6939-41b6-bbd9-d4b410f98659.jpg?v=1786754547",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_e6360203-2285-4c69-ac4f-0fe8e293cf47.jpg?v=1787002780",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1a1e1bfd-e8ff-4d51-b01a-db972d6980fc.jpg?v=1787002780",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_42a95761-6a29-43ce-a61e-a23bfd43de5a.jpg?v=1787002780"
+      ]
+    },
+    {
+      "id": "10701116473509",
+      "titulo": "5MM Tennis Bracelet - Silver",
+      "handle": "5mm-tennis-bracelet-silver",
+      "grupo": "joia",
+      "subtipo": "pulseira",
+      "cores": [
+        {
+          "id": "10701116473509",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_25500c0e-2773-4827-b3a9-dbffc201d3af.jpg?v=1786754306",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8a67dcab-abeb-4dec-8f66-37e1c5029343.jpg?v=1786754306"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_25500c0e-2773-4827-b3a9-dbffc201d3af.jpg?v=1786754306",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8a67dcab-abeb-4dec-8f66-37e1c5029343.jpg?v=1786754306",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_6bfe2294-28bd-49a2-93a8-91ca9145c5ad.jpg?v=1786754306",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c8eeee8d-169a-4462-9f67-5b638fab2818.jpg?v=1786754306"
+      ]
+    },
+    {
+      "id": "10701043171493",
+      "titulo": "5MM Tennis Chain - Silver",
+      "handle": "5mm-tennis-chain-silver",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "10701043171493",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/41_d6ec831d-6bbb-4448-b5fd-1d62b852061b.jpg?v=1786656143",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/42_150bd1c6-e1e1-4098-a224-129ae5e3d952.jpg?v=1786656143"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/41_d6ec831d-6bbb-4448-b5fd-1d62b852061b.jpg?v=1786656143",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/42_150bd1c6-e1e1-4098-a224-129ae5e3d952.jpg?v=1786656143",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/43_176b7517-2703-4778-a873-9d8b0f3f9cf6.jpg?v=1786656143",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/44_8e0c25cf-09ec-401f-8293-312003fd646f.jpg?v=1786656144"
+      ]
+    },
+    {
+      "id": "10700688359589",
+      "titulo": "Hunnid Necklace",
+      "handle": "hunnid-necklace",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48141832683685",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_fd8ef46f-8839-4476-adb8-2acada66e584.jpg?v=1786655753",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_a6b34c04-422f-4cb5-a0fe-07c0ce8d9c56.jpg?v=1786655752"
+        },
+        {
+          "id": "48142934114469",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_a3793c73-83f7-490f-9004-541628f24334.jpg?v=1786657462",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_313a46d9-7d90-444d-894d-1b839b805ea8.jpg?v=1786657462"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_fd8ef46f-8839-4476-adb8-2acada66e584.jpg?v=1786655753",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_a6b34c04-422f-4cb5-a0fe-07c0ce8d9c56.jpg?v=1786655752",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_a93f56d4-238a-471f-af9e-985bb7fb0127.jpg?v=1786655753",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_cc401082-58e7-4222-b98f-be18c746bba0.jpg?v=1786655752",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_a3793c73-83f7-490f-9004-541628f24334.jpg?v=1786657462",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_313a46d9-7d90-444d-894d-1b839b805ea8.jpg?v=1786657462",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_3aaca194-04ae-47c6-b87e-f06e07b4c911.jpg?v=1786657462",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/28_71177286-d3fd-4760-9abb-38691d0bb3c9.jpg?v=1786657462"
+      ]
+    },
+    {
+      "id": "10700681904293",
+      "titulo": "Cross Necklace",
+      "handle": "cross-necklace",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48141822492837",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_c460b764-6c64-49f1-b836-6f238f80373f.jpg?v=1786654554",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_696d1d82-8fc7-494d-b7c0-e189acd16dbb.jpg?v=1786654553"
+        },
+        {
+          "id": "48142929166501",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_2d29269a-d128-4b7e-a1f6-d9ca8055c5e9.jpg?v=1786657416",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38_b155e01e-71cf-423e-9244-a787c80c0d04.jpg?v=1786657416"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_c460b764-6c64-49f1-b836-6f238f80373f.jpg?v=1786654554",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_696d1d82-8fc7-494d-b7c0-e189acd16dbb.jpg?v=1786654553",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_e67b7215-531c-424d-a9a8-714b23af2163.jpg?v=1786654553",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_1_4adf2a1a-aac6-48cf-a612-6f48d08bd5f4.jpg?v=1786655488",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_2d29269a-d128-4b7e-a1f6-d9ca8055c5e9.jpg?v=1786657416",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38_b155e01e-71cf-423e-9244-a787c80c0d04.jpg?v=1786657416",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/39_1e184e5f-09c9-43ef-9ce7-cf714f144de7.jpg?v=1786657416",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/40_ff51e3bd-c86d-43ee-9c48-2a1950a346a5.jpg?v=1786657416"
+      ]
+    },
+    {
+      "id": "10700681871525",
+      "titulo": "3MM Cuban Chain",
+      "handle": "3mm-cuban-chain",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48141822427301",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_1127c2e4-710c-454f-922c-03055b273db3.jpg?v=1786655673",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_6961493b-a764-4c50-8a89-df69cad9c59b.jpg?v=1786655673"
+        },
+        {
+          "id": "48142924939429",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29_fa8734aa-f6da-464a-b7de-ca9f8f4901fa.jpg?v=1786657369",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30_30678a49-1c81-41d0-a7d6-18d92be243aa.jpg?v=1786657369"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_1127c2e4-710c-454f-922c-03055b273db3.jpg?v=1786655673",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_6961493b-a764-4c50-8a89-df69cad9c59b.jpg?v=1786655673",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_43d779d2-4321-49c8-9d8e-7d6edd56fbad.jpg?v=1786655672",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_21b7c638-d266-4e28-8b9a-fe5a2227382a.jpg?v=1786655673",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29_fa8734aa-f6da-464a-b7de-ca9f8f4901fa.jpg?v=1786657369",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30_30678a49-1c81-41d0-a7d6-18d92be243aa.jpg?v=1786657369",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_0ca5a8be-26a2-454e-8356-b924c6a2db24.jpg?v=1786657368",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_2_9e50cd5f-175c-45a2-8842-45100d351673.jpg?v=1786657368"
+      ]
+    },
+    {
+      "id": "10700681805989",
+      "titulo": "3MM Rope Chain",
+      "handle": "3mm-rope-chain",
+      "grupo": "joia",
+      "subtipo": "corrente",
+      "cores": [
+        {
+          "id": "48141822328997",
+          "nome": "SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_75fcc846-d239-45c7-9fff-5a9b8dae4f29.jpg?v=1786655234",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_3aa66117-ef17-498a-bfd9-91d9ca263afb.jpg?v=1786655234"
+        },
+        {
+          "id": "48142916518053",
+          "nome": "GOLD",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/33_8ccddc5d-2251-453b-af83-efbd9e69206f.jpg?v=1786657288",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/34_49f7840b-70b2-4c1f-8510-a538dfed6e5d.jpg?v=1786657288"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_75fcc846-d239-45c7-9fff-5a9b8dae4f29.jpg?v=1786655234",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_3aa66117-ef17-498a-bfd9-91d9ca263afb.jpg?v=1786655234",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_58de8e4d-3c73-4964-9827-5bb24d3c7b32.jpg?v=1786655234",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_40b50223-0896-4006-850d-45f552fd8900.jpg?v=1786655234",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/33_8ccddc5d-2251-453b-af83-efbd9e69206f.jpg?v=1786657288",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/34_49f7840b-70b2-4c1f-8510-a538dfed6e5d.jpg?v=1786657288",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35_47bfb022-2e29-45db-9178-404231c7a8f0.jpg?v=1786657288",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_493791a6-25a3-4291-a369-562845ef15db.jpg?v=1786657288"
+      ]
+    },
+    {
+      "id": "10700028739749",
+      "titulo": "MOTH CAP",
+      "handle": "moth-cap",
+      "grupo": "bone",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "48140098797733",
+          "nome": "BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/46.jpg?v=1786596874",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/47.jpg?v=1786596874"
+        },
+        {
+          "id": "48140122095781",
+          "nome": "NAVY",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_009530a6-a5ec-4202-8d9e-6336ea4f7a21.jpg?v=1786596874",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_803fcbfb-ac57-41c3-be2c-4772a2bcbfb6.jpg?v=1786596874"
+        },
+        {
+          "id": "48140122128549",
+          "nome": "CREAM",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/51.jpg?v=1786596874",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/52.jpg?v=1786596874"
+        },
+        {
+          "id": "48140122161317",
+          "nome": "GREY",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/41.jpg?v=1786596874",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/42.jpg?v=1786596874"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/46.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/47.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/48.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/49.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/50.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_009530a6-a5ec-4202-8d9e-6336ea4f7a21.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_803fcbfb-ac57-41c3-be2c-4772a2bcbfb6.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38_aacbab93-83d7-4e90-b9c1-d40373ef0d51.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/39_da9d133a-4fe4-44a1-a922-b11f4789e6e7.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/40_62739f02-afbc-40c6-b3e7-60efb8edbbb8.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/51.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/52.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/53.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/54.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/55.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/41.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/42.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/43.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/44.jpg?v=1786596874",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/45.jpg?v=1786596874"
+      ]
+    },
+    {
+      "id": "10699722293413",
+      "titulo": "OMEN CAP",
+      "handle": "omen-cap",
+      "grupo": "bone",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "48139563401381",
+          "nome": "GREY",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_cb3dd898-bcb9-4f65-9518-d7bee969a9e7.jpg?v=1786580531",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_24944257-5338-46e8-b3f4-942fa446eb20.jpg?v=1786580252"
+        },
+        {
+          "id": "48139563434149",
+          "nome": "BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_610a157d-9276-4a43-ac4a-609943f00098.jpg?v=1786580252",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_2f6634e8-6b8b-495d-b510-06bd29fa7772.jpg?v=1786580252"
+        },
+        {
+          "id": "48139563466917",
+          "nome": "KHAKI",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_51665792-2fb8-4b9f-9e25-a7624c310ce0.jpg?v=1786580253",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_43bc11b7-dd1b-4efb-98c4-0d6371e6478d.jpg?v=1786580253"
+        },
+        {
+          "id": "48139563499685",
+          "nome": "BURGUNDY",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_f47d2886-9c36-4d0a-9e03-ed3cab72ae70.jpg?v=1786580252",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2a6d851f-c04b-4b3f-8476-af371c235d51.jpg?v=1786580253"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_cb3dd898-bcb9-4f65-9518-d7bee969a9e7.jpg?v=1786580531",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_24944257-5338-46e8-b3f4-942fa446eb20.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_66188a5f-66e3-4357-bcf9-28441fe71dea.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_620a7954-ab47-4a2d-a6e4-1baa22adf116.jpg?v=1786590475",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_e3722f44-a6c8-4b8e-a25b-192d76812bb2.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_610a157d-9276-4a43-ac4a-609943f00098.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_2f6634e8-6b8b-495d-b510-06bd29fa7772.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_a9b17c0f-1467-4c67-b6ed-e79ebf9f3844.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_65ba5ceb-5217-405b-912f-31b28757c487.jpg?v=1786590475",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_aa596b2d-5aee-42c1-8839-519212a3d01a.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_f47d2886-9c36-4d0a-9e03-ed3cab72ae70.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2a6d851f-c04b-4b3f-8476-af371c235d51.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_e56c8757-a000-48ea-9595-ec83cb991eec.jpg?v=1786580252",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_bf5ad280-f832-4b6e-99ce-9410db2ce5c7.jpg?v=1786590475",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_06a0731d-bd2b-4491-9fbd-dd037f757437.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_51665792-2fb8-4b9f-9e25-a7624c310ce0.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_43bc11b7-dd1b-4efb-98c4-0d6371e6478d.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_07c165d5-834c-40b9-b491-8794d5282280.jpg?v=1786580253",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_ec934f7a-aaf4-42a4-a1ac-c841304b3471.jpg?v=1786590475",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_2939ebab-ed8f-44ba-84a0-892ee33048d2.jpg?v=1786580253"
+      ]
+    },
+    {
+      "id": "10699701452965",
+      "titulo": "SCAR CAP",
+      "handle": "scar-cap",
+      "grupo": "bone",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "48139493081253",
+          "nome": "Default Title",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_9dd255ab-c1e6-46a2-b4f6-0f33bb6ea12c.jpg?v=1786578491",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_8d2cd343-3760-4c99-b10e-2d902ab20d9a.jpg?v=1786578491"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_9dd255ab-c1e6-46a2-b4f6-0f33bb6ea12c.jpg?v=1786578491",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_8d2cd343-3760-4c99-b10e-2d902ab20d9a.jpg?v=1786578491",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_366ddc74-8d98-40dc-aa41-8d754db10278.jpg?v=1786578491",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_4f965fab-9fb3-4bc7-a262-c4d3f5dca5ea.jpg?v=1786590560",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_2_d66c4acb-d014-44a1-ae35-b5ffca7884f8.jpg?v=1786588451"
+      ]
+    },
+    {
+      "id": "10699695194277",
+      "titulo": "ASTRA CAP",
+      "handle": "astra-cap",
+      "grupo": "bone",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "48139490853029",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_15cff1b0-4ed7-4464-b07d-af8fb1ffc747.jpg?v=1786577620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_95078fe8-9a40-4323-a1df-8b707540ffdc.jpg?v=1786577620"
+        },
+        {
+          "id": "48139490885797",
+          "nome": "BLACK / WHITE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_b79a7cb5-2907-40a2-8f64-0e2d066727f3.jpg?v=1786577620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0021adab-00df-4ffc-8d53-41e73c18ddd2.jpg?v=1786577620"
+        },
+        {
+          "id": "48139490918565",
+          "nome": "BLUE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_1b1d7d96-ab54-463c-99f6-4c9ddcb0291f.jpg?v=1786577620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_aecc80f0-2a23-41e0-b9fc-d823dae7f7c3.jpg?v=1786577620"
+        },
+        {
+          "id": "48139490951333",
+          "nome": "BEIGE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_9e65ffb2-0b20-4de5-951b-93ece2503fe7.jpg?v=1786577620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_ba04b84e-62c4-4887-89ca-66326da62d42.jpg?v=1786577620"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_b79a7cb5-2907-40a2-8f64-0e2d066727f3.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0021adab-00df-4ffc-8d53-41e73c18ddd2.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_57f6c0f0-003e-457f-babd-2aad475d1263.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_95eacc66-b2f5-4877-9cd6-cea8ae6a1a55.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_d326f32a-cc1c-4635-beaf-f4214e5d26bd.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_15cff1b0-4ed7-4464-b07d-af8fb1ffc747.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_95078fe8-9a40-4323-a1df-8b707540ffdc.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_969b7a8d-9548-4d62-be0b-aa8e2ec24237.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_5c2334d9-1e90-43b4-8bbb-972648e8e5f6.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_64ad66bd-1354-498e-9b77-9cf443759272.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_9e65ffb2-0b20-4de5-951b-93ece2503fe7.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_ba04b84e-62c4-4887-89ca-66326da62d42.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_1fa9b8fb-b0a6-4dd5-9941-fbb00661840d.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_f5146ace-faa8-4424-ab58-565a9fdf2f39.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_00d3d7f9-dcc8-4cb9-980d-5a27bdb482f1.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_1b1d7d96-ab54-463c-99f6-4c9ddcb0291f.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_aecc80f0-2a23-41e0-b9fc-d823dae7f7c3.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_e8c52e6b-cc71-4229-9070-e7863fe7da6a.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_42cbd074-5638-4ab3-827b-f3c6522b2aae.jpg?v=1786577620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_f8c85e41-30bf-47be-b74d-e463bec58cf9.jpg?v=1786577620"
+      ]
+    },
+    {
+      "id": "10660945100965",
+      "titulo": "RELIC",
+      "handle": "relic",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "48027378548901",
+          "nome": "DARK BROWN / RED",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21.jpg?v=1782868653",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22.jpg?v=1782868656"
+        },
+        {
+          "id": "48027378581669",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2.jpg?v=1782868674",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1.jpg?v=1782868670"
+        },
+        {
+          "id": "48027378647205",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12.jpg?v=1782868711",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13.jpg?v=1782868714"
+        },
+        {
+          "id": "48027378679973",
+          "nome": "BROWN / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17.jpg?v=1782868725",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16.jpg?v=1782868723"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22.jpg?v=1782868656",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21.jpg?v=1782868653",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23.jpg?v=1782868659",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24.jpg?v=1782868664",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25.jpg?v=1782868667",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1.jpg?v=1782868670",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2.jpg?v=1782868674",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3.jpg?v=1782868677",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4.jpg?v=1782868681",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_12.jpg?v=1784767954",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12.jpg?v=1782868711",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13.jpg?v=1782868714",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14.jpg?v=1782868721",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15.jpg?v=1782868722",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16.jpg?v=1782868723",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17.jpg?v=1782868725",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18.jpg?v=1782868726",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19.jpg?v=1782868646",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20.jpg?v=1782868650",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_00c8ca9a-6995-46ae-b43a-a7cf9c1dccd0.png?v=1786068107"
+      ]
+    },
+    {
+      "id": "10656673267877",
+      "titulo": "TALON CAP",
+      "handle": "talon-cap",
+      "grupo": "bone",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "10656673267877",
+          "nome": "Único",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/imagem_2026-07-17_000953395.png?v=1784257848",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35_ff97dc57-5baf-46d3-9037-00a15efbec8a.jpg?v=1784258004"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/imagem_2026-07-17_000953395.png?v=1784257848",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35_ff97dc57-5baf-46d3-9037-00a15efbec8a.jpg?v=1784258004",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_d612a483-2440-45d9-9bf6-484696c62a75.jpg?v=1784258004",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_7997c5c8-7085-4fb0-9744-c31f39daabbf.jpg?v=1784258004",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c0321729-9195-42f4-8c52-74e5836217c1.jpg?v=1780969324"
+      ]
+    },
+    {
+      "id": "10609685561509",
+      "titulo": "RIOT",
+      "handle": "riot",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47989378220197",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8aa8e257-3ddd-4cc4-a5ac-9e4669ec2c51.jpg?v=1780977751",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_877b5956-2d21-4f6a-84a0-7a8f016e339f.jpg?v=1780977751"
+        },
+        {
+          "id": "47989378252965",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_f8a620fe-83fc-4a33-b279-a729729567c7.jpg?v=1780977751",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_596b6115-167a-436d-b8a1-f6eaa23a0f2c.jpg?v=1780977751"
+        },
+        {
+          "id": "47989378285733",
+          "nome": "PANTER / BROWN",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_f064566f-ad6f-4a93-89e0-0dc8220dc7e1.jpg?v=1780977751",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8baf8912-127e-458b-ad3e-fc687ab98bba.jpg?v=1780977751"
+        },
+        {
+          "id": "47989378318501",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_0418e96a-1e50-4b41-8614-a955a4a95e59.jpg?v=1780977751",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_d342fab8-1dd8-4dc7-a1dc-a0b7adbe42c6.jpg?v=1780977751"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_877b5956-2d21-4f6a-84a0-7a8f016e339f.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8aa8e257-3ddd-4cc4-a5ac-9e4669ec2c51.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_8d14ff85-376e-427f-8f58-638452b2d621.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_b2d1d41d-76e2-4d3b-8280-4efd439599b7.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_9975613c-fa5c-40bb-985e-2a9a98718b29.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_596b6115-167a-436d-b8a1-f6eaa23a0f2c.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_f8a620fe-83fc-4a33-b279-a729729567c7.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_e456276f-6fa5-4c4f-9a76-2accf81f44fe.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_da1105a8-e8d5-4a76-81a5-d62a3df9cc50.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_a61b4cec-9cd3-4293-9531-f51cc583fb6e.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8baf8912-127e-458b-ad3e-fc687ab98bba.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_f064566f-ad6f-4a93-89e0-0dc8220dc7e1.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_3e6e1e20-4d66-4ef1-8604-4256dfc91901.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_2f1dad0a-f959-4c5a-805e-193e55023c79.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_02d6b0fa-53f6-464b-9a0f-8f58cbb6bab9.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_d342fab8-1dd8-4dc7-a1dc-a0b7adbe42c6.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_0418e96a-1e50-4b41-8614-a955a4a95e59.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_1bf5d87f-5bdb-4620-bae2-19dd1f1a6a76.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_715f3a75-b194-4a57-b903-601ac584c4cf.jpg?v=1780977751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_2aec398c-a552-45ca-b5d2-0ed380cc32de.jpg?v=1785795095",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_26fe1b70-63f0-44ce-a98a-c4dc3ed26f6c.png?v=1786068200"
+      ]
+    },
+    {
+      "id": "10609658626213",
+      "titulo": "DRIFT",
+      "handle": "drift",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897235751077",
+          "nome": "SILVER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_d4f273dd-c17e-426f-8c24-346377107c17.jpg?v=1780974562",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_8198fdfc-b03a-4b16-b8f5-0b6717392e86.jpg?v=1780974562"
+        },
+        {
+          "id": "47989950218405",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_6e2465ba-2d87-402b-a6e1-b0193bbe3451.jpg?v=1780974562",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_f47f06ef-61ac-410b-b24c-e065fe6fdd1d.jpg?v=1780974562"
+        },
+        {
+          "id": "47989950251173",
+          "nome": "RED / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_dc433b29-61c0-414b-acb2-987c7d7dca1f.jpg?v=1780974562",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_a72b01a6-603d-4aaf-a119-d8c053421d04.jpg?v=1780974562"
+        },
+        {
+          "id": "47989950283941",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_38f14bcf-6d2f-4f69-b914-d3689bb87e00.jpg?v=1780974562",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_c281e99a-2ba3-41e7-8b93-70320820bb83.jpg?v=1780974562"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_8198fdfc-b03a-4b16-b8f5-0b6717392e86.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_d4f273dd-c17e-426f-8c24-346377107c17.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_031c3717-ba79-44d9-a793-41224bff55d7.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_04af4ae1-beae-40f1-85d5-a3ee6277fc24.jpg?v=1780974563",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_2.jpg?v=1784749721",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_f47f06ef-61ac-410b-b24c-e065fe6fdd1d.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_6e2465ba-2d87-402b-a6e1-b0193bbe3451.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/28_e35f8700-45b5-4c57-9cec-ae09d4a424b2.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_3.jpg?v=1784749821",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29_7ffc1837-1cc9-48b8-9c18-92400ad65320.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_c281e99a-2ba3-41e7-8b93-70320820bb83.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_38f14bcf-6d2f-4f69-b914-d3689bb87e00.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/33_1a05cd8c-74bb-440f-8fe6-cd8844be6c1d.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/34_8ee50632-b7d5-428c-bcca-f4567de9944b.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35_e6c04647-01d2-4e7c-baa6-20be1434e3ea.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_a72b01a6-603d-4aaf-a119-d8c053421d04.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_dc433b29-61c0-414b-acb2-987c7d7dca1f.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38_8d33beea-c205-43e6-81f6-6b5557cb005c.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/39_173f2b2a-99e1-424f-a762-5a51b6becd23.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/40_27a84ee5-3c59-4839-9b48-5d49d71515b7.jpg?v=1780974562",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_00367d2a-7de0-4ab6-b2b8-c5e9fdb0107d.png?v=1786067869"
+      ]
+    },
+    {
+      "id": "10609635688613",
+      "titulo": "BLITZ",
+      "handle": "blitz",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897165594789",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_f9c360a4-2305-4717-b319-60bfad2a48cd.jpg?v=1780972864",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3d2c49d3-6fb7-4c7e-ad0f-f68cc4e31aaf.jpg?v=1780972864"
+        },
+        {
+          "id": "47989956280485",
+          "nome": "PANTER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_81f1e68d-40f3-498f-b2fe-e287e187569e.jpg?v=1780972864",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a71c7d5d-6e32-4819-baf0-36882890003a.jpg?v=1780972864"
+        },
+        {
+          "id": "47989956313253",
+          "nome": "SILVER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_02737dd3-0627-49cb-8179-88a79db249d5.jpg?v=1780972864",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_53c1f921-c657-4a66-9afe-60947d87d694.jpg?v=1780972864"
+        },
+        {
+          "id": "47989956346021",
+          "nome": "TRANSPARENT / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ca50b016-3737-4fde-ba5e-3f81db801b48.jpg?v=1780972864",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_3cbab46d-3885-472d-bed5-591baf2a40ee.jpg?v=1780972864"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3d2c49d3-6fb7-4c7e-ad0f-f68cc4e31aaf.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_f9c360a4-2305-4717-b319-60bfad2a48cd.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_818bad68-0a33-48df-96dc-3a674e1329bb.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_144a29b3-538f-49ca-8e29-e9cd45e71f89.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_6da5f4fb-8184-4c58-88be-8d3fd4ed7b74.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a71c7d5d-6e32-4819-baf0-36882890003a.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_81f1e68d-40f3-498f-b2fe-e287e187569e.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_603a0ea6-b0c2-4480-b4ca-086578cea2ef.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_4bf3a4ac-2c57-435b-90e1-f1eb69298376.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_692ef39c-0a00-4f52-917c-b236c2c3b825.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_3cbab46d-3885-472d-bed5-591baf2a40ee.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ca50b016-3737-4fde-ba5e-3f81db801b48.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_400186dd-10c9-4992-8fcb-fe8753915420.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_7fc612d9-5a47-49c3-9981-1f25b753f947.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_adbb61e8-12ee-40c0-9cbf-a3a047033124.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_53c1f921-c657-4a66-9afe-60947d87d694.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_02737dd3-0627-49cb-8179-88a79db249d5.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_4b04c39f-96a1-4a6d-9ef0-0e27f7cbbdbf.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design.jpg?v=1784749398",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_d6ede03d-a481-4b75-a66e-faf97a80729f.jpg?v=1780972864",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_774448a3-7cfa-4fec-a35f-9289ae3c0b94.png?v=1786067820"
+      ]
+    },
+    {
+      "id": "10609587749029",
+      "titulo": "BASTION",
+      "handle": "bastion",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897093144741",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_07f5b5d1-93f4-4e49-b28a-019603ada955.jpg?v=1780971298",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_1a2c1593-953b-4636-a1ca-e68ce77b6764.jpg?v=1780971298"
+        },
+        {
+          "id": "47994178044069",
+          "nome": "BLACK / YELLOW",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_d541018b-c719-4ab4-9eb1-33bc435ba3f7.jpg?v=1780971298",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_efa45d8c-2e49-4931-94d4-00bc1873ad11.jpg?v=1780971298"
+        },
+        {
+          "id": "47994178076837",
+          "nome": "PANTER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_b8e57095-9527-4781-a294-0e0cbeecb790.jpg?v=1780971298",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_4c70b083-d818-4e13-a467-e32fa97c6ad1.jpg?v=1780971298"
+        },
+        {
+          "id": "47994178109605",
+          "nome": "ORANGE / TRANSPARENT",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_874ec92d-f5ad-45e5-bb65-1abc653b3467.jpg?v=1780971298",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_dd16f9ac-a6cf-45aa-9dc9-54774cd0f348.jpg?v=1780971298"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_1a2c1593-953b-4636-a1ca-e68ce77b6764.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_07f5b5d1-93f4-4e49-b28a-019603ada955.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_cb3a5556-2651-46fd-a42e-80eff09b7cad.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_1df2ac1c-8ed1-4bfe-af95-be5bf53a61ce.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_45501fe9-2634-49a5-80f2-832648f3c24f.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_efa45d8c-2e49-4931-94d4-00bc1873ad11.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_d541018b-c719-4ab4-9eb1-33bc435ba3f7.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/28_181749d5-eb98-49de-976c-7554273e1aac.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29_b2d61104-a88b-41c3-bf3c-29b47397d5f8.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30_435e7f50-b8d2-4325-8899-9744fffe0e3c.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_4c70b083-d818-4e13-a467-e32fa97c6ad1.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_b8e57095-9527-4781-a294-0e0cbeecb790.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/33_bed377ef-d613-408b-aee0-501aa40c049f.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/34_6e79cac4-eefd-4664-b1e5-1e12ab688050.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35_086aaa70-69aa-44a8-a719-2b1c745bee13.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37_dd16f9ac-a6cf-45aa-9dc9-54774cd0f348.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/36_874ec92d-f5ad-45e5-bb65-1abc653b3467.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38_a3c8be1a-b608-42e2-9a21-bc136542d61e.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/39_b88e7475-dec1-43f4-a5f3-a3ae2216065c.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/40_97bd4acc-ed9c-4d86-a045-ae4a60b10c4f.jpg?v=1780971298",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_3df17709-fdd9-4b9c-b9a3-77546e7da935.png?v=1786067778"
+      ]
+    },
+    {
+      "id": "10609582473381",
+      "titulo": "VERTIGO",
+      "handle": "vertigo",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897088458917",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_c825eb8e-0f16-4f74-ba6b-595b09c181ad.jpg?v=1780971156",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_1dbd567f-ccd9-47a7-9fec-b9834883faa8.jpg?v=1780971159"
+        },
+        {
+          "id": "47994275037349",
+          "nome": "CYAN / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_7252006b-5e61-4a50-b0e7-27920e4412a9.jpg?v=1780971156",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_35be7ed3-d2c5-41b6-bd9c-0863b2856bfb.jpg?v=1780971156"
+        },
+        {
+          "id": "47994275070117",
+          "nome": "BEIGE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_3eee91bb-b2e8-41d6-866b-577989d0ba25.jpg?v=1780971156",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_4aede0b0-2663-45a4-8419-8397718391e6.jpg?v=1780971156"
+        },
+        {
+          "id": "47994275102885",
+          "nome": "SILVER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_c86f7be8-93e7-4cf0-b594-81dbd6071815.jpg?v=1780971156",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_01a36699-f0af-4dfe-8a9e-eac0e8c07f3f.jpg?v=1780971156"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_1dbd567f-ccd9-47a7-9fec-b9834883faa8.jpg?v=1780971159",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_c825eb8e-0f16-4f74-ba6b-595b09c181ad.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_af0e3347-faa8-4d08-8929-90ea5a641fc0.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_69c0c886-edb6-4cfc-83d2-3fe899690fc7.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_94a86929-7c09-4885-9c07-1f831e4baab3.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_35be7ed3-d2c5-41b6-bd9c-0863b2856bfb.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_7252006b-5e61-4a50-b0e7-27920e4412a9.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_fff52cba-2a04-46f9-91b0-a656f14afc8d.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_694c0366-fac3-4604-b5e2-eb0000ac7b12.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_f1c0e84c-9070-4837-bdf1-d7cb746b34d5.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_4aede0b0-2663-45a4-8419-8397718391e6.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_3eee91bb-b2e8-41d6-866b-577989d0ba25.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_a13279e3-f6eb-4dc5-bb15-49f56678d1d3.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_4ffcb66c-631e-4497-8017-175629143cd5.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_b66f2b52-03df-4457-80d2-7792878daa43.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_01a36699-f0af-4dfe-8a9e-eac0e8c07f3f.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_c86f7be8-93e7-4cf0-b594-81dbd6071815.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_05795c23-2ebc-46ba-80ef-3d8932cc8e69.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_731b0c99-6437-46f1-b20f-5bfafbe932d1.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_72d54dc7-6c46-44e4-9d78-d0f1415c0a03.jpg?v=1780971156",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_1413a10e-1ca1-4f95-9b15-58f174bdf9e5.png?v=1786068351"
+      ]
+    },
+    {
+      "id": "10609553866917",
+      "titulo": "HORIZON",
+      "handle": "horizon",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897043173541",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_21323a56-e917-41ad-9960-6982be24ebcb.jpg?v=1780969324",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_f37c51e2-c68e-4899-a8bf-497af531096d.jpg?v=1780969324"
+        },
+        {
+          "id": "47994305642661",
+          "nome": "BROWN / BROWN",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_523a6a42-c33d-4dac-9f80-d74944fd19d4.jpg?v=1780969324",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2f0c7397-4b70-4c11-aa3c-12ed4589197a.jpg?v=1780969324"
+        },
+        {
+          "id": "47994305675429",
+          "nome": "TRANSPARENT / YELLOW",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ffb48982-5687-490a-aff2-4616f17eadd0.jpg?v=1780969324",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_d271acd1-9d0e-4b9f-b048-a366a817fc9c.jpg?v=1780969324"
+        },
+        {
+          "id": "47994305708197",
+          "nome": "SILVER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_caa97f6b-5c4b-4e6d-9c24-f18bda3143cb.jpg?v=1780969324",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_e32c11a4-9cc5-4d49-a15f-513567d6c0e5.jpg?v=1780969324"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_f37c51e2-c68e-4899-a8bf-497af531096d.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_21323a56-e917-41ad-9960-6982be24ebcb.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_88fd0323-f839-44df-a6a9-483e4e51beab.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c0321729-9195-42f4-8c52-74e5836217c1.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_3b41fd12-702d-4fda-b894-01ab5c578f3d.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2f0c7397-4b70-4c11-aa3c-12ed4589197a.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_523a6a42-c33d-4dac-9f80-d74944fd19d4.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_6188b665-0909-44ea-b64b-1a9de94dc243.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_46cd4c62-73e5-4ab0-a39a-1036afa2b402.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_d8db5693-c4fa-4103-9347-4c70e7ef4892.jpg?v=1780969325",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_d271acd1-9d0e-4b9f-b048-a366a817fc9c.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ffb48982-5687-490a-aff2-4616f17eadd0.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_48b3582a-ae66-40c2-b9a9-a610a3827809.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_da1c6c14-8c87-434b-8d7a-200e47880c03.jpg?v=1780969325",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_b8455266-3f9e-441d-a8c4-2445f56c129e.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_09ebc748-5df0-4bd9-b50d-c33e3afc2da6.jpg?v=1780969503",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_caa97f6b-5c4b-4e6d-9c24-f18bda3143cb.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_e32c11a4-9cc5-4d49-a15f-513567d6c0e5.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_4.jpg?v=1784750064",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_50fa89d6-acb9-45b2-86dc-640dc7c9bd10.jpg?v=1780969324",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_3c0efd02-fc19-4f31-ba75-073524da50a0.png?v=1786067973"
+      ]
+    },
+    {
+      "id": "10609545347237",
+      "titulo": "ORACLE",
+      "handle": "oracle",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47897021218981",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_e6885250-33cb-4703-b008-6b4abd9f42fa.jpg?v=1780968514",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_76d07892-78ac-405e-8de8-5a8411a24998.jpg?v=1780968513"
+        },
+        {
+          "id": "47994361348261",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_d3e8caca-d55f-4079-bdd0-74b1ccea784a.jpg?v=1780968514",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_5ed16f9b-3817-4c7c-a743-52ad64946f26.jpg?v=1780968514"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_53615063-a5b3-4db9-bd77-51f5d2ec4650.jpg?v=1780968825",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_e6885250-33cb-4703-b008-6b4abd9f42fa.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_76d07892-78ac-405e-8de8-5a8411a24998.jpg?v=1780968513",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_1.jpg?v=1780968881",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_ab4201e9-7039-472b-a715-d6fbd078ded4.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_5ed16f9b-3817-4c7c-a743-52ad64946f26.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_d3e8caca-d55f-4079-bdd0-74b1ccea784a.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/28_bc379f91-7e4c-4e42-9139-23ffa3ae27cd.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30_6c0838fa-5a51-4662-bd7d-1b0460c8f97e.jpg?v=1780968514",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass_2.jpg?v=1780968932",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_093d333e-3d8a-4356-a031-8c4e7c95f9ff.png?v=1786068054"
+      ]
+    },
+    {
+      "id": "10604227887269",
+      "titulo": "NOMAD",
+      "handle": "nomad",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886831878309",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_e726f22f-6e2b-4bd9-8fd4-9f2b2ce69ceb.jpg?v=1780646066",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_73dc8506-ac53-414d-8627-73e5824b74b9.jpg?v=1780646066"
+        },
+        {
+          "id": "47886831911077",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_69143361-d5ab-447d-bc3f-d5cddeafe599.jpg?v=1780646066",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0d9e407e-4f0f-4f6c-ace3-fe2155e4f581.jpg?v=1780646066"
+        },
+        {
+          "id": "48000402194597",
+          "nome": "PANTHER / BROWN",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_3c6fee37-dcb4-4302-9fff-22927d8db532.jpg?v=1780646066",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_bc1262b9-d536-4aef-98f2-f380deec37d6.jpg?v=1780646066"
+        },
+        {
+          "id": "48000402227365",
+          "nome": "BEIGE / BEIGE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ea7aaabc-cc08-43e8-b60e-e555cd42f121.jpg?v=1780646066",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_19db70f4-54d0-488e-bb9a-0e5b8d91e108.jpg?v=1780646066"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_73dc8506-ac53-414d-8627-73e5824b74b9.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_e726f22f-6e2b-4bd9-8fd4-9f2b2ce69ceb.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_a5fdb429-6ee8-4612-9e33-4c81e9c9bd40.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/glass.jpg?v=1780968397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_061c8b18-e3e6-4f3f-b2f2-8e974668f7f4.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_bc1262b9-d536-4aef-98f2-f380deec37d6.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_3c6fee37-dcb4-4302-9fff-22927d8db532.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_83a1f76e-6995-4c6a-8150-c55d3614e9c0.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_fb70ea91-e8da-4d8a-aef7-65395fa4b7a2.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_28169969-c145-4e38-8d82-3cd3894069fb.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_19db70f4-54d0-488e-bb9a-0e5b8d91e108.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ea7aaabc-cc08-43e8-b60e-e555cd42f121.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_39473ffe-9ad9-47c1-b307-21d7db9e37c8.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_5b77bf78-7131-419d-809b-1a5433a6ad42.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_bc753d14-6b88-46a0-b496-4fcee2618459.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0d9e407e-4f0f-4f6c-ace3-fe2155e4f581.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_69143361-d5ab-447d-bc3f-d5cddeafe599.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_ea04fa6c-809b-4f26-9b4e-ae301dc8b985.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_9.jpg?v=1784750598",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_db7153b5-f1f1-4904-ad74-be84576649bd.jpg?v=1780646066",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_d2ca4b70-1007-45a9-9a39-23367edd425f.png?v=1786068028"
+      ]
+    },
+    {
+      "id": "10604211011749",
+      "titulo": "ROGUE",
+      "handle": "rogue",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886808187045",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_dd0b03b4-6025-485b-9fa0-ccaa36d9d5e9.jpg?v=1780643643",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_38ea65c6-4a15-4d1b-97f7-5959113d5911.jpg?v=1780643643"
+        },
+        {
+          "id": "47886808252581",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_d884f645-d796-4afd-b864-24f96419242f.jpg?v=1780643642",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_88883536-4852-45e4-89eb-35e0558dfaf6.jpg?v=1780643642"
+        },
+        {
+          "id": "47886808285349",
+          "nome": "RED / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_a2e7666d-9056-4b61-a9b8-4be6c5eb65ea.jpg?v=1780643642",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_0c0b360e-30d9-4199-9455-19a4dbb4ba4b.jpg?v=1780643642"
+        },
+        {
+          "id": "48000431554725",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_85a190a5-5d61-4042-b7e6-a7d0961d86a2.jpg?v=1780643643",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a5009776-e305-4965-80d0-e18d2d13bc40.jpg?v=1780643643"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_38ea65c6-4a15-4d1b-97f7-5959113d5911.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_dd0b03b4-6025-485b-9fa0-ccaa36d9d5e9.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_1757c29e-a827-403f-83be-cdc0a6bf1959.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_be097194-fc4d-43fd-9817-5fddd105b999.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_fe7da99f-3f67-4fd3-ad67-e2804b8d1669.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a5009776-e305-4965-80d0-e18d2d13bc40.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_85a190a5-5d61-4042-b7e6-a7d0961d86a2.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_ffcac5b6-8117-4090-a4de-397a1e8c23af.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_08cd13c2-f540-4d69-998d-584e7bbc27ad.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_cf7ce6c7-a928-4094-99bf-42fd5a4de5d7.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_88883536-4852-45e4-89eb-35e0558dfaf6.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_d884f645-d796-4afd-b864-24f96419242f.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_4c171a7c-8f7d-4b16-8e20-7ac0b66aa01c.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_a57e4ac7-04f4-47e3-b4fa-6d3d625e8652.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_2f2fc8c3-0eb8-49ff-948a-244c39e729ce.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_15.jpg?v=1784768991",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_a2e7666d-9056-4b61-a9b8-4be6c5eb65ea.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_0c0b360e-30d9-4199-9455-19a4dbb4ba4b.jpg?v=1780643642",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_328c2653-cd3b-49bf-8594-6a2aa3e07c4a.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_6d9b5cf5-e4ab-4efd-98c9-bef45b75c5f3.jpg?v=1780643643",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_f45ce416-3a32-4480-9a71-f7d92a34a5fd.png?v=1786068228"
+      ]
+    },
+    {
+      "id": "10604180996261",
+      "titulo": "BLAZE",
+      "handle": "blaze",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886736752805",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_4b404163-49e4-4958-8c40-2219629dc0ec.jpg?v=1780640960",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3c170b08-6f50-4356-b1d0-f2d22a613ac9.jpg?v=1780640960"
+        },
+        {
+          "id": "47886736851109",
+          "nome": "BLACK / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_86ca1d5d-22c3-42bf-b413-bd75b65b69f4.jpg?v=1780640960",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_7b1c220d-2fa2-4e5f-acaf-26a536b2f055.jpg?v=1780640960"
+        },
+        {
+          "id": "48000434503845",
+          "nome": "BLACK /SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_075ce27c-a918-443c-9e86-868e3954d3ab.jpg?v=1780640960",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_9b158363-9499-423c-98fd-00f1db66e68d.jpg?v=1780640960"
+        },
+        {
+          "id": "48000435749029",
+          "nome": "BLACK / RED",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_677abd40-a9ab-46f9-be30-a27508385282.jpg?v=1780640960",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8c22704e-e244-4445-ae2a-c0a66ee7eefc.jpg?v=1780640960"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_3c170b08-6f50-4356-b1d0-f2d22a613ac9.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_4b404163-49e4-4958-8c40-2219629dc0ec.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_2f947eba-1388-405d-b80e-f17310c95c57.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_41f77302-b62a-432e-acfe-067c774e5953.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_a0cb6856-d222-4f6a-a75d-abc05bc35aca.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_9b158363-9499-423c-98fd-00f1db66e68d.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_075ce27c-a918-443c-9e86-868e3954d3ab.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_74cce440-dd64-48b9-8247-39cc6b313d32.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_dac76df8-d2d3-4cfa-8cb9-8b1fee0a96f1.jpg?v=1787105042",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_54cdc5fc-2366-4838-82a5-7629aed4e204.jpg?v=1787105626",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8c22704e-e244-4445-ae2a-c0a66ee7eefc.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_677abd40-a9ab-46f9-be30-a27508385282.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_d8481ba8-2ae4-461e-ac5e-60fc8f0f2229.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_12f5d711-5f33-4a0e-b4ac-8774b7fa0be0.jpg?v=1787104693",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_656f3482-3eac-484d-84c4-5b807421ad90.jpg?v=1787104821",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_7b1c220d-2fa2-4e5f-acaf-26a536b2f055.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_86ca1d5d-22c3-42bf-b413-bd75b65b69f4.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_af87b1ba-bf0b-4784-a0f4-4d0871def560.jpg?v=1780640960",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_b8c733fd-1c17-4a29-bf7c-dd9c72748523.jpg?v=1787104280",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_b2ecf5ab-ebec-4649-937a-d2cd6ee0573d.jpg?v=1787104411",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design.jpg?v=1786055314",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2.png?v=1786066672"
+      ]
+    },
+    {
+      "id": "10604170412197",
+      "titulo": "CINDER",
+      "handle": "cinder",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886724989093",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1cdf5146-fba0-4706-9c17-24da492acda9.jpg?v=1780639621",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_9211c64c-bd69-4183-80c8-fd2a525815b0.jpg?v=1780639620"
+        },
+        {
+          "id": "47886725021861",
+          "nome": "YELLOW / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_26fea1e1-eef8-4dac-81e0-e5b4deee0fef.jpg?v=1780639620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_1c55cb71-ee70-4e47-92bc-716145e93a3e.jpg?v=1780639620"
+        },
+        {
+          "id": "48006242893989",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_75013464-0b83-4bb4-bd23-96b00b35a45b.jpg?v=1780639620",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_b6b7448b-8c62-4229-888e-9b2bae86cc38.jpg?v=1780639621"
+        },
+        {
+          "id": "48006242926757",
+          "nome": "RED / RED",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_c889c974-cab6-4931-bc55-b6d951df7442.jpg?v=1780639621",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_f190abf2-52de-4dd8-9861-5caa7011e360.jpg?v=1780639620"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_9211c64c-bd69-4183-80c8-fd2a525815b0.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1cdf5146-fba0-4706-9c17-24da492acda9.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_1df4ff92-6cdf-461b-acf3-051a68f97afa.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_888f3851-ad7d-4afb-b061-6e0351022194.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_d7b3be5b-0fa6-4008-b3c8-cbd6c618fcec.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_1c55cb71-ee70-4e47-92bc-716145e93a3e.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_26fea1e1-eef8-4dac-81e0-e5b4deee0fef.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_8d688480-5924-45c4-850b-e09093164e11.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_59f613d2-6aa4-4562-a72a-c3d9718bb8db.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_21dde880-c56e-40ee-94c2-6b10a4976b87.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_f190abf2-52de-4dd8-9861-5caa7011e360.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_c889c974-cab6-4931-bc55-b6d951df7442.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_bd50c333-4549-4c50-9849-b78771ba674c.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_806cb4a2-e0a9-4397-a251-ff5b8c226fc9.jpg?v=1787102479",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_2f501829-950f-4393-900d-05ccbec2f0eb.jpg?v=1787102702",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_b6b7448b-8c62-4229-888e-9b2bae86cc38.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_75013464-0b83-4bb4-bd23-96b00b35a45b.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_9d47f594-df14-4f3c-8821-519efe000720.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_d65b68e7-e366-48dd-bdc6-b31ed9a2ebcd.jpg?v=1780639620",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_3204ffaf-f92c-4dde-9863-d8c96ed572e3.jpg?v=1780639621",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_40370f42-9dfb-480b-b82d-58e3039ccd5c.png?v=1786067845"
+      ]
+    },
+    {
+      "id": "10604166217893",
+      "titulo": "SENTINEL",
+      "handle": "sentinel",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886719910053",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_21c01e9d-6760-40be-a52f-cff659d98d65.jpg?v=1780639261",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_a7830905-5458-4386-a9eb-711a26068697.jpg?v=1780639262"
+        },
+        {
+          "id": "47886719942821",
+          "nome": "SILVER / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_96f32abc-0c70-47e7-a7f2-07864bf66321.jpg?v=1780639261",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_6958dc25-e97f-44a8-84af-2b2a65b1fe3b.jpg?v=1780639261"
+        },
+        {
+          "id": "47886719975589",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_64ea80b7-5391-4663-b0e9-2bd1dba46846.jpg?v=1780639261",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_09739660-b36f-48f3-9ef6-ac5598b8a58f.jpg?v=1780639261"
+        },
+        {
+          "id": "47886720008357",
+          "nome": "YELLOW / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_3383ae3a-8bc6-409f-8096-1d2f18352950.jpg?v=1780639262",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_60416d11-fad0-4676-a78b-81ca963aabe0.jpg?v=1780639261"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_a7830905-5458-4386-a9eb-711a26068697.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_21c01e9d-6760-40be-a52f-cff659d98d65.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_03f893c1-2c2e-4f1d-8d5d-e921c101baa2.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_f0ba7111-3ab1-4195-8e1d-70573d0e7e57.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_1556afcd-1060-4df4-8dc1-a95c02085825.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_09739660-b36f-48f3-9ef6-ac5598b8a58f.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_64ea80b7-5391-4663-b0e9-2bd1dba46846.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_0c33f972-01c9-4678-b237-771407dbb60e.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_70737e72-53b0-46ca-a3e3-99085be55248.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_2ce22f1a-a133-41ec-8d0a-c1533862d19c.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_6958dc25-e97f-44a8-84af-2b2a65b1fe3b.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_96f32abc-0c70-47e7-a7f2-07864bf66321.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_7e1686d3-6e20-4062-b771-60206f2edc37.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_1a2aebdb-ca78-411c-93b2-46048212dbd2.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_0d5ab615-a2eb-4f33-82e6-dbfc3c167160.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_60416d11-fad0-4676-a78b-81ca963aabe0.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_3383ae3a-8bc6-409f-8096-1d2f18352950.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_ca725f5e-618f-4daa-871c-8ddc0d98e1b9.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_bcb450bd-0bd3-433e-9653-1a3728748971.jpg?v=1780639262",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_4c17b09e-d921-4ee8-a947-66d0f81d74f3.jpg?v=1780639261",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_fb1536a9-297d-4486-82e6-6325258f5c17.png?v=1786068254"
+      ]
+    },
+    {
+      "id": "10604143870117",
+      "titulo": "VEGA",
+      "handle": "vega",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47886660173989",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_6ee7d801-89be-449b-9db6-f3b046e08b7b.jpg?v=1780637248",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_804e54a7-c45e-40ad-b652-e4b043e50f3b.jpg?v=1780637248"
+        },
+        {
+          "id": "47886660206757",
+          "nome": "GOLD / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_f737d53b-3051-4b42-9822-d0f38a8f42c9.jpg?v=1780637248",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_1399b394-7d65-4bbd-be2b-a6fe01bc7496.jpg?v=1780637248"
+        },
+        {
+          "id": "48006245482661",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_80e3af16-c162-49a7-a052-4db6a8b3d116.jpg?v=1780637248",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_d1b2f421-ff5d-4d7e-b527-a2dadd8cc0fe.jpg?v=1780637248"
+        },
+        {
+          "id": "48006245515429",
+          "nome": "BLACK / TRANSPARENT",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_fefb04b5-1259-4403-b14a-f2dde951c47e.jpg?v=1780637248",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_fd74bb81-7217-4b7a-b046-51c67e5d59c5.jpg?v=1780637248"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_6ee7d801-89be-449b-9db6-f3b046e08b7b.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_804e54a7-c45e-40ad-b652-e4b043e50f3b.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_08e18d96-422c-40c1-a6d4-58512ed5c14d.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_9a326b3c-9aae-4395-ad6c-34462c3f802c.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_5926f9e6-73d7-400d-8326-fae24b94bc9e.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_f737d53b-3051-4b42-9822-d0f38a8f42c9.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_1399b394-7d65-4bbd-be2b-a6fe01bc7496.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_977a2d30-fb02-4ca4-a6a3-aacbf9679b78.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_5f7f56b0-92cb-476b-8370-117f9df85737.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_a532c65b-f96a-4ad2-a5d3-79014d77bcf3.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_d1b2f421-ff5d-4d7e-b527-a2dadd8cc0fe.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_80e3af16-c162-49a7-a052-4db6a8b3d116.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_3df5c20d-98bc-4265-b835-9f497218fcc2.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_cd894c8d-8818-4bf7-9803-ded8ecee5c8f.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_67806c8b-0c9f-4d6e-a43a-07c524411bae.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_fd74bb81-7217-4b7a-b046-51c67e5d59c5.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_fefb04b5-1259-4403-b14a-f2dde951c47e.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_d651b07a-8a28-48d0-9a22-332185ddb188.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_6c28dcbd-e680-4d21-b54e-080c98d2495b.jpg?v=1780637248",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_18.jpg?v=1784769745",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_ff2acb44-5e11-4df4-a431-9f7ba24e298d.png?v=1786068325"
+      ]
+    },
+    {
+      "id": "10603918524581",
+      "titulo": "SIRIUS",
+      "handle": "sirius",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47885969064101",
+          "nome": "BLACK / PURPLE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_86b49fa1-fba6-4d3e-917e-93a30bc53824.jpg?v=1780620397",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1b7da964-77c8-42fd-ad2b-c5af7d42080d.jpg?v=1780620397"
+        },
+        {
+          "id": "48006245679269",
+          "nome": "ORGANGE / ORANGE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a0d13bf2-8978-48f7-b1a9-753d33816e39.jpg?v=1780620397",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_d1d99826-b9f4-40f1-9a2a-4805d02c9563.jpg?v=1780620397"
+        },
+        {
+          "id": "48006245712037",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8f236fa2-f14d-474b-b3a4-aa2bec8aae05.jpg?v=1780620397",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_2d26ec3b-f8a3-4e17-b1b2-9d9194c355e0.jpg?v=1780620397"
+        },
+        {
+          "id": "48006245744805",
+          "nome": "WHITE / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_ab4a6b94-782a-4762-ac75-94d6064326c6.jpg?v=1780620397",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_ac94a5a3-7ebd-4359-a10b-5103a841cfaa.jpg?v=1780620397"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1b7da964-77c8-42fd-ad2b-c5af7d42080d.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_86b49fa1-fba6-4d3e-917e-93a30bc53824.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_c57bef1e-1818-4f8f-a147-6d65a5a660df.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_a37cd391-1f71-41c4-93be-0cb91317a1be.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_16.jpg?v=1784769534",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_d1d99826-b9f4-40f1-9a2a-4805d02c9563.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a0d13bf2-8978-48f7-b1a9-753d33816e39.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_cbb5cdc6-9836-4b98-8759-42e7d4da009f.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_577a2a7c-a58c-4038-a34d-340f1003b0b5.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_f53dd705-397c-4ce9-9509-835f085616a1.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_2d26ec3b-f8a3-4e17-b1b2-9d9194c355e0.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_8f236fa2-f14d-474b-b3a4-aa2bec8aae05.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_8d43d89d-0fa2-4d9b-9414-2ae57ace60fa.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_17.jpg?v=1784769534",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_c6eb348d-74da-4c33-bd18-d8bd3d5f3f9e.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_ac94a5a3-7ebd-4359-a10b-5103a841cfaa.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_ab4a6b94-782a-4762-ac75-94d6064326c6.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_88d13d31-8da3-40b9-99f0-4ae2a23f4430.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_4fd9ac22-24c0-4586-a307-9c59dd70a18e.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_3567c7d1-bf6f-4a18-990a-ea781187b444.jpg?v=1780620397",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_ba9af1fc-5846-4701-8a60-f20f3da4ea0c.png?v=1786068302"
+      ]
+    },
+    {
+      "id": "10603838537893",
+      "titulo": "RIGER",
+      "handle": "riger",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47885814530213",
+          "nome": "BLACK / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_e0045203-1d35-4c9d-be5c-f0f6ea8e96c4.jpg?v=1780612669",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0617f6a8-3855-4aee-a9f2-fb8342881272.jpg?v=1780612669"
+        },
+        {
+          "id": "48006246727845",
+          "nome": "RED / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_4286bc10-761d-431c-bfcb-3fb6adff09e3.jpg?v=1780612669",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_411c5e7c-8fa3-4606-b2ed-3e5bc78619f4.jpg?v=1780612669"
+        },
+        {
+          "id": "48006246760613",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_41027d12-6c9f-42dc-9f9b-536146ac5b7c.jpg?v=1780612669",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2b1dead8-330b-4096-9094-2b0330194145.jpg?v=1780612669"
+        },
+        {
+          "id": "48006246793381",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_bcb2248c-b5b7-4250-8932-ee8c63029697.jpg?v=1780612669",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_50713ad8-19ad-4c70-9b79-582117a8838c.jpg?v=1780612669"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Untitled_design_1.jpg?v=1780620809",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_4286bc10-761d-431c-bfcb-3fb6adff09e3.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_411c5e7c-8fa3-4606-b2ed-3e5bc78619f4.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_22c92e01-3786-4d81-a9e4-760dbb5f5b19.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_03c508c3-bb16-466c-b5fb-3b71bfb0c2ab.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_2b1dead8-330b-4096-9094-2b0330194145.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_41027d12-6c9f-42dc-9f9b-536146ac5b7c.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_6d83ec46-b5fa-480a-a577-3713320013eb.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_c04edea0-607f-4740-a583-7bc831a0e508.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_cbe69279-007c-4ef9-9e28-7ec11d55c01d.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_50713ad8-19ad-4c70-9b79-582117a8838c.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_bcb2248c-b5b7-4250-8932-ee8c63029697.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_b8f0db89-6ca0-4f65-8f21-189a0b335731.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_2537d05a-01b8-46cc-ae7a-ec25ff0eb78e.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_3e460577-7d64-4e66-9c54-6dabe2ad47ea.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0617f6a8-3855-4aee-a9f2-fb8342881272.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_e0045203-1d35-4c9d-be5c-f0f6ea8e96c4.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_6ee2fee7-735e-4e82-9b3d-a5feeb8742a3.jpg?v=1780612669",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_ce02b3e0-fe1c-4b7e-94f7-19b30f79dc97.jpg?v=1780613219",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_ae0ea33b-12c7-4a44-b983-c68f0273e6cc.jpg?v=1780613219",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_0047edb1-4e93-49d7-9924-18be93baa1ec.png?v=1786068172"
+      ]
+    },
+    {
+      "id": "10603822579877",
+      "titulo": "POLARIS",
+      "handle": "polaris",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47885772259493",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37.jpg?v=1780610946",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38.jpg?v=1780610946"
+        },
+        {
+          "id": "48006248431781",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_93ef2d9d-c5a3-4dc2-82a1-7e051f1ad6b8.jpg?v=1780610946",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_c14ceceb-90cd-4158-8d8c-daf2e16b5ada.jpg?v=1780610946"
+        },
+        {
+          "id": "48006248464549",
+          "nome": "BLUE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_2b0c5f82-fe0a-4320-87d8-b44845e1f52f.jpg?v=1780610946",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_c4904db2-a9f9-475e-8cc5-3bb0f87084b3.jpg?v=1780610946"
+        },
+        {
+          "id": "48006248497317",
+          "nome": "TRANSPARENT / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_9aad2abf-d1ce-4e49-ba4f-1e8de90bde97.jpg?v=1780610946",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_4499cf51-b7f3-4381-8935-a5bd5f5499da.jpg?v=1780610946"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Untitled_design_323f350e-2848-4615-8b36-4438364c69f3.jpg?v=1780620852",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_9aad2abf-d1ce-4e49-ba4f-1e8de90bde97.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_4499cf51-b7f3-4381-8935-a5bd5f5499da.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_91fdba03-351b-4652-b2db-a0971169439f.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_92422dc5-a5e7-46bb-bb8d-f95bccb4b702.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26_c14ceceb-90cd-4158-8d8c-daf2e16b5ada.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/27_93ef2d9d-c5a3-4dc2-82a1-7e051f1ad6b8.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/28_444e4855-c98c-46af-ad02-1e88939aa7a2.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29_7df92172-a2be-4a2a-affa-8bd77f9d5808.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30_4210a60e-5c17-46f3-9cd3-fdb9a6d06d8b.jpg?v=1787100878",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31_c4904db2-a9f9-475e-8cc5-3bb0f87084b3.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/32_2b0c5f82-fe0a-4320-87d8-b44845e1f52f.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/33_f26c0e64-ab12-488c-bcf0-e17460ff0f1e.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/34.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/35.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_10.jpg?v=1784751148",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/37.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/38.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/39.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/40.jpg?v=1780610946",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_7340914e-a48f-4f02-960a-2266578fb00e.png?v=1786068081"
+      ]
+    },
+    {
+      "id": "10601732702373",
+      "titulo": "SHADE",
+      "handle": "shade",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47880730935461",
+          "nome": "BLACK / YELLOW",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_fe22f00f-4aa6-4848-8db2-b69ca1555123.jpg?v=1780449532",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0ef2e710-eb20-45f5-a2fc-82181fa1d90f.jpg?v=1780449532"
+        },
+        {
+          "id": "47880730968229",
+          "nome": "BLACK / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_2768f2c8-dafa-4b1e-85fd-7d0ca8d3b5d3.jpg?v=1780449532",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_bf5c7189-ec9c-4af9-880c-a4d931c119d7.jpg?v=1780449532"
+        },
+        {
+          "id": "48006249054373",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_5bce5d72-6f43-4a31-9e97-7b5d20565ec9.jpg?v=1780449533",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_6e9c60b2-69ba-4034-a9f1-b44c5d40c175.jpg?v=1780449532"
+        },
+        {
+          "id": "48006249087141",
+          "nome": "BLACK / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_05a68a83-16f9-4458-ad17-77d7e5ae686b.jpg?v=1780449535",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_15d31ed5-83f7-4493-8590-55f0b70aa122.jpg?v=1780449532"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_15d31ed5-83f7-4493-8590-55f0b70aa122.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_05a68a83-16f9-4458-ad17-77d7e5ae686b.jpg?v=1780449535",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_94619ae5-760f-4b0e-bc16-3554b58d97a5.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_833b16a8-5cc6-48f1-85da-19335e771eb0.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_8f6ec7a7-03a1-4f99-85a0-3e613e2b71af.jpg?v=1787100823",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_bf5c7189-ec9c-4af9-880c-a4d931c119d7.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_2768f2c8-dafa-4b1e-85fd-7d0ca8d3b5d3.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_cf800e02-df17-4086-8ace-554defeb2884.jpg?v=1780449533",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_4479ab0a-1329-4a65-a3c8-89b77cdeb973.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_9cb8a212-ef11-4f67-bff8-b41d8f8ff089.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_6e9c60b2-69ba-4034-a9f1-b44c5d40c175.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_5bce5d72-6f43-4a31-9e97-7b5d20565ec9.jpg?v=1780449533",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_7bd1a73f-8c20-46fe-8d4b-d108b75d2b2c.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_2873716d-0459-4b5b-9946-bf04e9a39fbf.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_c34a1900-1f1c-4063-914a-9d0380c07730.jpg?v=1780449533",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_0ef2e710-eb20-45f5-a2fc-82181fa1d90f.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_fe22f00f-4aa6-4848-8db2-b69ca1555123.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_1308139d-f39c-4ae8-b1ac-e3e53fdbdec6.jpg?v=1780449533",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_05715e7f-1f3e-43e2-accd-16434aa4c91d.jpg?v=1780449533",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_1f7b4e47-bc23-41bd-a21b-61b31dec7c02.jpg?v=1780449532",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_7a9a9fc6-9f90-4841-96a3-09399afea5b8.png?v=1786068278"
+      ]
+    },
+    {
+      "id": "10601634168997",
+      "titulo": "DUBHE",
+      "handle": "dubhe",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47880597438629",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ffb36c24-db80-4ea4-bf01-9d8868a8039b.jpg?v=1780444527",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_3ddd3629-eda8-4943-8c17-e8061d4fb2ea.jpg?v=1780444527"
+        },
+        {
+          "id": "48006249939109",
+          "nome": "BROWN / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_8f0dbb43-9d48-4c28-8bd9-41ca9f79d5de.jpg?v=1780444527",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_e3bfe6fc-0ff8-4fec-829f-92f11d49d517.jpg?v=1780444527"
+        },
+        {
+          "id": "48006249971877",
+          "nome": "BLUE / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_83e3ed08-b2ef-4bf0-af85-617171650462.jpg?v=1780444527",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_40c34ab2-d2ec-4522-b36c-f87ffb4007e8.jpg?v=1780444526"
+        },
+        {
+          "id": "48006250004645",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_d1f94bd6-d7cd-4090-b8b9-7e7d9dae433d.jpg?v=1780444527",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_48cead2d-06d4-4247-87e8-155a2e25fec5.jpg?v=1780444527"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_40c34ab2-d2ec-4522-b36c-f87ffb4007e8.jpg?v=1780444526",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_83e3ed08-b2ef-4bf0-af85-617171650462.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_3220095b-7515-43a1-a5de-0b05f9204305.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_4f21312d-2d40-4b59-9292-5cd05db440ae.jpg?v=1787100205",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_ff029a07-eb7d-489b-ad9a-b02093bb7395.jpg?v=1787100247",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_48cead2d-06d4-4247-87e8-155a2e25fec5.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_d1f94bd6-d7cd-4090-b8b9-7e7d9dae433d.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_a1694088-8e27-4352-a341-bc48c3060f18.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c88c6f66-88b4-45a1-bc4b-999e5da76418.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_40b02405-716b-4166-91e3-33c36355a6b3.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_3ddd3629-eda8-4943-8c17-e8061d4fb2ea.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_ffb36c24-db80-4ea4-bf01-9d8868a8039b.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_857f2f80-717f-40b4-9574-04c743e94c59.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_fb2417c1-b9aa-4579-864a-50092ae23341.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_04248e3f-bf2b-4bf8-bf0b-4dfc3e7fd4cd.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_e3bfe6fc-0ff8-4fec-829f-92f11d49d517.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_8f0dbb43-9d48-4c28-8bd9-41ca9f79d5de.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_e4e93e3e-4fb8-49b5-a41e-924571a6b1df.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_962eacd2-326a-4c5a-8e65-c68b9cb3c612.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_acb91f96-b760-485e-ba78-1010e6e19c95.jpg?v=1780444527",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_e866aadc-65e1-4b32-8487-1ba91cb1aefb.png?v=1786067902"
+      ]
+    },
+    {
+      "id": "10601617326245",
+      "titulo": "MIRAGE",
+      "handle": "mirage",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47880564605093",
+          "nome": "BROWN / BROWN",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_39626ad9-ba4d-4d77-8adf-e2b883b88e53.jpg?v=1780443328",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_9ff0f409-804e-49e0-9514-c82621e7e2a9.jpg?v=1780443328"
+        },
+        {
+          "id": "47880564637861",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_613cbc92-812a-4b68-9475-5059c0aec475.jpg?v=1780443329",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_aef7649a-12ac-410e-bc44-c1ab97378568.jpg?v=1780443329"
+        },
+        {
+          "id": "47880564670629",
+          "nome": "BLACK / PURPLE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_de9171b1-e3d0-41d7-86c9-f4dbf968aff3.jpg?v=1780443328",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_fbd4c352-9ccd-4f10-bb3c-25a36daf6335.jpg?v=1780443328"
+        },
+        {
+          "id": "47880564703397",
+          "nome": "BLACK / BLUE",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30.jpg?v=1780443329",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29.jpg?v=1780443328"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_9ff0f409-804e-49e0-9514-c82621e7e2a9.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_39626ad9-ba4d-4d77-8adf-e2b883b88e53.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/21_00e57528-9898-431a-abee-a55d1494029f.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/22_69fabb96-a01f-4588-ba6d-02f72f2f823b.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/23_0390d4fe-716e-43e8-a3e6-57848a4d337b.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Untitled_design_ddd60800-5ce5-4a95-a8ce-88ce2b858a65.jpg?v=1780443496",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_613cbc92-812a-4b68-9475-5059c0aec475.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_aef7649a-12ac-410e-bc44-c1ab97378568.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_9ba76add-4979-4c9c-807f-99ac1e59a60a.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_e41f8c06-bcea-40e8-af7a-0f8105dd8aa8.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/24_fbd4c352-9ccd-4f10-bb3c-25a36daf6335.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/25_de9171b1-e3d0-41d7-86c9-f4dbf968aff3.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/26.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_5.jpg?v=1784750225",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_6.jpg?v=1784750302",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/29.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/30.jpg?v=1780443329",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/31.jpg?v=1780443328",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_7.jpg?v=1784750375",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_8.jpg?v=1784750442",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_3fd14977-d4b3-47d6-b4ea-e8e94f371305.png?v=1786068001"
+      ]
+    },
+    {
+      "id": "10599777075365",
+      "titulo": "RENEGADE",
+      "handle": "renegade",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47873072201893",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_289cf4ea-99b2-413e-9103-779379f63d0a.jpg?v=1780370144",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_4794df0d-c6d7-4c5f-9c39-fffcfe415c36.jpg?v=1780370144"
+        },
+        {
+          "id": "47873072234661",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_ae9e2166-16a5-4d46-993c-262e0cd3ef68.jpg?v=1780370144",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_72dbea81-6889-4fa6-b1e7-cc2a4a08c9ae.jpg?v=1780370144"
+        },
+        {
+          "id": "47873072267429",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_1292bbca-9d66-4af7-84da-8376ff6d7914.jpg?v=1780370144",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_492f41ca-a647-4388-b085-e2dec3363cc8.jpg?v=1780370144"
+        },
+        {
+          "id": "47873072496805",
+          "nome": "ORANGE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_10d50a76-b809-4b34-a5ac-b90f24f6ae0d.jpg?v=1780370144",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_a72f6612-e218-46c0-a7b9-1a0d904aa775.jpg?v=1780370144"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_4794df0d-c6d7-4c5f-9c39-fffcfe415c36.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_289cf4ea-99b2-413e-9103-779379f63d0a.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_dc642d6b-5de5-47df-9825-fe68df558ec2.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_d24722d9-096c-4ad9-ac0c-e48b0902a161.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_62f2b46d-20d1-489e-b0a7-2ab110f2952a.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_72dbea81-6889-4fa6-b1e7-cc2a4a08c9ae.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_ae9e2166-16a5-4d46-993c-262e0cd3ef68.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_ddcd31c6-6357-4420-9ba7-c57ef25fcea1.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_f7ba30de-ba47-404c-9f9d-52db4971c190.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_409d352f-d865-45cc-9a75-1c1dfbd47766.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_492f41ca-a647-4388-b085-e2dec3363cc8.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_1292bbca-9d66-4af7-84da-8376ff6d7914.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_521b08ff-9a06-4610-8723-50c6984c8723.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_aae20eac-01c2-404a-b8e6-35a1b55a3aef.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_0015ea11-7032-4337-bb20-bd7067896ef4.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_a72f6612-e218-46c0-a7b9-1a0d904aa775.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_10d50a76-b809-4b34-a5ac-b90f24f6ae0d.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_87e28b31-877a-41ba-a4bf-a4e29ce3c904.jpg?v=1780370144",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_13.jpg?v=1784768588",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_14.jpg?v=1784768587",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_7937ea13-6ca8-4d7a-9a4b-518d61a04d0c.png?v=1786068149"
+      ]
+    },
+    {
+      "id": "10599726088357",
+      "titulo": "VOID",
+      "handle": "void",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47873013252261",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_2080ac13-bade-446f-b958-dc6c9955f23d.jpg?v=1782868800",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_a191e9ff-0c9d-4b13-a861-c6135b08eb0c.jpg?v=1782868798"
+        },
+        {
+          "id": "47873013285029",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_89b7db7b-f9b5-4db6-bf93-4fad88f8d009.jpg?v=1780367798",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a8991960-7eb2-473d-a333-422ada225b6e.jpg?v=1782868806"
+        },
+        {
+          "id": "47873013317797",
+          "nome": "RED / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_5d7e7fbf-2704-49b9-9a7a-0eff7a1ebaa0.jpg?v=1780367798",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_e995b9b8-a422-4172-a7ae-bac8ce5beac7.jpg?v=1780367798"
+        },
+        {
+          "id": "47873013350565",
+          "nome": "WHITE / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_2f7870d7-63c3-4a59-acf2-9581a65196f6.jpg?v=1780367798",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_df2faca8-395f-47b9-8d81-d289dcf54c0c.jpg?v=1780367798"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_a191e9ff-0c9d-4b13-a861-c6135b08eb0c.jpg?v=1782868798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_2080ac13-bade-446f-b958-dc6c9955f23d.jpg?v=1782868800",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_930f1354-b627-4913-bba2-27eceef9ed67.jpg?v=1782868800",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_38db02ea-a6e3-46db-a68b-c76df12fb340.jpg?v=1782868802",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_22b98b84-6c6a-4f9e-ac2d-4a60f19cfcbe.jpg?v=1787100554",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_a8991960-7eb2-473d-a333-422ada225b6e.jpg?v=1782868806",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_89b7db7b-f9b5-4db6-bf93-4fad88f8d009.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_2570f651-b715-4e23-ad9d-16e3639eca39.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/9_be0788a8-8f27-4953-b405-7a4d6ce422cd.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_c908fc3e-8921-43b1-b303-9913b6665728.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_e995b9b8-a422-4172-a7ae-bac8ce5beac7.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_5d7e7fbf-2704-49b9-9a7a-0eff7a1ebaa0.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_7b6beb0f-af98-4c23-9c00-00c1d87f14b7.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_f7490f35-f1af-41c5-a496-40ebcd88cb1f.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/Copy_of_Copy_of_Untitled_Design_19.jpg?v=1784769958",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_df2faca8-395f-47b9-8d81-d289dcf54c0c.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_2f7870d7-63c3-4a59-acf2-9581a65196f6.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_0906d7ac-c470-4280-8c22-f350f16c595c.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_6c8ad86a-0e1b-42ff-8e4b-1e7a264e05ed.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_f6a574df-a81a-4c9a-be32-ba97e98a5762.jpg?v=1780367798",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_ea036c00-41cd-4a74-8615-9fc129086b4d.png?v=1786068397"
+      ]
+    },
+    {
+      "id": "10599654785189",
+      "titulo": "FANG",
+      "handle": "fang",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47872870416549",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-2.jpg?v=1782868760",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-3.jpg?v=1782868760"
+        },
+        {
+          "id": "47872870449317",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-2.jpg?v=1782868766",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-3.jpg?v=1782868768"
+        },
+        {
+          "id": "47872870482085",
+          "nome": "RED / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_0bb75e0f-a175-4d85-8797-8f1797011b02.jpg?v=1782868774",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_4810f33a-8613-48ef-a165-21927f6df9d1.jpg?v=1782868772"
+        },
+        {
+          "id": "47872870514853",
+          "nome": "GREEN / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_d3c669a0-ce13-4ea2-be40-00622b67be2f.jpg?v=1782868782",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_8d115dc6-fa88-4dd5-8b70-fd8b9629552c.jpg?v=1782868781"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-1.jpg?v=1782868758",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-2.jpg?v=1782868760",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-3.jpg?v=1782868760",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-4.jpg?v=1782868762",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/black-black-5.jpg?v=1782868763",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-1.jpg?v=1782868765",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-2.jpg?v=1782868766",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-3.jpg?v=1782868768",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-4.jpg?v=1782868769",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/silver-silver-5.jpg?v=1782868770",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_4810f33a-8613-48ef-a165-21927f6df9d1.jpg?v=1782868772",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_0bb75e0f-a175-4d85-8797-8f1797011b02.jpg?v=1782868774",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_277eaada-bacc-404a-82e4-38e6677607ad.jpg?v=1782868775",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_174054b9-22db-4a3b-8aff-9993f4581629.jpg?v=1782868776",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/15_3d96a258-b1f0-416c-9c76-9b06b94d2c66.jpg?v=1782868779",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/16_8d115dc6-fa88-4dd5-8b70-fd8b9629552c.jpg?v=1782868781",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/17_d3c669a0-ce13-4ea2-be40-00622b67be2f.jpg?v=1782868782",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/18_a4d93118-cdff-4906-bdb9-64a1e312cd88.jpg?v=1782868783",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/19_c97a127f-6b1e-428a-85d1-457400f90e22.jpg?v=1782868784",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/20_f86c3429-dc67-46e3-9a3c-cd7d384acc26.webp?v=1782868797",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_ccf75e9a-7b19-42de-8f96-01309f97584a.png?v=1786067937"
+      ]
+    },
+    {
+      "id": "10599573029029",
+      "titulo": "VIPER",
+      "handle": "viper",
+      "grupo": "oculos",
+      "subtipo": null,
+      "cores": [
+        {
+          "id": "47872825032869",
+          "nome": "BLACK / BLACK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8189b219-2d32-4009-94ba-d1cbb7a7d0b6.jpg?v=1782868751",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_334fb08d-1b1e-4d58-85eb-2d7e377302de.jpg?v=1782868752"
+        },
+        {
+          "id": "47872825065637",
+          "nome": "GRAY / GREEN",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_079dec49-9d53-4f7f-854a-fe1bc7913bdc.jpg?v=1782868729",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_6dc6a01d-e4c7-4992-b3a6-bec319783848.jpg?v=1782868727"
+        },
+        {
+          "id": "47872825098405",
+          "nome": "SILVER / SILVER",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_a58f0eed-3cd1-4ce6-8d54-651d45f5849a.jpg?v=1782868744",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_9ba0c8c3-5943-4b81-b4da-17e2dfef3091.jpg?v=1782868740"
+        },
+        {
+          "id": "47872825131173",
+          "nome": "WHITE / PINK",
+          "frente": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_689af30e-77f0-484a-98f8-a1ba338e7236.jpg?v=1782868736",
+          "ladinho": "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_9d833e84-d18a-4325-bf6c-56bc95ed3e95.jpg?v=1782868735"
+        }
+      ],
+      "todas": [
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_334fb08d-1b1e-4d58-85eb-2d7e377302de.jpg?v=1782868752",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_8189b219-2d32-4009-94ba-d1cbb7a7d0b6.jpg?v=1782868751",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_bada029f-6396-4132-b013-a9a91739753b.jpg?v=1782868748",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_16acc93b-2dda-4052-a787-515e6ab8438c.jpg?v=1782868795",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_63f26ca0-e88f-4b89-8a06-b8c47826730e.jpg?v=1782868753",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/1_6dc6a01d-e4c7-4992-b3a6-bec319783848.jpg?v=1782868727",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_079dec49-9d53-4f7f-854a-fe1bc7913bdc.jpg?v=1782868729",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_8325080f-ac08-43b2-8c4e-7910d05d5ffe.jpg?v=1782868729",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/2_1cea5b00-b849-4352-bbee-7684796f817c.jpg?v=1782868796",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/5_f6fc061e-2fc5-4d90-b505-d090884fd3bb.jpg?v=1782868734",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/11_9ba0c8c3-5943-4b81-b4da-17e2dfef3091.jpg?v=1782868740",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/12_a58f0eed-3cd1-4ce6-8d54-651d45f5849a.jpg?v=1782868744",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/13_461d9b1d-2295-4a1d-8d59-88a9c0553b52.jpg?v=1782868744",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/14_7db6bd97-9201-40df-9cff-647022828f48.jpg?v=1782868745",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/4_c0056084-5751-43ce-8d5c-d2c17aa19ed4.jpg?v=1782868794",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/6_9d833e84-d18a-4325-bf6c-56bc95ed3e95.jpg?v=1782868735",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/7_689af30e-77f0-484a-98f8-a1ba338e7236.jpg?v=1782868736",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/8_7b10ddd2-41bb-40bd-855c-8c033ccc185a.jpg?v=1782868737",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/3_29873460-5132-42c9-bed8-2c07ba486be2.jpg?v=1782868792",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/10_ec49a681-eefe-4dfb-82a4-bb708dddff45.jpg?v=1782868739",
+        "https://cdn.shopify.com/s/files/1/0768/9705/8981/files/copy_of_untitled_design_2_72ba2f86-6fa6-49cc-b567-43a15cda97e7.png?v=1786068375"
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { sincronizarCatalogo } from './sync-catalog.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -17,6 +18,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 async function fileToOpenAI(filePath, mimetype, name) {
   const buffer = fs.readFileSync(filePath);
+  return await toFile(buffer, name, { type: mimetype });
+}
+
+// Baixa uma foto do CDN da Shopify e entrega no formato que a OpenAI aceita.
+// Só aceita URLs do CDN da própria loja — evita a rota virar proxy de download.
+async function urlToOpenAI(url, name) {
+  if (!/^https:\/\/cdn\.shopify\.com\//.test(url)) {
+    throw new Error(`URL de foto não permitida: ${url}`);
+  }
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Falha ao baixar foto do catálogo (${res.status})`);
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const mimetype = res.headers.get('content-type') || 'image/jpeg';
   return await toFile(buffer, name, { type: mimetype });
 }
 
@@ -354,7 +368,7 @@ function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx, 
   lines.push('- Allow only very subtle natural variation: slight micro-expression shift and minor hair strand movement — to create a natural feel');
 
   if (expressionIdx) {
-    lines.push(`- Replicate only the facial expression from Image ${expressionIdx} (mouth position, eye openness, brow shape) onto the model — do NOT copy the face, identity, skin tone or any other feature of the person in Image ${expressionIdx}`);
+    lines.push(`- Replicate only the facial expression from Image ${expressionIdx} (mouth position, eye openness, brow shape) onto ${varias ? 'every person' : 'the model'} — do NOT copy the face, identity, skin tone or any other feature of the person in Image ${expressionIdx}`);
   }
 
   lines.push(`- Place the glasses naturally and precisely on the model\'s face, preserving their exact shape, color, lenses, and frame${glassesCount > 1 ? ' — cross-reference all glasses images to get the details right' : ''}`);
@@ -372,34 +386,104 @@ function buildModelPrompt(glassesCount, outfitIdx, expressionIdx, boneStartIdx, 
 }
 
 // Monta prompt para a seção "Criativos": recria a foto de referência trocando o modelo
-function buildCreativePrompt(glassesCount, keepOutfit, outfitIdx, expressionIdx, extraText) {
-  const modelIdx     = 2;
-  const glassesStart = 3;
-  const glassesEnd   = 2 + glassesCount;
-  const glassesRef   = glassesCount === 1
-    ? `Image ${glassesStart} shows the glasses`
-    : `Images ${glassesStart} to ${glassesEnd} show the glasses from different angles — use all of them as reference to understand the exact shape, color, lenses, and frame`;
+// Quantas fotos de produto cabem numa geração — dá pra combinar óculos + boné +
+// joia de uma vez, cada um entrando com frente e ladinho
+const MAX_FOTOS_PRODUTO = 10;
 
-  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, and shadow style exactly. Image ${modelIdx} is the model reference photo. ${glassesRef}.`];
+// Quantas pessoas cabem numa mesma cena
+const MAX_MODELOS = 4;
+
+const NOME_DO_GRUPO = {
+  oculos: 'the sunglasses',
+  bone:   'the cap',
+  joia:   'the jewelry piece',
+};
+
+// Cada tipo de joia é usado num lugar do corpo — sem isso a IA põe pulseira no pescoço
+const NOME_DO_SUBTIPO = {
+  anel:     { nome: 'the ring',     onde: "on the model's finger" },
+  pulseira: { nome: 'the bracelet', onde: "around the model's wrist" },
+  corrente: { nome: 'the chain',    onde: "around the model's neck" },
+};
+
+function nomeDoProduto(item) {
+  return NOME_DO_SUBTIPO[item.subtipo]?.nome || NOME_DO_GRUPO[item.grupo] || 'the product';
+}
+
+function descricaoDoProduto(item) {
+  const cor = item.cor && item.cor !== 'Único' ? ` in the "${item.cor}" colorway` : '';
+  return `${nomeDoProduto(item)} "${item.titulo}"${cor}`;
+}
+
+function comoVestirProduto(item) {
+  const nome = nomeDoProduto(item);
+  if (item.grupo === 'oculos') {
+    return `Place ${nome} naturally and precisely on the model's face, replacing whatever glasses (if any) appear in Image 1`;
+  }
+  if (item.grupo === 'bone') {
+    return `Put ${nome} on the model's head at a natural angle, replacing whatever headwear (if any) appears in Image 1`;
+  }
+  if (item.grupo === 'joia') {
+    const onde = NOME_DO_SUBTIPO[item.subtipo]?.onde;
+    return onde
+      ? `Have the model wear ${nome} ${onde} — it must appear there and nowhere else, replacing any equivalent jewelry in Image 1. If the framing of Image 1 does not show that part of the body, widen nothing and simply leave it out rather than moving it elsewhere`
+      : `Have the model wear ${nome} in its natural position on the body, replacing any equivalent jewelry in Image 1`;
+  }
+  return `Place ${nome} naturally on the model`;
+}
+
+// produtos: [{ descricao, comoVestir, inicio, fim }] — um por produto anexado,
+// com a faixa de imagens que pertence a ele
+// modelos: [{ idx }] — uma imagem de referência por pessoa que deve aparecer na cena
+function buildCreativePrompt(modelos, produtos, keepOutfit, outfitIdx, expressionIdx, extraText) {
+  const varias   = modelos.length > 1;
+  const idxs     = modelos.map(m => m.idx);
+  const listaIdx = varias
+    ? `Images ${idxs.slice(0, -1).join(', ')} and ${idxs[idxs.length - 1]}`
+    : `Image ${idxs[0]}`;
+
+  const produtoRef = produtos.map(p => (
+    p.inicio === p.fim
+      ? `Image ${p.inicio} shows ${p.descricao}`
+      : `Images ${p.inicio} to ${p.fim} show ${p.descricao} from different angles — use all of them as reference to understand its exact shape, color and details`
+  )).join('. ');
+
+  const refModelos = varias
+    ? `${listaIdx} are the model reference photos — one per person, ${modelos.length} people in total`
+    : `${listaIdx} is the model reference photo`;
+  const header = [`Image 1 is the reference photo — replicate its pose, camera angle, framing, background, lighting, and shadow style exactly. ${refModelos}. ${produtoRef}.`];
   if (!keepOutfit && outfitIdx) header[0] += ` Image ${outfitIdx} shows the outfit to use.`;
   if (expressionIdx) header[0] += ` Image ${expressionIdx} is a facial expression reference.`;
 
   const lines = [...header, ''];
 
-  lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person in it with the model from Image ${modelIdx}.`);
-  lines.push(`- Preserve the model's face, skin, and hair exactly as in Image ${modelIdx}`);
+  if (varias) {
+    lines.push(`Generate a photo that recreates Image 1 exactly, but with ${modelos.length} people in it — one for each model reference (${listaIdx}).`);
+    lines.push(`- Every one of the ${modelos.length} models must appear in the final photo, each as a distinct person — never merge two references into one face and never repeat the same face twice`);
+    lines.push('- If Image 1 shows fewer people than that, add the missing ones into the scene naturally, side by side, matching its framing, scale, lighting and shadows');
+    modelos.forEach((m, i) => lines.push(`- Person ${i + 1}: preserve the face, skin, and hair exactly as in Image ${m.idx}`));
+  } else {
+    lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person in it with the model from Image ${idxs[0]}.`);
+    lines.push(`- Preserve the model's face, skin, and hair exactly as in Image ${idxs[0]}`);
+  }
   lines.push('- Allow only very subtle natural variation: slight micro-expression shift and minor hair strand movement — to create a natural feel');
 
   if (expressionIdx) {
-    lines.push(`- Replicate only the facial expression from Image ${expressionIdx} (mouth position, eye openness, brow shape) onto the model — do NOT copy the face, identity, skin tone or any other feature of the person in Image ${expressionIdx}`);
+    lines.push(`- Replicate only the facial expression from Image ${expressionIdx} (mouth position, eye openness, brow shape) onto ${varias ? 'every person' : 'the model'} — do NOT copy the face, identity, skin tone or any other feature of the person in Image ${expressionIdx}`);
   }
 
-  lines.push(`- Place the glasses naturally and precisely on the model's face, preserving their exact shape, color, lenses, and frame${glassesCount > 1 ? ' — cross-reference all glasses images to get the details right' : ''}, replacing whatever glasses (if any) appear in Image 1`);
+  for (const p of produtos) {
+    const varias = p.fim > p.inicio ? ' — cross-reference all of its images to get the details right' : '';
+    lines.push(`- ${p.comoVestir}, preserving its exact shape, color and details${varias}`);
+  }
+  if (produtos.length > 1) {
+    lines.push(`- All the products above must appear together at the same time, worn naturally and consistently${varias ? ' — spread them across the people so each product is clearly visible on someone' : ' on the model'}`);
+  }
 
   if (keepOutfit) {
-    lines.push('- Keep the exact same clothing/outfit worn by the person in Image 1, now on the new model');
+    lines.push(`- Keep the exact same clothing/outfit style worn by the person in Image 1, now on the new ${varias ? 'models' : 'model'}`);
   } else {
-    lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
+    lines.push(`- Dress ${varias ? 'every model' : 'the model'} in the exact outfit shown in Image ${outfitIdx}`);
   }
 
   lines.push('- Keep everything else from Image 1 identical: pose, camera angle, framing, background, lighting, and shadows');
@@ -430,9 +514,9 @@ function buildCorrenteModeloPrompt(chainCount, keepOutfit, outfitIdx, extraText,
   lines.push(`Generate a photo that recreates Image 1 exactly, but replace the person's skin/neck/body with the model from Image ${modelIdx}, matching their skin tone and build naturally.`);
 
   if (keepOutfit) {
-    lines.push('- Keep the exact same clothing/outfit worn by the person in Image 1, now on the new model');
+    lines.push(`- Keep the exact same clothing/outfit style worn by the person in Image 1, now on the new ${varias ? 'models' : 'model'}`);
   } else {
-    lines.push(`- Dress the model in the exact outfit shown in Image ${outfitIdx}`);
+    lines.push(`- Dress ${varias ? 'every model' : 'the model'} in the exact outfit shown in Image ${outfitIdx}`);
   }
 
   if (jacketIdx) {
@@ -648,6 +732,26 @@ app.get('/api/products', (req, res) => {
   res.json(result);
 });
 
+// Catálogo da loja Shopify — produtos com a foto de frente e a de ladinho de cada cor
+app.get('/api/catalog', (req, res) => {
+  const catalogPath = path.join(__dirname, 'public/catalog.json');
+  if (!fs.existsSync(catalogPath)) {
+    return res.status(404).json({ error: 'Catálogo ainda não sincronizado. Clique em "Sincronizar".' });
+  }
+  res.json(JSON.parse(fs.readFileSync(catalogPath, 'utf8')));
+});
+
+app.post('/api/catalog/sync', async (req, res) => {
+  try {
+    const dados = await sincronizarCatalogo();
+    console.log(`[catalog] sincronizado: ${dados.produtos.length} produtos`);
+    res.json(dados);
+  } catch (err) {
+    console.error('[catalog] erro na sincronização:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/png-sombra', upload.array('images', 10), async (req, res) => {
   const uploadedPaths = (req.files || []).map(f => f.path);
   try {
@@ -832,9 +936,43 @@ app.post('/api/generate-creative', creativeUpload.fields([
   const uploadedPaths  = [referenceFile?.path, ...glassesFiles.map(f => f.path), outfitFile?.path].filter(Boolean);
   try {
     const { modelFile, pose, keepOutfit, expressionFile, extraText, size } = req.body;
-    if (!referenceFile)     return res.status(400).json({ error: 'Envie a foto de referência.' });
-    if (!glassesFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto dos óculos.' });
-    if (!modelFile)          return res.status(400).json({ error: 'Selecione um modelo.' });
+
+    // Modelos: dá pra colocar mais de uma pessoa na mesma cena. Aceita tanto
+    // modelFiles (lista) quanto o modelFile antigo, de uma pessoa só.
+    let modelFiles = [];
+    if (req.body.modelFiles) {
+      try {
+        modelFiles = JSON.parse(req.body.modelFiles);
+        if (!Array.isArray(modelFiles) || modelFiles.some(f => typeof f !== 'string')) throw new Error();
+      } catch {
+        return res.status(400).json({ error: 'modelFiles inválido.' });
+      }
+    } else if (modelFile) {
+      modelFiles = [modelFile];
+    }
+
+    // Produtos escolhidos no catálogo da loja — podem ser vários ao mesmo tempo
+    // (ex: óculos + boné + corrente), e somam com as fotos anexadas na mão
+    let catalogItems = [];
+    if (req.body.catalogItems) {
+      try {
+        catalogItems = JSON.parse(req.body.catalogItems);
+        if (!Array.isArray(catalogItems) || catalogItems.some(i => !Array.isArray(i?.urls))) throw new Error();
+      } catch {
+        return res.status(400).json({ error: 'catalogItems inválido.' });
+      }
+    }
+    const totalCatalogo = catalogItems.reduce((n, i) => n + i.urls.length, 0);
+    const totalProduto  = glassesFiles.length + totalCatalogo;
+
+    if (!referenceFile)   return res.status(400).json({ error: 'Envie a foto de referência.' });
+    if (!totalProduto)    return res.status(400).json({ error: 'Selecione um produto do catálogo ou anexe ao menos uma foto.' });
+    if (totalProduto > MAX_FOTOS_PRODUTO) return res.status(400).json({ error: `No máximo ${MAX_FOTOS_PRODUTO} fotos de produto.` });
+    if (!modelFiles.length) return res.status(400).json({ error: 'Selecione um modelo.' });
+    if (modelFiles.length > MAX_MODELOS) return res.status(400).json({ error: `No máximo ${MAX_MODELOS} pessoas por criativo.` });
+    // nomes vêm do próprio grid de modelos; barra qualquer tentativa de sair da pasta
+    if (modelFiles.some(f => /[\\/]/.test(f) || f.includes('..')))
+      return res.status(400).json({ error: 'Nome de modelo inválido.' });
 
     const allowedSizes = ['1024x1024', '1024x1536', '1536x1024'];
     const imageSize = allowedSizes.includes(size) ? size : '1024x1024';
@@ -843,24 +981,50 @@ app.post('/api/generate-creative', creativeUpload.fields([
     if (!keepOutfitBool && !outfitFile)
       return res.status(400).json({ error: 'Envie a foto da roupa ou selecione "manter roupa da referência".' });
 
-    const modelPath = path.join(__dirname, 'public/models', modelFile);
-    if (!fs.existsSync(modelPath))
-      return res.status(400).json({ error: 'Modelo não encontrado.' });
-
-    const ext  = path.extname(modelFile).toLowerCase();
-    const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+    const modelPaths = modelFiles.map(f => path.join(__dirname, 'public/models', f));
+    const faltando = modelFiles.filter((f, i) => !fs.existsSync(modelPaths[i]));
+    if (faltando.length)
+      return res.status(400).json({ error: `Modelo não encontrado: ${faltando.join(', ')}` });
 
     // Image 1: referência
     const referenceRef = await fileToOpenAI(referenceFile.path, referenceFile.mimetype, 'reference.jpg');
     const images = [referenceRef];
 
-    // Image 2: modelo
-    const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
-    images.push(modelRef);
+    // Images 2..N+1: uma foto por pessoa que deve aparecer na cena
+    const modelos = [];
+    for (let i = 0; i < modelFiles.length; i++) {
+      const mime = path.extname(modelFiles[i]).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+      images.push(await fileToOpenAI(modelPaths[i], mime, `model-${i + 1}.jpg`));
+      modelos.push({ idx: images.length });
+    }
 
-    // Images 3 a N+2: óculos (1 ou mais)
-    for (let i = 0; i < glassesFiles.length; i++) {
-      images.push(await fileToOpenAI(glassesFiles[i].path, glassesFiles[i].mimetype, `glasses-${i + 1}.jpg`));
+    // Images 3 a N+2: produtos — primeiro os do catálogo, depois as fotos da mão.
+    // Guarda a faixa de imagens de cada produto pra o prompt saber o que é o quê.
+    const produtos = [];
+    let contador = 0;
+    for (const item of catalogItems) {
+      const inicio = images.length + 1;
+      for (const url of item.urls) {
+        images.push(await urlToOpenAI(url, `product-${++contador}.jpg`));
+      }
+      produtos.push({
+        descricao: descricaoDoProduto(item),
+        comoVestir: comoVestirProduto(item),
+        inicio,
+        fim: images.length,
+      });
+    }
+    if (glassesFiles.length) {
+      const inicio = images.length + 1;
+      for (const f of glassesFiles) {
+        images.push(await fileToOpenAI(f.path, f.mimetype, `product-${++contador}.jpg`));
+      }
+      produtos.push({
+        descricao: 'the product',
+        comoVestir: "Place the product naturally and precisely on the model",
+        inicio,
+        fim: images.length,
+      });
     }
 
     let outfitIdx = null;
@@ -880,8 +1044,8 @@ app.post('/api/generate-creative', creativeUpload.fields([
       }
     }
 
-    const prompt = buildCreativePrompt(glassesFiles.length, keepOutfitBool, outfitIdx, expressionIdx, extraText);
-    console.log(`[generate-creative] model=${modelFile} pose=${pose} glasses=${glassesFiles.length} keepOutfit=${keepOutfitBool} expr=${!!expressionFile} size=${imageSize}`);
+    const prompt = buildCreativePrompt(modelos, produtos, keepOutfitBool, outfitIdx, expressionIdx, extraText);
+    console.log(`[generate-creative] modelos=${modelFiles.join('+')} pose=${pose} produtos=${produtos.length} fotos=${totalProduto} (catalogo=${totalCatalogo}) keepOutfit=${keepOutfitBool} expr=${!!expressionFile} size=${imageSize}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
@@ -1132,6 +1296,59 @@ app.post('/api/generate-anel-modelo', creativeUpload.fields([
       prompt,
       quality: 'medium',
     });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: b64 });
+  } catch (err) {
+    uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Seção Livre: o prompt é escrito por você, sem molde nenhum por cima.
+// Com foto anexada usa images.edit; sem foto, images.generate (cria do zero).
+const MAX_FOTOS_LIVRE = 10;
+
+app.post('/api/generate-livre', creativeUpload.array('images', MAX_FOTOS_LIVRE), async (req, res) => {
+  const arquivos = req.files || [];
+  const uploadedPaths = arquivos.map(f => f.path);
+  try {
+    const { prompt, size } = req.body;
+    if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Escreva o prompt.' });
+
+    // Fotos do catálogo da loja também valem aqui
+    let catalogUrls = [];
+    if (req.body.catalogUrls) {
+      try {
+        catalogUrls = JSON.parse(req.body.catalogUrls);
+        if (!Array.isArray(catalogUrls)) throw new Error();
+      } catch {
+        return res.status(400).json({ error: 'catalogUrls inválido.' });
+      }
+    }
+    if (arquivos.length + catalogUrls.length > MAX_FOTOS_LIVRE)
+      return res.status(400).json({ error: `No máximo ${MAX_FOTOS_LIVRE} fotos.` });
+
+    const allowedSizes = ['1024x1024', '1024x1536', '1536x1024'];
+    const imageSize = allowedSizes.includes(size) ? size : '1024x1024';
+
+    const images = [];
+    for (let i = 0; i < catalogUrls.length; i++) {
+      images.push(await urlToOpenAI(catalogUrls[i], `catalogo-${i + 1}.jpg`));
+    }
+    for (let i = 0; i < arquivos.length; i++) {
+      images.push(await fileToOpenAI(arquivos[i].path, arquivos[i].mimetype, `imagem-${i + 1}.jpg`));
+    }
+
+    console.log(`[generate-livre] fotos=${images.length} size=${imageSize} prompt="${prompt.trim().slice(0, 80)}"`);
+    uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
+
+    const response = images.length
+      ? await client.images.edit({ model: 'gpt-image-2', image: images, prompt: prompt.trim(), quality: 'medium', size: imageSize })
+      : await client.images.generate({ model: 'gpt-image-2', prompt: prompt.trim(), quality: 'medium', size: imageSize });
 
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');

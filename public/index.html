@@ -124,6 +124,13 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .model-thumb.selected span { color: #6366f1; }
+    .model-thumb { position: relative; }
+    .model-badge {
+      position: absolute; top: 4px; left: 4px;
+      background: #6366f1; color: #fff; font-style: normal;
+      font-size: 0.62rem; font-weight: 700; line-height: 17px;
+      width: 17px; height: 17px; border-radius: 50%; text-align: center;
+    }
     .empty-models { color: #aaa; font-size: 0.85rem; padding: 4px 0 16px; }
 
     .pose-toggle { display: flex; gap: 6px; }
@@ -204,6 +211,58 @@
     }
     .glasses-add-btn:hover { border-color: #6366f1; color: #6366f1; }
 
+    /* Catálogo da loja */
+    .catalog-box {
+      border: 2px solid #eef0f4; border-radius: 12px;
+      padding: 14px; margin-bottom: 20px; background: #fcfcfd;
+    }
+    .catalog-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .catalog-sync {
+      border: none; background: none; color: #6366f1;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 4px 6px;
+    }
+    .catalog-sync:disabled { color: #bbb; cursor: default; }
+    .catalog-search {
+      width: 100%; padding: 8px 10px; margin-bottom: 10px;
+      border: 2px solid #e5e7eb; border-radius: 8px;
+      font-family: inherit; font-size: 0.85rem;
+    }
+    .catalog-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+      gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px;
+    }
+    .catalog-item {
+      cursor: pointer; border-radius: 9px; border: 2.5px solid #e5e7eb;
+      overflow: hidden; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .catalog-item { position: relative; }
+    .catalog-item:hover { border-color: #6366f1; }
+    .catalog-item.aberto { border-color: #6366f1; }
+    .catalog-item.selected { border-color: #6366f1; box-shadow: 0 0 0 3px #e0e7ff; }
+    .catalog-badge {
+      position: absolute; top: 4px; right: 4px;
+      background: #6366f1; color: #fff; font-style: normal;
+      font-size: 0.62rem; font-weight: 700; line-height: 16px;
+      min-width: 16px; height: 16px; padding: 0 4px;
+      border-radius: 8px; text-align: center;
+    }
+    .catalog-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #f3f4f6; }
+    .catalog-item span {
+      display: block; font-size: 0.66rem; font-weight: 600; color: #555;
+      text-align: center; padding: 4px 3px 5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .catalog-colors { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .catalog-color {
+      padding: 5px 11px; border: 2px solid #e5e7eb; border-radius: 20px;
+      background: #fff; color: #555; font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .catalog-color:hover { border-color: #6366f1; color: #6366f1; }
+    .catalog-color.selected { border-color: #6366f1; background: #6366f1; color: #fff; }
+    .catalog-note { font-size: 0.72rem; color: #9ca3af; margin-top: 10px; }
+    .catalog-note b { color: #6366f1; }
+
     /* Spinner */
     .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
     .spinner-dark { display: inline-block; width: 28px; height: 28px; border: 3px solid #e5e7eb; border-top-color: #6366f1; border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -226,6 +285,7 @@
     <button class="mode-tab" onclick="setMode('modelo')">📸 Modelo</button>
     <button class="mode-tab" onclick="setMode('criativos')">🎨 Criativos</button>
     <button class="mode-tab" onclick="setMode('joias')">💎 Joias</button>
+    <button class="mode-tab" onclick="setMode('livre')">✨ Livre</button>
   </div>
 
   <!-- Upload -->
@@ -334,15 +394,16 @@
     <div style="margin-bottom:20px;"></div>
 
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-      <p class="section-label" style="margin-bottom:0;">Modelo</p>
+      <p class="section-label" style="margin-bottom:0;">Modelos <span style="font-weight:400;text-transform:none;color:#bbb;">(até 4 pessoas)</span></p>
       <div class="pose-toggle" style="margin-bottom:0;">
         <button class="pose-btn active" id="pose-frente-creative" onclick="selectCreativePose('frente')">De Frente</button>
         <button class="pose-btn" id="pose-ladinho-creative" onclick="selectCreativePose('ladinho')">De Ladinho</button>
       </div>
     </div>
-    <div class="model-grid" id="model-grid-creative">
+    <div class="model-grid" id="model-grid-creative" style="margin-bottom:6px;">
       <span class="empty-models">Nenhum modelo encontrado — adicione fotos em public/models/</span>
     </div>
+    <p class="catalog-note" id="model-note-creative" style="margin:0 0 18px;"></p>
 
     <p class="section-label" style="margin-bottom:8px;">Roupa</p>
     <div class="pose-toggle" style="margin-bottom:12px;">
@@ -362,10 +423,28 @@
       <div class="expr-none selected" id="expr-none-creative" onclick="selectCreativeExpression(null)">Sem<br>expressão</div>
     </div>
 
-    <p class="section-label">Óculos <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos, obrigatório)</span></p>
+    <p class="section-label">Produto <span style="font-weight:400;text-transform:none;color:#bbb;">(até 10 fotos, obrigatório)</span></p>
+
+    <div class="catalog-box">
+      <div class="catalog-head">
+        <div class="pose-toggle">
+          <button class="pose-btn active" id="catalog-tab-oculos" onclick="selectCatalogGrupo('oculos')">Óculos</button>
+          <button class="pose-btn" id="catalog-tab-bone" onclick="selectCatalogGrupo('bone')">Bonés</button>
+          <button class="pose-btn" id="catalog-tab-joia" onclick="selectCatalogGrupo('joia')">Joias</button>
+        </div>
+        <button class="catalog-sync" id="btn-catalog-sync" onclick="sincronizarCatalogo()">↻ Sincronizar</button>
+      </div>
+      <input type="text" class="catalog-search" id="catalog-search" placeholder="Buscar produto..." oninput="setCatalogBusca(this.value)" />
+      <div class="catalog-grid" id="catalog-grid">
+        <span class="empty-models">Carregando catálogo da loja...</span>
+      </div>
+      <div class="catalog-colors" id="catalog-colors"></div>
+      <div class="catalog-note" id="catalog-note"></div>
+    </div>
+
     <input type="file" id="input-creative-glasses" accept="image/*" multiple style="display:none" onchange="handleCreativeGlassesFiles(this.files)" />
     <div class="glasses-upload-area" id="upload-creative-glasses-area" onclick="openCreativeUpload('glasses')">
-      📎 Anexar foto(s) dos óculos
+      📎 Ou anexe foto(s) na mão
     </div>
     <div class="glasses-thumbs" id="creative-glasses-thumbs"></div>
     <div style="margin-bottom:20px;"></div>
@@ -567,6 +646,40 @@
   </div>
   </div><!-- /section-joias -->
 
+  <div id="section-livre" style="display:none;">
+  <!-- Livre: prompt escrito por você, sem molde -->
+  <div class="upload-card">
+    <p class="section-title">✨ Livre</p>
+    <p class="section-sub">Anexe as fotos que quiser e escreva o prompt do seu jeito — sem molde nenhum por cima</p>
+
+    <p class="section-label">Fotos <span style="font-weight:400;text-transform:none;color:#bbb;">(até 10, opcional — sem foto ele cria do zero)</span></p>
+    <input type="file" id="input-livre" accept="image/*" multiple style="display:none" onchange="handleLivreFiles(this.files)" />
+    <div class="glasses-upload-area" id="upload-livre-area" onclick="openLivreUpload()">
+      📎 Anexar foto(s) — ou cole com Ctrl+V
+    </div>
+    <div class="glasses-thumbs" id="livre-thumbs"></div>
+    <div style="margin-bottom:20px;"></div>
+
+    <p class="section-label">Prompt</p>
+    <textarea id="livre-prompt" placeholder="Escreva exatamente o que você quer que a IA faça com as fotos anexadas."
+      style="width:100%; min-height:150px; padding:12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:6px;"
+      oninput="livrePrompt = this.value; updateLivreBtn();"></textarea>
+    <p class="catalog-note" id="livre-dica" style="margin:0 0 20px;">As fotos entram na ordem em que aparecem acima — dá pra citá-las como "Image 1", "Image 2" no prompt.</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Tamanho</p>
+    <div class="pose-toggle" style="margin-bottom:20px;">
+      <button class="pose-btn active" id="livre-size-square" onclick="selectLivreSize('1024x1024')">◻️ Quadrado</button>
+      <button class="pose-btn" id="livre-size-portrait" onclick="selectLivreSize('1024x1536')">📱 Retrato</button>
+      <button class="pose-btn" id="livre-size-landscape" onclick="selectLivreSize('1536x1024')">🖼️ Paisagem</button>
+    </div>
+
+    <button class="btn-generate" id="btn-livre" onclick="gerarLivre()" disabled>
+      ✨ Gerar
+    </button>
+    <div class="status" id="status-livre"></div>
+  </div>
+  </div><!-- /section-livre -->
+
   <!-- Resultados -->
   <div id="results-list"></div>
 
@@ -578,12 +691,10 @@
     document.getElementById('section-modelo').style.display = mode === 'modelo' ? '' : 'none';
     document.getElementById('section-criativos').style.display = mode === 'criativos' ? '' : 'none';
     document.getElementById('section-joias').style.display = mode === 'joias' ? '' : 'none';
+    document.getElementById('section-livre').style.display = mode === 'livre' ? '' : 'none';
+    const ordem = ['oculos', 'modelo', 'criativos', 'joias', 'livre'];
     document.querySelectorAll('.mode-tab').forEach((t, i) => {
-      t.classList.toggle('active',
-        (i === 0 && mode === 'oculos') ||
-        (i === 1 && mode === 'modelo') ||
-        (i === 2 && mode === 'criativos') ||
-        (i === 3 && mode === 'joias'));
+      t.classList.toggle('active', ordem[i] === mode);
     });
   }
 
@@ -902,7 +1013,7 @@
 
     try {
       const form = new FormData();
-      form.append('modelFile', modelFile);
+      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       form.append('pose',     selectedPose);
       glassesSnap.forEach(f => form.append('glasses', f));
       form.append('clothing', clothingSnap);
@@ -988,7 +1099,7 @@
 
   // ── Seção Criativos ─────────────────────────────────────
   let creativeReferenceFile = null;
-  let creativeSelectedModel = null;
+  let creativeSelectedModels = [];   // várias pessoas na mesma cena
   let creativeSelectedPose  = 'frente';
   let creativeKeepOutfit    = true;
   let creativeOutfitFile    = null;
@@ -1045,24 +1156,49 @@
     }
     grid.innerHTML = '';
     allModels.forEach(m => {
-      const hasFile = creativeSelectedPose === 'ladinho' ? !!m.ladinho : !!m.frente;
-      const previewFile = (creativeSelectedPose === 'ladinho' && m.ladinho) ? m.ladinho : (m.frente || m.ladinho);
+      const arquivo = creativeSelectedPose === 'ladinho' ? m.ladinho : m.frente;
+      const previewFile = arquivo || m.frente || m.ladinho;
+      // a mesma pessoa pode entrar de frente e de ladinho, então a pose faz parte da chave
+      const escolhido = arquivo && creativeSelectedModels.some(s => s.file === arquivo);
+
       const div = document.createElement('div');
-      div.className = 'model-thumb' + (!hasFile ? ' no-pose' : '');
-      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`;
-      if (hasFile) {
-        div.onclick = () => {
-          document.querySelectorAll('#model-grid-creative .model-thumb').forEach(el => el.classList.remove('selected'));
-          div.classList.add('selected');
-          creativeSelectedModel = m;
-          updateCreativeBtn();
-        };
-      }
-      if (creativeSelectedModel && creativeSelectedModel.name === m.name && hasFile) {
-        div.classList.add('selected');
+      div.className = 'model-thumb' + (!arquivo ? ' no-pose' : '') + (escolhido ? ' selected' : '');
+      const ordem = creativeSelectedModels.findIndex(s => s.file === arquivo) + 1;
+      div.innerHTML = `<img src="/models/${previewFile}" alt="${m.name}" />`
+        + (escolhido ? `<i class="model-badge">${ordem}</i>` : '');
+
+      if (arquivo) {
+        div.onclick = () => alternarModelo(m, arquivo);
       }
       grid.appendChild(div);
     });
+    atualizarNotaModelos();
+  }
+
+  // Clicar adiciona a pessoa à cena; clicar de novo tira. Dá pra somar até
+  // MAX_MODELOS pessoas, misturando poses (uma de frente, outra de ladinho).
+  function alternarModelo(m, arquivo) {
+    const jaEsta = creativeSelectedModels.some(s => s.file === arquivo);
+    if (jaEsta) {
+      creativeSelectedModels = creativeSelectedModels.filter(s => s.file !== arquivo);
+    } else {
+      if (creativeSelectedModels.length >= MAX_MODELOS) {
+        atualizarNotaModelos(`Máximo de ${MAX_MODELOS} pessoas — tire uma antes de somar outra.`);
+        return;
+      }
+      creativeSelectedModels.push({ nome: m.name, file: arquivo, pose: creativeSelectedPose });
+    }
+    renderCreativeModelGrid();
+    updateCreativeBtn();
+  }
+
+  function atualizarNotaModelos(aviso) {
+    const nota = document.getElementById('model-note-creative');
+    if (!nota) return;
+    if (aviso) { nota.textContent = aviso; return; }
+    nota.textContent = creativeSelectedModels.length
+      ? `Na cena: ${creativeSelectedModels.map(s => `${s.nome} (${s.pose})`).join(' + ')}`
+      : 'Clique nos modelos que devem aparecer — dá pra somar mais de uma pessoa.';
   }
 
   function selectCreativeOutfitMode(keep) {
@@ -1087,9 +1223,13 @@
     updateCreativeBtn();
   }
 
+  function totalFotosProduto() {
+    return totalFotosCatalogo() + creativeGlassesFiles.length;
+  }
+
   function handleCreativeGlassesFiles(files) {
     for (const f of files) {
-      if (creativeGlassesFiles.length >= 5) break;
+      if (totalFotosProduto() >= MAX_FOTOS_PRODUTO) break;
       creativeGlassesFiles.push(f);
     }
     renderCreativeGlassesThumbs();
@@ -1101,7 +1241,7 @@
     const thumbsEl = document.getElementById('creative-glasses-thumbs');
     thumbsEl.innerHTML = '';
 
-    if (creativeGlassesFiles.length === 0) {
+    if (totalFotosProduto() === 0) {
       area.classList.remove('has-files');
       area.style.display = '';
       return;
@@ -1110,26 +1250,43 @@
     area.classList.add('has-files');
     area.style.display = 'none';
 
-    creativeGlassesFiles.forEach((f, i) => {
+    const thumb = (src, remover, titulo) => {
       const div = document.createElement('div');
       div.className = 'glasses-thumb';
+      div.title = titulo;
       const img = document.createElement('img');
-      img.src = URL.createObjectURL(f);
+      img.src = src;
       const btn = document.createElement('button');
       btn.textContent = '×';
       btn.title = 'Remover';
       btn.onclick = (e) => {
         e.stopPropagation();
-        creativeGlassesFiles.splice(i, 1);
+        remover();
         renderCreativeGlassesThumbs();
+        renderCatalogColors();
         updateCreativeBtn();
       };
       div.appendChild(img);
       div.appendChild(btn);
       thumbsEl.appendChild(div);
+    };
+
+    creativeCatalogItens.forEach((item) => {
+      item.urls.forEach((u, iu) => {
+        thumb(u, () => {
+          item.urls.splice(iu, 1);
+          // sem foto sobrando, o produto sai da seleção
+          if (!item.urls.length) {
+            creativeCatalogItens = creativeCatalogItens.filter(i => i !== item);
+          }
+        }, `${item.titulo} — ${item.cor}`);
+      });
+    });
+    creativeGlassesFiles.forEach((f, i) => {
+      thumb(URL.createObjectURL(f), () => creativeGlassesFiles.splice(i, 1), f.name);
     });
 
-    if (creativeGlassesFiles.length < 5) {
+    if (totalFotosProduto() < MAX_FOTOS_PRODUTO) {
       const addBtn = document.createElement('div');
       addBtn.className = 'glasses-add-btn';
       addBtn.title = 'Adicionar mais fotos';
@@ -1137,6 +1294,165 @@
       addBtn.onclick = () => openCreativeUpload('glasses');
       thumbsEl.appendChild(addBtn);
     }
+  }
+
+  // ── Catálogo da loja Shopify ─────────────────────────────
+  // Selecionar uma cor anexa direto a foto de frente e a de ladinho daquele produto,
+  // sem precisar copiar e colar. Continua dando pra anexar fotos na mão por cima.
+  const MAX_FOTOS_PRODUTO = 10;
+  const MAX_MODELOS = 4;
+
+  let catalogo       = null;
+  let catalogGrupo   = 'oculos';
+  let catalogBusca   = '';
+  let catalogProduto = null;
+  // vários produtos ao mesmo tempo: [{ chave, titulo, grupo, cor, urls }]
+  let creativeCatalogItens = [];
+
+  const chaveDaCor = (produto, cor) => `${produto.id}:${cor.id}`;
+  const corSelecionada = (produto, cor) =>
+    creativeCatalogItens.some(i => i.chave === chaveDaCor(produto, cor));
+  const totalFotosCatalogo = () =>
+    creativeCatalogItens.reduce((n, i) => n + i.urls.length, 0);
+
+  async function loadCatalogo() {
+    try {
+      const res = await fetch('/api/catalog');
+      if (!res.ok) throw new Error((await res.json()).error || 'Falha ao carregar');
+      catalogo = await res.json();
+      renderCatalogGrid();
+    } catch (e) {
+      document.getElementById('catalog-grid').innerHTML =
+        `<span class="empty-models">${e.message}</span>`;
+    }
+  }
+
+  async function sincronizarCatalogo() {
+    const btn = document.getElementById('btn-catalog-sync');
+    btn.disabled = true;
+    btn.textContent = 'Sincronizando...';
+    try {
+      const res = await fetch('/api/catalog/sync', { method: 'POST' });
+      if (!res.ok) throw new Error((await res.json()).error || 'Falha na sincronização');
+      catalogo = await res.json();
+      catalogProduto = null;
+      renderCatalogGrid();
+      renderCatalogColors();
+    } catch (e) {
+      document.getElementById('catalog-note').textContent = `❌ ${e.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '↻ Sincronizar';
+    }
+  }
+
+  function selectCatalogGrupo(grupo) {
+    catalogGrupo = grupo;
+    ['oculos', 'bone', 'joia'].forEach(g =>
+      document.getElementById(`catalog-tab-${g}`).classList.toggle('active', g === grupo));
+    renderCatalogGrid();
+  }
+
+  function setCatalogBusca(v) {
+    catalogBusca = v.trim().toLowerCase();
+    renderCatalogGrid();
+  }
+
+  function produtosVisiveis() {
+    if (!catalogo) return [];
+    return catalogo.produtos.filter(p =>
+      p.grupo === catalogGrupo && (!catalogBusca || p.titulo.toLowerCase().includes(catalogBusca)));
+  }
+
+  function renderCatalogGrid() {
+    const grid = document.getElementById('catalog-grid');
+    const lista = produtosVisiveis();
+    grid.innerHTML = '';
+
+    if (!lista.length) {
+      grid.innerHTML = '<span class="empty-models">Nenhum produto encontrado.</span>';
+      renderCatalogColors();
+      return;
+    }
+
+    lista.forEach(p => {
+      const escolhidas = p.cores.filter(c => corSelecionada(p, c)).length;
+      const div = document.createElement('div');
+      div.className = 'catalog-item'
+        + (catalogProduto?.id === p.id ? ' aberto' : '')
+        + (escolhidas ? ' selected' : '');
+      div.innerHTML = `
+        <img src="${p.cores[0].frente}&width=200" loading="lazy" alt="${p.titulo}" />
+        ${escolhidas ? `<i class="catalog-badge">${escolhidas}</i>` : ''}
+        <span>${p.titulo}</span>`;
+      div.onclick = () => {
+        catalogProduto = catalogProduto?.id === p.id ? null : p;
+        renderCatalogGrid();
+      };
+      grid.appendChild(div);
+    });
+
+    renderCatalogColors();
+  }
+
+  function renderCatalogColors() {
+    const wrap = document.getElementById('catalog-colors');
+    const note = document.getElementById('catalog-note');
+    wrap.innerHTML = '';
+
+    if (catalogProduto) {
+      catalogProduto.cores.forEach(cor => {
+        const btn = document.createElement('button');
+        btn.className = 'catalog-color' + (corSelecionada(catalogProduto, cor) ? ' selected' : '');
+        btn.textContent = cor.nome;
+        btn.onclick = () => alternarCorDoCatalogo(catalogProduto, cor);
+        wrap.appendChild(btn);
+      });
+    }
+
+    const escolhidos = creativeCatalogItens
+      .map(i => `${i.titulo} (${i.cor})`)
+      .join(' + ');
+
+    if (escolhidos) {
+      note.innerHTML = `Anexados: <b>${escolhidos}</b> — ${totalFotosProduto()} de ${MAX_FOTOS_PRODUTO} fotos`;
+    } else if (catalogProduto) {
+      note.textContent = 'Escolha a cor para anexar a frente e o ladinho automaticamente.';
+    } else {
+      note.textContent = catalogo
+        ? `${catalogo.produtos.length} produtos — dá pra combinar mais de um (óculos + boné + joia)`
+        : '';
+    }
+  }
+
+  // Clicar numa cor adiciona aquele produto à seleção; clicar de novo tira.
+  // Vários produtos podem ficar selecionados ao mesmo tempo.
+  function alternarCorDoCatalogo(produto, cor) {
+    const chave = chaveDaCor(produto, cor);
+
+    if (corSelecionada(produto, cor)) {
+      creativeCatalogItens = creativeCatalogItens.filter(i => i.chave !== chave);
+    } else {
+      const urls = [cor.frente, cor.ladinho].filter(Boolean);
+      const sobra = MAX_FOTOS_PRODUTO - totalFotosProduto();
+      if (sobra <= 0) {
+        document.getElementById('catalog-note').innerHTML =
+          `<b>Limite de ${MAX_FOTOS_PRODUTO} fotos</b> — remova alguma antes de somar outro produto.`;
+        return;
+      }
+      creativeCatalogItens.push({
+        chave,
+        titulo: produto.titulo,
+        grupo: produto.grupo,
+        subtipo: produto.subtipo,
+        cor: cor.nome,
+        urls: urls.slice(0, sobra), // com pouco espaço, entra só a frente
+      });
+    }
+
+    renderCatalogGrid();
+    renderCreativeGlassesThumbs();
+    updateCreativeBtn();
   }
 
   async function loadCreativeExpressions() {
@@ -1164,17 +1480,14 @@
   }
 
   function updateCreativeBtn() {
-    const modelFile = creativeSelectedModel
-      ? (creativeSelectedPose === 'ladinho' ? creativeSelectedModel.ladinho : creativeSelectedModel.frente)
-      : null;
     const outfitOk = creativeKeepOutfit || !!creativeOutfitFile;
     document.getElementById('btn-creative').disabled =
-      !(creativeReferenceFile && modelFile && creativeGlassesFiles.length > 0 && outfitOk);
+      !(creativeReferenceFile && creativeSelectedModels.length && totalFotosProduto() > 0 && outfitOk);
   }
 
   async function gerarCriativo() {
-    const modelFile = creativeSelectedPose === 'ladinho' ? creativeSelectedModel.ladinho : creativeSelectedModel.frente;
-    const label = `${creativeSelectedModel.name} (${creativeSelectedPose})`;
+    const modelosSnap = [...creativeSelectedModels];
+    const label = modelosSnap.map(s => `${s.nome} (${s.pose})`).join(' + ');
     const n = document.querySelectorAll('.result-row, .result-single').length + 1;
 
     const wrap = document.createElement('div');
@@ -1192,6 +1505,9 @@
 
     const referenceSnap = creativeReferenceFile;
     const glassesSnap    = [...creativeGlassesFiles];
+    const catalogSnap    = creativeCatalogItens.map(i => ({
+      titulo: i.titulo, grupo: i.grupo, subtipo: i.subtipo, cor: i.cor, urls: [...i.urls],
+    }));
     const outfitSnap     = creativeOutfitFile;
     const keepOutfitSnap = creativeKeepOutfit;
     const exprSnap        = creativeExpression;
@@ -1201,11 +1517,12 @@
     try {
       const form = new FormData();
       form.append('reference', referenceSnap);
-      form.append('modelFile', modelFile);
+      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       form.append('size', sizeSnap);
       form.append('pose', creativeSelectedPose);
       form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
       glassesSnap.forEach(f => form.append('glasses', f));
+      if (catalogSnap.length) form.append('catalogItems', JSON.stringify(catalogSnap));
       if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
       if (exprSnap) form.append('expressionFile', exprSnap);
       if (extraTextSnap) form.append('extraText', extraTextSnap);
@@ -1229,13 +1546,143 @@
   }
 
   loadCreativeExpressions();
+  loadCatalogo();
+
+  // ── Seção Livre ──────────────────────────────────────────
+  // Sem molde de prompt: o texto vai cru pra IA, do jeito que você escreveu.
+  const MAX_FOTOS_LIVRE = 10;
+  let livreFiles  = [];
+  let livrePrompt = '';
+  let livreSize   = '1024x1024';
+
+  function openLivreUpload() {
+    document.getElementById('input-livre').click();
+  }
+
+  function selectLivreSize(size) {
+    livreSize = size;
+    document.getElementById('livre-size-square').classList.toggle('active', size === '1024x1024');
+    document.getElementById('livre-size-portrait').classList.toggle('active', size === '1024x1536');
+    document.getElementById('livre-size-landscape').classList.toggle('active', size === '1536x1024');
+  }
+
+  function handleLivreFiles(files) {
+    for (const f of files) {
+      if (livreFiles.length >= MAX_FOTOS_LIVRE) break;
+      livreFiles.push(f);
+    }
+    renderLivreThumbs();
+    updateLivreBtn();
+  }
+
+  function renderLivreThumbs() {
+    const area = document.getElementById('upload-livre-area');
+    const thumbsEl = document.getElementById('livre-thumbs');
+    thumbsEl.innerHTML = '';
+    area.style.display = livreFiles.length ? 'none' : '';
+
+    livreFiles.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      div.title = `Image ${i + 1} — ${f.name}`;
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        livreFiles.splice(i, 1);
+        renderLivreThumbs();
+        updateLivreBtn();
+      };
+      const num = document.createElement('i');
+      num.className = 'model-badge';
+      num.textContent = i + 1;
+      div.append(img, btn, num);
+      thumbsEl.appendChild(div);
+    });
+
+    if (livreFiles.length && livreFiles.length < MAX_FOTOS_LIVRE) {
+      const addBtn = document.createElement('div');
+      addBtn.className = 'glasses-add-btn';
+      addBtn.title = 'Adicionar mais fotos';
+      addBtn.textContent = '+';
+      addBtn.onclick = openLivreUpload;
+      thumbsEl.appendChild(addBtn);
+    }
+  }
+
+  function updateLivreBtn() {
+    document.getElementById('btn-livre').disabled = !livrePrompt.trim();
+  }
+
+  async function gerarLivre() {
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+    const promptSnap = livrePrompt;
+    const filesSnap  = [...livreFiles];
+    const sizeSnap   = livreSize;
+    const label = filesSnap.length
+      ? `${filesSnap.length} foto${filesSnap.length > 1 ? 's' : ''}`
+      : 'do zero';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Livre — ${label}</div>
+      <div class="results-grid results-grid--single">
+        <div class="result-card" id="card-livre-${n}">
+          <h3>Livre</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    try {
+      const form = new FormData();
+      form.append('prompt', promptSnap);
+      form.append('size', sizeSnap);
+      filesSnap.forEach(f => form.append('images', f));
+
+      const res  = await fetch('/api/generate-livre', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      const src = 'data:image/png;base64,' + data.image;
+      document.getElementById(`card-livre-${n}`).innerHTML = `
+        <h3>Livre</h3>
+        <img src="${src}" alt="Livre ${n}" />
+        <div class="card-actions">
+          <a href="${src}" download="vyser-livre-${n}.png">⬇ Baixar</a>
+          <button class="btn-retry" onclick="gerarLivre()">↺ Gerar de novo</button>
+        </div>`;
+    } catch (e) {
+      document.getElementById(`card-livre-${n}`).innerHTML =
+        `<h3>Livre</h3><div class="card-error">❌ ${e.message}</div>`;
+    }
+  }
 
   // Cole uma imagem (Ctrl+V) direto na área de upload clicada por último, quando a aba Criativos estiver aberta
   document.addEventListener('paste', (e) => {
     const criativosVisible = document.getElementById('section-criativos').style.display !== 'none';
-    if (!criativosVisible) return;
+    const livreVisible     = document.getElementById('section-livre').style.display !== 'none';
+    if (!criativosVisible && !livreVisible) return;
     const items = e.clipboardData?.items;
     if (!items) return;
+
+    // Na aba Livre a foto colada entra direto na lista, na ordem
+    if (livreVisible) {
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          handleLivreFiles([item.getAsFile()]);
+          e.preventDefault();
+          break;
+        }
+      }
+      return;
+    }
+
     for (const item of items) {
       if (item.type.startsWith('image/')) {
         const file = item.getAsFile();
@@ -1606,7 +2053,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFile', modelFile);
+      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       chainSnap.forEach(f => form.append('chain', f));
       form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
       if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
@@ -1791,7 +2238,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFile', modelFile);
+      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       itemSnap.forEach(f => form.append('bracelet', f));
       if (shirtFileSnap) form.append('shirt', shirtFileSnap);
       if (pantsFileSnap) form.append('pants', pantsFileSnap);
@@ -1975,7 +2422,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFile', modelFile);
+      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       itemSnap.forEach(f => form.append('ring', f));
       if (shirtFileSnap) form.append('shirt', shirtFileSnap);
       if (pantsFileSnap) form.append('pants', pantsFileSnap);
