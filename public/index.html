@@ -263,6 +263,26 @@
     .catalog-note { font-size: 0.72rem; color: #9ca3af; margin-top: 10px; }
     .catalog-note b { color: #6366f1; }
 
+    /* Guarda-roupa */
+    .peca-add {
+      width: 64px; height: 64px; border-radius: 8px;
+      border: 2px dashed #d1d5db; background: #f9fafb; color: #aaa;
+      font-size: 1.4rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+      transition: border-color .15s, color .15s;
+    }
+    .peca-add:hover { border-color: #6366f1; color: #6366f1; }
+    .expr-thumb { position: relative; }
+    .expr-thumb .peca-acoes {
+      position: absolute; top: 0; right: 0; display: none; gap: 2px; padding: 2px;
+    }
+    .expr-thumb:hover .peca-acoes { display: flex; }
+    .peca-acoes button {
+      background: rgba(0,0,0,.6); color: #fff; border: none; border-radius: 4px;
+      width: 17px; height: 17px; font-size: 10px; line-height: 17px; padding: 0; cursor: pointer;
+    }
+    .grade-arrastando { outline: 2px dashed #6366f1; outline-offset: 4px; border-radius: 8px; }
+
     /* Spinner */
     .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
     .spinner-dark { display: inline-block; width: 28px; height: 28px; border: 3px solid #e5e7eb; border-top-color: #6366f1; border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -286,6 +306,7 @@
     <button class="mode-tab" onclick="setMode('criativos')">🎨 Criativos</button>
     <button class="mode-tab" onclick="setMode('joias')">💎 Joias</button>
     <button class="mode-tab" onclick="setMode('livre')">✨ Livre</button>
+    <button class="mode-tab" onclick="setMode('variacoes')">🎞️ Variações</button>
   </div>
 
   <!-- Upload -->
@@ -450,11 +471,13 @@
     <div style="margin-bottom:20px;"></div>
 
     <p class="section-label" style="margin-bottom:8px;">Tamanho</p>
-    <div class="pose-toggle" style="margin-bottom:20px;">
-      <button class="pose-btn active" id="size-square" onclick="selectCreativeSize('1024x1024')">◻️ Quadrado</button>
-      <button class="pose-btn" id="size-portrait" onclick="selectCreativeSize('1024x1536')">📱 Retrato</button>
-      <button class="pose-btn" id="size-landscape" onclick="selectCreativeSize('1536x1024')">🖼️ Paisagem</button>
+    <div class="pose-toggle" style="margin-bottom:6px; flex-wrap:wrap;">
+      <button class="pose-btn active" id="size-1-1"    onclick="selectCreativeSize('1:1')">◻️ 1:1</button>
+      <button class="pose-btn"        id="size-4-5"    onclick="selectCreativeSize('4:5')">📱 4:5</button>
+      <button class="pose-btn"        id="size-9-16"   onclick="selectCreativeSize('9:16')">📲 9:16</button>
+      <button class="pose-btn"        id="size-1-91-1" onclick="selectCreativeSize('1.91:1')">🖼️ Paisagem</button>
     </div>
+    <p class="catalog-note" style="margin:0 0 20px;">4:5 é o mais alto que o feed aceita. 9:16 é Story e Reels — o feed rejeita.</p>
 
     <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
     <textarea id="creative-extra-text" placeholder="Ex: deixe a câmera mais próxima do rosto, remova o boné..." style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:8px;" oninput="creativeExtraText = this.value"></textarea>
@@ -667,10 +690,11 @@
     <p class="catalog-note" id="livre-dica" style="margin:0 0 20px;">As fotos entram na ordem em que aparecem acima — dá pra citá-las como "Image 1", "Image 2" no prompt.</p>
 
     <p class="section-label" style="margin-bottom:8px;">Tamanho</p>
-    <div class="pose-toggle" style="margin-bottom:20px;">
-      <button class="pose-btn active" id="livre-size-square" onclick="selectLivreSize('1024x1024')">◻️ Quadrado</button>
-      <button class="pose-btn" id="livre-size-portrait" onclick="selectLivreSize('1024x1536')">📱 Retrato</button>
-      <button class="pose-btn" id="livre-size-landscape" onclick="selectLivreSize('1536x1024')">🖼️ Paisagem</button>
+    <div class="pose-toggle" style="margin-bottom:20px; flex-wrap:wrap;">
+      <button class="pose-btn active" id="livre-size-1-1"    onclick="selectLivreSize('1:1')">◻️ 1:1</button>
+      <button class="pose-btn"        id="livre-size-4-5"    onclick="selectLivreSize('4:5')">📱 4:5</button>
+      <button class="pose-btn"        id="livre-size-9-16"   onclick="selectLivreSize('9:16')">📲 9:16</button>
+      <button class="pose-btn"        id="livre-size-1-91-1" onclick="selectLivreSize('1.91:1')">🖼️ Paisagem</button>
     </div>
 
     <button class="btn-generate" id="btn-livre" onclick="gerarLivre()" disabled>
@@ -679,6 +703,88 @@
     <div class="status" id="status-livre"></div>
   </div>
   </div><!-- /section-livre -->
+
+  <div id="section-variacoes" style="display:none;">
+  <!-- Variacoes: varias fotos, cada uma num contexto diferente, no DNA da marca -->
+  <div class="upload-card">
+    <p class="section-title">🎞️ Variações</p>
+    <p class="section-sub">Gera várias fotos de uma vez, cada uma num contexto diferente — na pegada streetwear noturna da VYSER</p>
+
+    <p class="section-label" style="margin-bottom:8px;">Modo</p>
+    <div class="pose-toggle" style="margin-bottom:16px;">
+      <button class="pose-btn active" id="var-modo-mesma" onclick="selectVarModo('mesma')">👤 Mesma pessoa</button>
+      <button class="pose-btn" id="var-modo-aleatorio" onclick="selectVarModo('aleatorio')">🎲 Tudo aleatório</button>
+    </div>
+
+    <div id="var-modelo-wrap">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <p class="section-label" style="margin-bottom:0;">Modelo</p>
+        <div class="pose-toggle" style="margin-bottom:0;">
+          <button class="pose-btn active" id="var-pose-frente" onclick="selectVarPose('frente')">De Frente</button>
+          <button class="pose-btn" id="var-pose-ladinho" onclick="selectVarPose('ladinho')">De Ladinho</button>
+        </div>
+      </div>
+      <div class="model-grid" id="var-model-grid" style="margin-bottom:6px;"></div>
+      <p class="catalog-note" id="var-model-note" style="margin:0 0 18px;"></p>
+    </div>
+
+    <p class="section-label">Produto</p>
+    <div class="catalog-box">
+      <div class="catalog-head">
+        <div class="pose-toggle">
+          <button class="pose-btn active" id="var-tab-oculos" onclick="selectVarGrupo('oculos')">Óculos</button>
+          <button class="pose-btn" id="var-tab-bone" onclick="selectVarGrupo('bone')">Bonés</button>
+          <button class="pose-btn" id="var-tab-joia" onclick="selectVarGrupo('joia')">Joias</button>
+        </div>
+      </div>
+      <input type="text" class="catalog-search" id="var-search" placeholder="Buscar produto..." oninput="setVarBusca(this.value)" />
+      <div class="catalog-grid" id="var-catalog-grid"></div>
+      <div class="catalog-colors" id="var-catalog-colors"></div>
+      <div class="catalog-note" id="var-catalog-note"></div>
+    </div>
+
+    <p class="section-label" style="margin-bottom:8px;">Roupa <span style="font-weight:400;text-transform:none;color:#bbb;">(jogue as peças em public/roupas/)</span></p>
+    <div class="expr-grid" id="var-roupa-grid"></div>
+    <input type="text" id="var-roupa" class="catalog-search" placeholder="Ou descreva: jaqueta de couro preta aberta"
+      style="margin-bottom:18px;" oninput="varRoupa = this.value" />
+
+    <p class="section-label" style="margin-bottom:8px;">Calça <span style="font-weight:400;text-transform:none;color:#bbb;">(jogue as peças em public/calcas/)</span></p>
+    <div class="expr-grid" id="var-calca-grid"></div>
+    <input type="text" id="var-calca" class="catalog-search" placeholder="Ou descreva: jeans largo preto"
+      style="margin-bottom:18px;" oninput="varCalca = this.value" />
+
+    <p class="section-label" style="margin-bottom:8px;">Expressão <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+    <div class="expr-grid" id="var-expr-grid">
+      <div class="expr-none selected" id="var-expr-none" onclick="selectVarExpressao(null)">Sem<br>expressão</div>
+      <div class="expr-none" id="var-expr-random" onclick="selectVarExpressao('aleatorio')">🎲<br>Aleatória</div>
+    </div>
+
+    <p class="section-label" style="margin-bottom:8px;">Estilos de cenário <span style="font-weight:400;text-transform:none;color:#bbb;">(marque para prender — vazio = livre)</span></p>
+    <div class="catalog-colors" id="var-estilos" style="margin-bottom:6px;"></div>
+    <p class="catalog-note" id="var-estilos-nota" style="margin:0 0 20px;"></p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:20px;">
+      <div style="width:140px;">
+        <p class="section-label">Quantas fotos</p>
+        <input type="number" id="var-qtd" class="catalog-search" min="1" max="12" value="6"
+          style="margin-bottom:0;" oninput="varQuantidade = this.value" />
+      </div>
+      <div style="flex:1; min-width:240px;">
+        <p class="section-label" style="margin-bottom:8px;">Proporção</p>
+        <div class="pose-toggle" style="flex-wrap:wrap;">
+          <button class="pose-btn" id="var-size-1-1" onclick="selectVarSize('1:1')">◻️ 1:1</button>
+          <button class="pose-btn active" id="var-size-4-5" onclick="selectVarSize('4:5')">📱 4:5</button>
+          <button class="pose-btn" id="var-size-9-16" onclick="selectVarSize('9:16')">📲 9:16</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btn-variacoes" onclick="gerarVariacoes()" disabled>
+      🎞️ Gerar variações
+    </button>
+    <div class="status" id="status-variacoes"></div>
+  </div>
+  </div><!-- /section-variacoes -->
 
   <!-- Resultados -->
   <div id="results-list"></div>
@@ -692,7 +798,8 @@
     document.getElementById('section-criativos').style.display = mode === 'criativos' ? '' : 'none';
     document.getElementById('section-joias').style.display = mode === 'joias' ? '' : 'none';
     document.getElementById('section-livre').style.display = mode === 'livre' ? '' : 'none';
-    const ordem = ['oculos', 'modelo', 'criativos', 'joias', 'livre'];
+    document.getElementById('section-variacoes').style.display = mode === 'variacoes' ? '' : 'none';
+    const ordem = ['oculos', 'modelo', 'criativos', 'joias', 'livre', 'variacoes'];
     document.querySelectorAll('.mode-tab').forEach((t, i) => {
       t.classList.toggle('active', ordem[i] === mode);
     });
@@ -879,6 +986,7 @@
     renderCorrenteModelGrid();
     renderBraceleteModelGrid();
     renderAnelModelGrid();
+    renderVarModelGrid();
   }
 
   function renderModelGrid() {
@@ -1106,7 +1214,7 @@
   let creativeGlassesFiles  = [];
   let creativeExpression    = null;
   let creativeExtraText     = '';
-  let creativeSize          = '1024x1024';
+  let creativeSize          = '1:1';
 
   // Rastreia qual área de upload foi clicada por último, pra saber onde colar (Ctrl+V)
   let creativePasteTarget = 'reference';
@@ -1120,11 +1228,13 @@
     document.getElementById(creativeUploadInputs[target]).click();
   }
 
-  function selectCreativeSize(size) {
-    creativeSize = size;
-    document.getElementById('size-square').classList.toggle('active', size === '1024x1024');
-    document.getElementById('size-portrait').classList.toggle('active', size === '1024x1536');
-    document.getElementById('size-landscape').classList.toggle('active', size === '1536x1024');
+  const PROPORCOES = ['1:1', '4:5', '9:16', '1.91:1'];
+  const idDaProporcao = r => r.replace(/[.:]/g, '-');
+
+  function selectCreativeSize(ratio) {
+    creativeSize = ratio;
+    PROPORCOES.forEach(r =>
+      document.getElementById(`size-${idDaProporcao(r)}`).classList.toggle('active', r === ratio));
   }
 
   function handleCreativeReference(file) {
@@ -1321,6 +1431,7 @@
       if (!res.ok) throw new Error((await res.json()).error || 'Falha ao carregar');
       catalogo = await res.json();
       renderCatalogGrid();
+      renderVarCatalogo();
     } catch (e) {
       document.getElementById('catalog-grid').innerHTML =
         `<span class="empty-models">${e.message}</span>`;
@@ -1518,7 +1629,7 @@
       const form = new FormData();
       form.append('reference', referenceSnap);
       form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
-      form.append('size', sizeSnap);
+      form.append('ratio', sizeSnap);
       form.append('pose', creativeSelectedPose);
       form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
       glassesSnap.forEach(f => form.append('glasses', f));
@@ -1548,22 +1659,432 @@
   loadCreativeExpressions();
   loadCatalogo();
 
+  // ── Seção Variações ──────────────────────────────────────
+  // Cada foto sai num contexto diferente: um modelo de texto escreve as cenas
+  // na hora, presas ao DNA da marca, e cada cena vira uma imagem.
+  const ESTILOS_VAR = {
+    laje: 'Laje / cidade', interior: 'Interior sujo', graffiti: 'Graffiti',
+    neon: 'Neon / fachada', estudio: 'Estúdio limpo', pb: 'Preto e branco',
+    close: 'Close extremo', concreto: 'Garagem / concreto',
+  };
+
+  let varModo        = 'mesma';
+  let varPose        = 'frente';
+  let varModelo      = null;
+  let varGrupo       = 'oculos';
+  let varBusca       = '';
+  let varProduto     = null;
+  let varCor         = null;
+  let varRoupa       = '';
+  let varCalca       = '';
+  let varExpressao   = null;
+  let varRoupaFile   = null;   // peça escolhida na grade, ou 'aleatorio'
+  let varCalcaFile   = null;
+  let guardaRoupa    = { roupas: [], calcas: [] };
+  let ultimaGradeDePeca = null;   // onde o Ctrl+V vai cair
+  let varEstilos     = [];
+  let varQuantidade  = 6;
+  let varSize        = '4:5';
+
+  function selectVarModo(modo) {
+    varModo = modo;
+    document.getElementById('var-modo-mesma').classList.toggle('active', modo === 'mesma');
+    document.getElementById('var-modo-aleatorio').classList.toggle('active', modo === 'aleatorio');
+    // no aleatório o modelo é sorteado por foto, então a grade some
+    document.getElementById('var-modelo-wrap').style.display = modo === 'mesma' ? '' : 'none';
+    updateVariacoesBtn();
+  }
+
+  function selectVarPose(pose) {
+    varPose = pose;
+    document.getElementById('var-pose-frente').classList.toggle('active', pose === 'frente');
+    document.getElementById('var-pose-ladinho').classList.toggle('active', pose === 'ladinho');
+    renderVarModelGrid();
+  }
+
+  function selectVarSize(r) {
+    varSize = r;
+    ['1:1', '4:5', '9:16'].forEach(x =>
+      document.getElementById(`var-size-${idDaProporcao(x)}`).classList.toggle('active', x === r));
+  }
+
+  function renderVarModelGrid() {
+    const grid = document.getElementById('var-model-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    allModels.forEach(m => {
+      const arquivo = varPose === 'ladinho' ? m.ladinho : m.frente;
+      const preview = arquivo || m.frente || m.ladinho;
+      const div = document.createElement('div');
+      div.className = 'model-thumb' + (!arquivo ? ' no-pose' : '') + (varModelo?.file === arquivo ? ' selected' : '');
+      div.innerHTML = `<img src="/models/${preview}" alt="${m.name}" />`;
+      if (arquivo) div.onclick = () => {
+        varModelo = varModelo?.file === arquivo ? null : { nome: m.name, file: arquivo, genero: m.genero };
+        renderVarModelGrid();
+        updateVariacoesBtn();
+      };
+      grid.appendChild(div);
+    });
+    document.getElementById('var-model-note').textContent =
+      varModelo ? `Todas as fotos com ${varModelo.nome} (${varPose})` : 'Escolha quem aparece em todas as fotos.';
+  }
+
+  function selectVarGrupo(g) {
+    varGrupo = g;
+    ['oculos', 'bone', 'joia'].forEach(x =>
+      document.getElementById(`var-tab-${x}`).classList.toggle('active', x === g));
+    renderVarCatalogo();
+  }
+
+  function setVarBusca(v) { varBusca = v.trim().toLowerCase(); renderVarCatalogo(); }
+
+  function renderVarCatalogo() {
+    const grid = document.getElementById('var-catalog-grid');
+    if (!grid || !catalogo) return;
+    const lista = catalogo.produtos.filter(p =>
+      p.grupo === varGrupo && (!varBusca || p.titulo.toLowerCase().includes(varBusca)));
+    grid.innerHTML = '';
+    lista.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'catalog-item' + (varProduto?.id === p.id ? ' selected' : '');
+      div.innerHTML = `<img src="${p.cores[0].frente}&width=200" loading="lazy" alt="${p.titulo}" /><span>${p.titulo}</span>`;
+      div.onclick = () => {
+        varProduto = varProduto?.id === p.id ? null : p;
+        varCor = null;
+        renderVarCatalogo();
+      };
+      grid.appendChild(div);
+    });
+    renderVarCores();
+  }
+
+  function renderVarCores() {
+    const wrap = document.getElementById('var-catalog-colors');
+    const nota = document.getElementById('var-catalog-note');
+    wrap.innerHTML = '';
+    if (!varProduto) { nota.textContent = 'Escolha o produto que aparece nas fotos.'; updateVariacoesBtn(); return; }
+    varProduto.cores.forEach(cor => {
+      const b = document.createElement('button');
+      b.className = 'catalog-color' + (varCor?.id === cor.id ? ' selected' : '');
+      b.textContent = cor.nome;
+      b.onclick = () => {
+        varCor = varCor?.id === cor.id ? null : cor;
+        renderVarCores();
+      };
+      wrap.appendChild(b);
+    });
+    nota.textContent = varCor ? `${varProduto.titulo} — ${varCor.nome}` : 'Escolha a cor.';
+    updateVariacoesBtn();
+  }
+
+  function renderVarEstilos() {
+    const wrap = document.getElementById('var-estilos');
+    wrap.innerHTML = '';
+    Object.entries(ESTILOS_VAR).forEach(([id, rotulo]) => {
+      const b = document.createElement('button');
+      b.className = 'catalog-color' + (varEstilos.includes(id) ? ' selected' : '');
+      b.textContent = rotulo;
+      b.onclick = () => {
+        varEstilos = varEstilos.includes(id) ? varEstilos.filter(x => x !== id) : [...varEstilos, id];
+        renderVarEstilos();
+      };
+      wrap.appendChild(b);
+    });
+    document.getElementById('var-estilos-nota').textContent = varEstilos.length
+      ? `Preso a ${varEstilos.length} estilo(s) — só varia ângulo, luz e cor.`
+      : 'Livre: inventa um cenário novo pra cada foto.';
+  }
+
+  function selectVarExpressao(file) {
+    varExpressao = file;
+    document.querySelectorAll('#var-expr-grid .expr-thumb, #var-expr-grid .expr-none')
+      .forEach(el => el.classList.remove('selected'));
+    if (!file) document.getElementById('var-expr-none').classList.add('selected');
+    else if (file === 'aleatorio') document.getElementById('var-expr-random').classList.add('selected');
+    else document.querySelector(`#var-expr-grid .expr-thumb[data-file="${file}"]`)?.classList.add('selected');
+  }
+
+  async function loadVarExpressoes() {
+    const exprs = await (await fetch('/api/expressions')).json();
+    const grid = document.getElementById('var-expr-grid');
+    exprs.forEach(e => {
+      const div = document.createElement('div');
+      div.className = 'expr-thumb';
+      div.dataset.file = e.file;
+      div.innerHTML = `<img src="/expressions/${e.file}" alt="${e.name}" title="${e.name}" />`;
+      div.onclick = () => selectVarExpressao(e.file);
+      grid.appendChild(div);
+    });
+    window.varExpressoesDisponiveis = exprs.map(e => e.file);
+  }
+
+  async function loadGuardaRoupa() {
+    try {
+      guardaRoupa = await (await fetch('/api/guarda-roupa')).json();
+    } catch { guardaRoupa = { roupas: [], calcas: [] }; }
+    renderPecas('roupa');
+    renderPecas('calca');
+  }
+
+  // uma grade por tipo, com "sem peça" e "aleatória" na frente
+  function renderPecas(tipo) {
+    const grid = document.getElementById(`var-${tipo}-grid`);
+    if (!grid) return;
+    const pasta = tipo === 'roupa' ? 'roupas' : 'calcas';
+    const lista = guardaRoupa[pasta] || [];
+    const atual = tipo === 'roupa' ? varRoupaFile : varCalcaFile;
+
+    grid.innerHTML = '';
+    const fixo = (valor, rotulo, id) => {
+      const div = document.createElement('div');
+      div.className = 'expr-none' + (atual === valor ? ' selected' : '');
+      div.id = id;
+      div.innerHTML = rotulo;
+      div.onclick = () => selectPeca(tipo, valor);
+      grid.appendChild(div);
+    };
+    fixo(null, 'Sem<br>peça', `var-${tipo}-none`);
+    if (lista.length) fixo('aleatorio', '🎲<br>Aleatória', `var-${tipo}-random`);
+
+    lista.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'expr-thumb' + (atual === p.file ? ' selected' : '');
+      div.title = p.nome;
+      div.innerHTML = `<img src="/${pasta}/${encodeURIComponent(p.file)}" alt="${p.nome}" />
+        <span class="peca-acoes">
+          <button title="Renomear">✎</button>
+          <button title="Apagar">×</button>
+        </span>`;
+      const [btnNome, btnApagar] = div.querySelectorAll('.peca-acoes button');
+      btnNome.onclick = (e) => { e.stopPropagation(); renomearPeca(pasta, p); };
+      btnApagar.onclick = (e) => { e.stopPropagation(); apagarPeca(pasta, p); };
+      div.onclick = () => selectPeca(tipo, p.file);
+      grid.appendChild(div);
+    });
+
+    const add = document.createElement('div');
+    add.className = 'peca-add';
+    add.textContent = '+';
+    add.title = 'Adicionar peças — ou arraste a imagem aqui, ou cole com Ctrl+V';
+    add.onclick = () => escolherArquivosPeca(pasta);
+    grid.appendChild(add);
+
+    grid.onmouseenter = () => { ultimaGradeDePeca = pasta; };
+    ligarArrastar(grid, pasta);
+  }
+
+  // arrastar do Google traz o arquivo ou só a URL — os dois funcionam
+  function ligarArrastar(grid, pasta) {
+    grid.ondragover = (e) => { e.preventDefault(); grid.classList.add('grade-arrastando'); };
+    grid.ondragleave = () => grid.classList.remove('grade-arrastando');
+    grid.ondrop = (e) => {
+      e.preventDefault();
+      grid.classList.remove('grade-arrastando');
+      const arquivos = [...(e.dataTransfer.files || [])].filter(f => f.type.startsWith('image/'));
+      const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+      if (arquivos.length) enviarPecas(pasta, arquivos);
+      else if (url && url.trim().startsWith('https://')) enviarPecas(pasta, [], [url.trim()]);
+    };
+  }
+
+  function escolherArquivosPeca(pasta) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+    input.onchange = () => enviarPecas(pasta, [...input.files]);
+    input.click();
+  }
+
+  async function enviarPecas(pasta, arquivos, urls = []) {
+    const tipo = pasta === 'roupas' ? 'roupa' : 'calca';
+    const grid = document.getElementById(`var-${tipo}-grid`);
+    grid.style.opacity = '.5';
+    try {
+      const form = new FormData();
+      form.append('destino', pasta);
+      arquivos.forEach(f => form.append('pecas', f));
+      if (urls.length) form.append('urls', JSON.stringify(urls));
+      const r = await fetch('/api/guarda-roupa/upload', { method: 'POST', body: form });
+      const d = await r.json();
+      if (d.error) throw new Error(d.error);
+      guardaRoupa[pasta] = d.lista;
+      renderPecas(tipo);
+    } catch (e) {
+      alert('Não consegui adicionar: ' + e.message);
+    } finally {
+      grid.style.opacity = '';
+    }
+  }
+
+  async function renomearPeca(pasta, peca) {
+    const novo = prompt('Nome da peça (vira a descrição no prompt):', peca.nome);
+    if (!novo || novo.trim() === peca.nome) return;
+    const r = await fetch('/api/guarda-roupa/renomear', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ destino: pasta, de: peca.file, para: novo.trim() }),
+    });
+    const d = await r.json();
+    if (d.error) return alert(d.error);
+    const tipo = pasta === 'roupas' ? 'roupa' : 'calca';
+    if (tipo === 'roupa' && varRoupaFile === peca.file) varRoupaFile = d.novo;
+    if (tipo === 'calca' && varCalcaFile === peca.file) varCalcaFile = d.novo;
+    guardaRoupa[pasta] = d.lista;
+    renderPecas(tipo);
+  }
+
+  async function apagarPeca(pasta, peca) {
+    if (!confirm(`Apagar "${peca.nome}"?`)) return;
+    const r = await fetch('/api/guarda-roupa/apagar', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ destino: pasta, file: peca.file }),
+    });
+    const d = await r.json();
+    if (d.error) return alert(d.error);
+    const tipo = pasta === 'roupas' ? 'roupa' : 'calca';
+    if (tipo === 'roupa' && varRoupaFile === peca.file) varRoupaFile = null;
+    if (tipo === 'calca' && varCalcaFile === peca.file) varCalcaFile = null;
+    guardaRoupa[pasta] = d.lista;
+    renderPecas(tipo);
+  }
+
+  function selectPeca(tipo, valor) {
+    if (tipo === 'roupa') varRoupaFile = varRoupaFile === valor ? null : valor;
+    else varCalcaFile = varCalcaFile === valor ? null : valor;
+    renderPecas(tipo);
+  }
+
+  function updateVariacoesBtn() {
+    const btn = document.getElementById('btn-variacoes');
+    if (!btn) return;
+    const modeloOk = varModo === 'aleatorio' || !!varModelo;
+    btn.disabled = !(modeloOk && varCor);
+  }
+
+  const sorteia = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  async function gerarVariacoes() {
+    const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 6, 1), 12);
+    const status = document.getElementById('status-variacoes');
+    const btn = document.getElementById('btn-variacoes');
+    btn.disabled = true;
+    status.textContent = 'Escrevendo as cenas...';
+
+    let cenas;
+    try {
+      const res = await fetch('/api/variacoes/cenas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantidade: qtd, estilos: varEstilos, genero: varModo === 'mesma' ? varModelo?.genero : null }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      cenas = data.cenas;
+    } catch (e) {
+      status.textContent = `❌ ${e.message}`;
+      btn.disabled = false;
+      return;
+    }
+
+    status.textContent = `${cenas.length} cenas prontas — gerando as fotos...`;
+
+    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Variações — ${varProduto.titulo} (${varCor.nome})</div>
+      <div class="results-grid" id="var-grid-${n}">
+        ${cenas.map((c, i) => `
+          <div class="result-card" id="var-card-${n}-${i}">
+            <h3>${c.titulo}</h3>
+            <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+          </div>`).join('')}
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const item = {
+      titulo: varProduto.titulo, grupo: varProduto.grupo, subtipo: varProduto.subtipo || null,
+      cor: varCor.nome, urls: [varCor.frente, varCor.ladinho].filter(Boolean),
+    };
+
+    // 3 por vez: mantém as fotos aparecendo aos poucos sem estourar a API
+    let proxima = 0;
+    let prontas = 0;
+    const trabalhador = async () => {
+      while (proxima < cenas.length) {
+        const i = proxima++;
+        const card = document.getElementById(`var-card-${n}-${i}`);
+        try {
+          const modelo = varModo === 'aleatorio'
+            ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
+            : varModelo.file;
+          const expr = varExpressao === 'aleatorio' ? sorteia(window.varExpressoesDisponiveis || [null]) : varExpressao;
+
+          const form = new FormData();
+          form.append('modelFile', modelo);
+          form.append('cena', cenas[i].prompt);
+          if (cenas[i].pose) form.append('pose', cenas[i].pose);
+          if (cenas[i].enquadramento) form.append('enquadramento', cenas[i].enquadramento);
+          form.append('catalogItems', JSON.stringify([item]));
+          form.append('ratio', varSize);
+          if (varRoupa.trim()) form.append('roupa', varRoupa);
+          if (varCalca.trim()) form.append('calca', varCalca);
+
+          // no modo aleatório a peça também é sorteada, e por foto
+          const escolhePeca = (valor, lista) => {
+            if (valor === 'aleatorio' || (varModo === 'aleatorio' && !valor && lista.length)) return sorteia(lista)?.file;
+            return valor;
+          };
+          const rf = escolhePeca(varRoupaFile, guardaRoupa.roupas);
+          const cf = escolhePeca(varCalcaFile, guardaRoupa.calcas);
+          if (rf) form.append('roupaFile', rf);
+          if (cf) form.append('calcaFile', cf);
+          if (expr) form.append('expressionFile', expr);
+
+          const res = await fetch('/api/variacoes/gerar', { method: 'POST', body: form });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+
+          const src = 'data:image/png;base64,' + data.image;
+          card.innerHTML = `
+            <h3>${cenas[i].titulo}</h3>
+            <img src="${src}" alt="${cenas[i].titulo}" />
+            <div class="card-actions">
+              <a href="${src}" download="vyser-variacao-${n}-${i + 1}.png">⬇ Baixar</a>
+            </div>`;
+        } catch (e) {
+          card.innerHTML = `<h3>${cenas[i].titulo}</h3><div class="card-error">❌ ${e.message}</div>`;
+        }
+        prontas++;
+        status.textContent = `${prontas} de ${cenas.length} prontas...`;
+      }
+    };
+
+    await Promise.all([trabalhador(), trabalhador(), trabalhador()]);
+    status.textContent = `✅ ${cenas.length} variações geradas.`;
+    btn.disabled = false;
+  }
+
+  renderVarEstilos();
+  loadVarExpressoes();
+  loadGuardaRoupa();
+
   // ── Seção Livre ──────────────────────────────────────────
   // Sem molde de prompt: o texto vai cru pra IA, do jeito que você escreveu.
   const MAX_FOTOS_LIVRE = 10;
   let livreFiles  = [];
   let livrePrompt = '';
-  let livreSize   = '1024x1024';
+  let livreSize   = '1:1';
 
   function openLivreUpload() {
     document.getElementById('input-livre').click();
   }
 
-  function selectLivreSize(size) {
-    livreSize = size;
-    document.getElementById('livre-size-square').classList.toggle('active', size === '1024x1024');
-    document.getElementById('livre-size-portrait').classList.toggle('active', size === '1024x1536');
-    document.getElementById('livre-size-landscape').classList.toggle('active', size === '1536x1024');
+  function selectLivreSize(ratio) {
+    livreSize = ratio;
+    PROPORCOES.forEach(r =>
+      document.getElementById(`livre-size-${idDaProporcao(r)}`).classList.toggle('active', r === ratio));
   }
 
   function handleLivreFiles(files) {
@@ -1642,7 +2163,7 @@
     try {
       const form = new FormData();
       form.append('prompt', promptSnap);
-      form.append('size', sizeSnap);
+      form.append('ratio', sizeSnap);
       filesSnap.forEach(f => form.append('images', f));
 
       const res  = await fetch('/api/generate-livre', { method: 'POST', body: form });
@@ -1665,6 +2186,18 @@
 
   // Cole uma imagem (Ctrl+V) direto na área de upload clicada por último, quando a aba Criativos estiver aberta
   document.addEventListener('paste', (e) => {
+    const variacoesVisible = document.getElementById('section-variacoes').style.display !== 'none';
+    if (variacoesVisible && ultimaGradeDePeca) {
+      for (const item of e.clipboardData?.items || []) {
+        if (item.type.startsWith('image/')) {
+          enviarPecas(ultimaGradeDePeca, [item.getAsFile()]);
+          e.preventDefault();
+          return;
+        }
+      }
+      return;
+    }
+
     const criativosVisible = document.getElementById('section-criativos').style.display !== 'none';
     const livreVisible     = document.getElementById('section-livre').style.display !== 'none';
     if (!criativosVisible && !livreVisible) return;

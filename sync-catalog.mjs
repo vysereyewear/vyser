@@ -1,10 +1,15 @@
 // Sincroniza o catálogo da loja Shopify para public/catalog.json
 //
 // Usa o endpoint público /products.json — não precisa de token nem de app privado.
-// Cada variante de cor tem uma featured_image no Shopify, e essa é sempre a foto
-// de FRENTE. As fotos de cada cor são numeradas em sequência no nome do arquivo
-// (1_hash.jpg, 2_hash.jpg, ...), então o "ladinho" (3/4, não completamente de lado)
-// é o arquivo N-1 — com fallback pro vizinho seguinte quando N-1 não existe.
+//
+// A loja é organizada com UM PRODUTO POR COR ("BLAZE - BLACK / BLACK"), sem
+// featured_image nas variantes. Então frente e ladinho saem da numeração no nome
+// do arquivo: dentro de um produto, ordenando pelo número, as fotos seguem sempre
+// a mesma sequência de captação. Para óculos e bonés é [ladinho, frente, lado,
+// costas/modelo...]; para joias, a primeira já é a foto cheia.
+//
+// Fotos com modelo e banners entram no meio da numeração, então cada candidata é
+// conferida pela fração de fundo antes de ser aceita.
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -16,23 +21,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const STORE = process.env.SHOPIFY_STORE_DOMAIN || 'vyser-eyewear.com';
 const OUT = path.join(__dirname, 'public', 'catalog.json');
 
-// product_type do Shopify → grupo usado nas abas do app.
-// Óculos são os que estão sem product_type na loja, então o título desempata
-// os que ficaram sem tipo preenchido (ex: TALON CAP).
-function grupoDe(productType, titulo = '') {
-  const t = (productType || '').toLowerCase();
-  if (t.includes('cap')) return 'bone';
-  if (t === '') return /\bcap\b/i.test(titulo) ? 'bone' : 'oculos';
-  return 'joia';
+// product_type da loja → aba do app
+const GRUPO_POR_TIPO = {
+  sunglasses: 'oculos',
+  cap: 'bone',
+};
+
+function grupoDe(productType) {
+  const t = (productType || '').trim().toLowerCase();
+  return GRUPO_POR_TIPO[t] || 'joia';
 }
 
-// Dentro de joia, o tipo decide onde a peça é usada (dedo, pulso, pescoço)
-function subtipoDe(productType, titulo = '') {
-  const t = `${productType} ${titulo}`.toLowerCase();
-  if (/\bring\b|\banel\b/.test(t)) return 'anel';
-  if (/bracelet|armband|pulseira/.test(t)) return 'pulseira';
-  if (/chain|necklace|halskette|colar/.test(t)) return 'corrente';
-  return null;
+// "BLAZE - BLACK / BLACK" → { base: 'BLAZE', cor: 'BLACK / BLACK' }
+// Sem hífen, o produto é uma cor só e vira o próprio nome.
+function separarTitulo(titulo) {
+  const i = titulo.indexOf(' - ');
+  return i === -1
+    ? { base: titulo.trim(), cor: 'Único' }
+    : { base: titulo.slice(0, i).trim(), cor: titulo.slice(i + 3).trim() };
 }
 
 // número no começo do nome do arquivo: "12_a1b2c3.jpg" ou "12.jpg" → 12
@@ -42,8 +48,8 @@ function numeroDoArquivo(src) {
   return m ? parseInt(m[1], 10) : null;
 }
 
-// Foto de produto é um objeto pequeno sobre fundo liso, então quase todo o quadro
-// é fundo. Foto com modelo tem uma pessoa ocupando o quadro e derruba essa fração.
+// Foto de produto é objeto pequeno sobre fundo liso, então quase todo o quadro é
+// fundo. Foto com modelo tem uma pessoa ocupando o quadro e derruba essa fração.
 // Medido no catálogo: produto fica em 68-89%, modelo em 3-59%.
 const FRACAO_MINIMA_DE_FUNDO = 0.64;
 const cacheFundo = new Map();
@@ -64,7 +70,6 @@ async function fracaoDeFundo(url) {
         const i = (y * info.width + x) * info.channels;
         return [data[i], data[i + 1], data[i + 2]];
       };
-      // cor do fundo = mediana dos quatro cantos
       const cantos = [px(1, 1), px(62, 1), px(1, 62), px(62, 62)];
       const fundo = [0, 1, 2].map((c) => cantos.map((p) => p[c]).sort((a, b) => a - b)[1]);
 
@@ -83,34 +88,21 @@ async function fracaoDeFundo(url) {
   return fracao;
 }
 
-// A foto de frente é a N do lote da cor, e o ladinho (3/4) costuma ser a N-1.
-// Mas quando a cor começa no próprio N, a N-1 é do lote anterior e cai justo numa
-// foto com modelo — por isso cada candidata é conferida antes de ser aceita.
-async function escolherLadinho(images, idxFrente, frentesDeOutrasCores) {
-  const n = numeroDoArquivo(images[idxFrente].src);
+// As fotos só de produto, na ordem de captação, checando no máximo `limite`
+// candidatas pra não baixar o produto inteiro.
+async function fotosDeProduto(images, limite = 4) {
+  const numeradas = images
+    .map((img) => ({ src: img.src, n: numeroDoArquivo(img.src) }))
+    .filter((x) => x.n !== null)
+    .sort((a, b) => a.n - b.n);
 
-  const maisProximaComNumero = (alvo) =>
-    images
-      .map((img, i) => ({ img, dist: Math.abs(i - idxFrente) }))
-      .filter(({ img, dist }) => dist > 0 && numeroDoArquivo(img.src) === alvo)
-      .sort((a, b) => a.dist - b.dist)[0]?.img.src || null;
-
-  // N-1 primeiro (o 3/4 na maioria dos lotes), depois os vizinhos seguintes
-  const candidatas = (n === null
-    ? [images[idxFrente + 1]?.src, images[idxFrente - 1]?.src]
-    : [n - 1, n + 1, n + 2, n - 2].map(maisProximaComNumero)
-  ).filter((src) => src && !frentesDeOutrasCores.has(src));
-
-  let primeiraDesconhecida = null;
-  for (const src of candidatas) {
-    const fracao = await fracaoDeFundo(src);
-    if (fracao === null) {
-      primeiraDesconhecida ??= src; // não deu pra medir; só usa se nada melhor aparecer
-    } else if (fracao >= FRACAO_MINIMA_DE_FUNDO) {
-      return src;
-    }
+  const aceitas = [];
+  for (const foto of numeradas.slice(0, limite)) {
+    const fracao = await fracaoDeFundo(foto.src);
+    if (fracao === null || fracao >= FRACAO_MINIMA_DE_FUNDO) aceitas.push(foto.src);
+    if (aceitas.length === 2) break;
   }
-  return primeiraDesconhecida;
+  return aceitas;
 }
 
 export async function sincronizarCatalogo() {
@@ -118,60 +110,37 @@ export async function sincronizarCatalogo() {
   if (!res.ok) throw new Error(`Shopify respondeu ${res.status} ao buscar /products.json`);
   const { products } = await res.json();
 
-  const catalogo = [];
+  const porBase = new Map();
 
   for (const p of products) {
     // Kits não são um produto pra vestir no modelo — a foto é da caixa/sacola
-    if (/\bkit\b/i.test(p.title)) continue;
+    if (/\bkit\b/i.test(p.title) || /^kit$/i.test((p.product_type || '').trim())) continue;
+    if (!p.images?.length) continue;
 
-    const images = [...p.images].sort((a, b) => a.position - b.position);
-    if (!images.length) continue;
+    const grupo = grupoDe(p.product_type);
+    const { base, cor } = separarTitulo(p.title);
 
-    const todasAsFrentes = new Set(p.variants.map((v) => v.featured_image?.src).filter(Boolean));
+    const fotos = await fotosDeProduto(p.images);
+    if (!fotos.length) continue;
 
-    const cores = [];
-    for (const v of p.variants) {
-      const frenteSrc = v.featured_image?.src;
-      if (!frenteSrc) continue;
+    // Em óculos e bonés a primeira da sequência é o 3/4 e a segunda é a frente.
+    // Em joias a primeira já é a foto cheia do produto.
+    const [frente, ladinho] = grupo === 'joia'
+      ? [fotos[0], fotos[1] || null]
+      : [fotos[1] || fotos[0], fotos[1] ? fotos[0] : null];
 
-      const idxFrente = images.findIndex((img) => img.src === frenteSrc);
-      if (idxFrente === -1) continue;
-
-      const frentesDeOutrasCores = new Set([...todasAsFrentes].filter((s) => s !== frenteSrc));
-      cores.push({
-        id: String(v.id),
-        nome: v.title,
-        frente: frenteSrc,
-        ladinho: await escolherLadinho(images, idxFrente, frentesDeOutrasCores),
-      });
+    if (!porBase.has(base)) {
+      porBase.set(base, { id: String(p.id), titulo: base, handle: p.handle, grupo, cores: [], todas: [] });
     }
-
-    // Produto sem foto atribuída por variante (ex: cor única) — cai nas duas primeiras
-    if (!cores.length) {
-      cores.push({
-        id: String(p.id),
-        nome: p.variants[0]?.title === 'Default Title' ? 'Único' : (p.variants[0]?.title || 'Único'),
-        frente: images[0].src,
-        ladinho: images[1]?.src || null,
-      });
-    }
-
-    catalogo.push({
-      id: String(p.id),
-      titulo: p.title,
-      handle: p.handle,
-      grupo: grupoDe(p.product_type, p.title),
-      subtipo: subtipoDe(p.product_type, p.title),
-      cores,
-      // todas as fotos do produto, pra poder trocar a escolha na mão no app
-      todas: images.map((img) => img.src),
-    });
+    const entrada = porBase.get(base);
+    entrada.cores.push({ id: String(p.id), nome: cor, frente, ladinho });
+    entrada.todas.push(...p.images.map((img) => img.src));
   }
 
   const dados = {
     loja: STORE,
     sincronizadoEm: new Date().toISOString(),
-    produtos: catalogo,
+    produtos: [...porBase.values()].sort((a, b) => a.titulo.localeCompare(b.titulo)),
   };
 
   await fs.writeFile(OUT, JSON.stringify(dados, null, 2), 'utf8');
@@ -186,5 +155,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     return acc;
   }, {});
   const cores = dados.produtos.reduce((n, p) => n + p.cores.length, 0);
+  const semLadinho = dados.produtos.flatMap((p) => p.cores.filter((c) => !c.ladinho));
   console.log(`catalog.json escrito: ${dados.produtos.length} produtos (${JSON.stringify(porGrupo)}), ${cores} cores`);
+  if (semLadinho.length) console.log(`sem ladinho: ${semLadinho.length}`);
 }

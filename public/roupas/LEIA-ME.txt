@@ -1,0 +1,13 @@
+Guarda-roupa das Variacoes — parte de cima.
+
+Joga as imagens das pecas aqui (jpg, png ou webp) e elas aparecem sozinhas
+na grade da aba Variacoes. Nao precisa cadastrar nada.
+
+O NOME DO ARQUIVO VIRA O ROTULO e tambem entra no prompt como descricao,
+entao vale caprichar:
+
+   jaqueta-de-couro-preta.jpg   ->  "jaqueta de couro preta"
+   corta-vento-cinza.png        ->  "corta vento cinza"
+   moletom-oversized-preto.jpg  ->  "moletom oversized preto"
+
+Foto da peca sozinha, de frente, funciona melhor do que foto de alguem vestindo.

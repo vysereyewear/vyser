@@ -21,6 +21,40 @@ async function fileToOpenAI(filePath, mimetype, name) {
   return await toFile(buffer, name, { type: mimetype });
 }
 
+// Proporções que a gente oferece. A OpenAI só gera em 1024x1024, 1024x1536 e
+// 1536x1024, então 4:5 e 9:16 saem de um corte no retrato 2:3 que ela devolve.
+//   4:5  — o mais alto que o feed do Instagram aceita
+//   9:16 — Stories e Reels; o feed rejeita
+const PROPORCOES = {
+  '1:1':    { size: '1024x1024', corte: null,            rotulo: 'Quadrado' },
+  '4:5':    { size: '1024x1536', corte: { w: 1024, h: 1280 }, rotulo: 'Feed retrato' },
+  '9:16':   { size: '1024x1536', corte: { w: 864,  h: 1536 }, rotulo: 'Story / Reels' },
+  '1.91:1': { size: '1536x1024', corte: null,            rotulo: 'Paisagem' },
+};
+
+function proporcaoEscolhida(ratio) {
+  return PROPORCOES[ratio] ? ratio : '1:1';
+}
+
+// Corta no centro até bater a proporção pedida
+async function aplicarProporcao(b64, ratio) {
+  const { corte } = PROPORCOES[ratio];
+  if (!corte) return b64;
+
+  const entrada = Buffer.from(b64, 'base64');
+  const { width, height } = await sharp(entrada).metadata();
+  const saida = await sharp(entrada)
+    .extract({
+      left: Math.round((width - corte.w) / 2),
+      top: Math.round((height - corte.h) / 2),
+      width: corte.w,
+      height: corte.h,
+    })
+    .png()
+    .toBuffer();
+  return saida.toString('base64');
+}
+
 // Baixa uma foto do CDN da Shopify e entrega no formato que a OpenAI aceita.
 // Só aceita URLs do CDN da própria loja — evita a rota virar proxy de download.
 async function urlToOpenAI(url, name) {
@@ -812,7 +846,14 @@ app.get('/api/models', (req, res) => {
     }
   });
 
-  res.json(Object.values(map).sort((a, b) => a.name.localeCompare(b.name)));
+  let generos = {};
+  try {
+    generos = JSON.parse(fs.readFileSync(path.join(modelsDir, 'generos.json'), 'utf8'));
+  } catch { /* sem o arquivo, a pose não se diferencia */ }
+
+  res.json(Object.values(map)
+    .map(m => ({ ...m, genero: generos[m.name] || null }))
+    .sort((a, b) => a.name.localeCompare(b.name)));
 });
 
 // Lista expressões disponíveis em public/expressions/
@@ -974,8 +1015,8 @@ app.post('/api/generate-creative', creativeUpload.fields([
     if (modelFiles.some(f => /[\\/]/.test(f) || f.includes('..')))
       return res.status(400).json({ error: 'Nome de modelo inválido.' });
 
-    const allowedSizes = ['1024x1024', '1024x1536', '1536x1024'];
-    const imageSize = allowedSizes.includes(size) ? size : '1024x1024';
+    const ratio = proporcaoEscolhida(req.body.ratio || size);
+    const imageSize = PROPORCOES[ratio].size;
 
     const keepOutfitBool = keepOutfit === 'true';
     if (!keepOutfitBool && !outfitFile)
@@ -1060,7 +1101,7 @@ app.post('/api/generate-creative', creativeUpload.fields([
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
-    res.json({ image: b64 });
+    res.json({ image: await aplicarProporcao(b64, ratio) });
   } catch (err) {
     uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
     console.error(err);
@@ -1332,8 +1373,8 @@ app.post('/api/generate-livre', creativeUpload.array('images', MAX_FOTOS_LIVRE),
     if (arquivos.length + catalogUrls.length > MAX_FOTOS_LIVRE)
       return res.status(400).json({ error: `No máximo ${MAX_FOTOS_LIVRE} fotos.` });
 
-    const allowedSizes = ['1024x1024', '1024x1536', '1536x1024'];
-    const imageSize = allowedSizes.includes(size) ? size : '1024x1024';
+    const ratio = proporcaoEscolhida(req.body.ratio || size);
+    const imageSize = PROPORCOES[ratio].size;
 
     const images = [];
     for (let i = 0; i < catalogUrls.length; i++) {
@@ -1353,9 +1394,345 @@ app.post('/api/generate-livre', creativeUpload.array('images', MAX_FOTOS_LIVRE),
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
-    res.json({ image: b64 });
+    res.json({ image: await aplicarProporcao(b64, ratio) });
   } catch (err) {
     uploadedPaths.forEach(p => { try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Variações ────────────────────────────────────────────────────────────────
+// Cada rodada inventa cenas novas em vez de puxar de uma lista pronta: um modelo
+// de texto escreve N cenários distintos, presos ao DNA visual da VYSER, e cada um
+// vira uma imagem. Sem isso o gerador de imagem repete o mesmo cenário sozinho.
+
+const MODELO_TEXTO = 'gpt-5.4-mini';
+
+// Lido do feed atual da marca: flash direto, lugar real, ângulo incomum.
+const DNA_VYSER = `VYSER is a streetwear sunglasses brand. Its photography is EDITORIAL FASHION PHOTOGRAPHY:
+
+CRITICAL — this is never a selfie. The camera is held by a photographer standing several meters away from the subject. Never an outstretched arm, never a phone held by the subject, never a face filling the frame from arm's length.
+
+- FRAMING VARIES WILDLY between shots. Some are full body with the location wide open around the subject; others are tight — the face filling the frame, a crop that cuts the head at the top, a hand entering the frame near the lens, the body cut off by the frame edge. Never shoot two photos at the same distance.
+- The subject is POSED and placed in the scene by a photographer — leaning, crouching, walking, standing against architecture. Deliberate, styled, aware of the camera.
+- Locations are scouted and striking: places a crew would pick for a shoot because of their architecture, texture, scale or light. Not a generic room.
+- Hard direct flash, high contrast, visible grain — the harsh look of on-location fashion editorial. Never soft beauty lighting.
+- Camera angles are chosen and graphic: low angle making the subject tower, high angle looking down on them in a space, straight-on wide symmetry.
+- One strong dominant color cast (cyan, green, red neon) or full black and white.
+- Dark wardrobe: leather, track jackets, hoodies. Mostly black.
+- It should look like a page from a fashion magazine or a brand campaign — not like a photo taken on a night out.
+
+LIFE AROUND THE SUBJECT. The street keeps moving while the shot happens: passers-by blurred by a slow shutter, traffic, someone crossing behind. The subject is in a real place with other people in it, not on an empty film set.
+
+MOSTLY NIGHT, BUT NOT ALWAYS. Roughly one shot in four is daylight instead — hard midday sun with black shadows, or flat overcast grey. Same harshness, different source.
+
+DEPTH AND COMPOSITION. The strongest VYSER images are built like this: the architecture dominates and the subject is small and pushed off to one side; the frame has three layers of depth (something close in the foreground, the subject in the middle, something glowing far behind); strong diagonals from the structure cut across the frame; and one single saturated colour appears deep in the scene as a small accent against an otherwise desaturated palette. Reach for this construction often.
+
+AVOID THE CGI LOOK. A real photo is imperfect: the subject is off-centre, the composition is not symmetric, the flash blows out some highlights and crushes some shadows to black, there is lens distortion up close, skin has texture and shine, edges are not perfectly clean. Never a subject standing dead centre in a tidy symmetrical frame — that reads instantly as computer generated.`;
+
+// Homens e mulheres são dirigidos de forma diferente numa produção de moda
+const DIRECAO_POR_GENERO = {
+  h: `The subject is a MAN. Direct him accordingly: wide stance with the weight dumped onto one leg, shoulders loose and heavy, slouched, blunt and economical movement. Relaxed and unbothered, never stiff or tense. Never a hand on the hip, never a curved S-shaped spine, never daintily crossed legs, never a head tilted onto a shoulder, never delicate or fluid hand gestures.`,
+  m: `The subject is a WOMAN. Direct her accordingly: longer fluid lines, contrapposto with the weight on one hip, more movement through the spine and neck, expressive hands, legs crossed or extended.`,
+};
+
+// gênero de cada modelo, editável em public/models/generos.json
+function generoDoModelo(modelFile) {
+  try {
+    const generos = JSON.parse(fs.readFileSync(path.join(__dirname, 'public/models/generos.json'), 'utf8'));
+    return generos[modelFile.replace(/-(frente|ladinho)\.[a-z]+$/i, '')] || null;
+  } catch { return null; }
+}
+
+const ESTILOS_VARIACAO = {
+  laje:     'a rooftop at night with the city skyline behind',
+  interior: 'a grimy real interior — tiled bathroom, hallway, stairwell',
+  graffiti: 'a graffiti-covered wall',
+  neon:     'a street at night lit by storefront neon',
+  estudio:  'a clean seamless studio backdrop',
+  pb:       'black and white, no color at all',
+  close:    'an extreme close-up crop of the face',
+  concreto: 'a concrete garage or parking structure',
+};
+
+// Guarda-roupa: é só jogar arquivo em public/roupas e public/calcas.
+// O nome do arquivo vira o rótulo na grade e a descrição no prompt.
+const EXTS_IMG = ['.jpg', '.jpeg', '.png', '.webp'];
+
+function lerPasta(nome) {
+  const dir = path.join(__dirname, 'public', nome);
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter(f => EXTS_IMG.includes(path.extname(f).toLowerCase()))
+    .sort()
+    .map(f => ({
+      file: f,
+      nome: path.basename(f, path.extname(f)).replace(/[-_]+/g, ' ').trim(),
+    }));
+}
+
+app.get('/api/guarda-roupa', (req, res) => {
+  res.json({ roupas: lerPasta('roupas'), calcas: lerPasta('calcas') });
+});
+
+const pastaDoGuardaRoupa = (destino) =>
+  destino === 'roupas' || destino === 'calcas' ? path.join(__dirname, 'public', destino) : null;
+
+// "Jaqueta Couro (1).JPG" -> "jaqueta-couro-1.jpg"; nomes do Google costumam ser lixo
+function nomeLimpo(original, ext) {
+  const base = path.basename(original, path.extname(original))
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60);
+  return (base || 'peca') + ext;
+}
+
+function semColidir(dir, arquivo) {
+  const ext = path.extname(arquivo);
+  const base = path.basename(arquivo, ext);
+  let nome = arquivo, n = 2;
+  while (fs.existsSync(path.join(dir, nome))) nome = `${base}-${n++}${ext}`;
+  return nome;
+}
+
+const uploadPecas = multer({ dest: path.join(__dirname, 'uploads') });
+
+app.post('/api/guarda-roupa/upload', uploadPecas.array('pecas', 20), async (req, res) => {
+  const enviados = req.files || [];
+  try {
+    const dir = pastaDoGuardaRoupa(req.body.destino);
+    if (!dir) return res.status(400).json({ error: 'destino inválido' });
+    fs.mkdirSync(dir, { recursive: true });
+
+    const salvos = [];
+
+    for (const f of enviados) {
+      const ext = EXTS_IMG.includes(path.extname(f.originalname).toLowerCase())
+        ? path.extname(f.originalname).toLowerCase() : '.jpg';
+      const nome = semColidir(dir, nomeLimpo(f.originalname, ext));
+      fs.renameSync(f.path, path.join(dir, nome));
+      salvos.push(nome);
+    }
+
+    // arrastar do Google traz a URL da imagem, não o arquivo
+    const urls = req.body.urls ? JSON.parse(req.body.urls) : [];
+    for (const url of urls.slice(0, 20)) {
+      if (!/^https:\/\//.test(url)) continue;
+      try {
+        const r = await fetch(url);
+        if (!r.ok) continue;
+        const tipo = r.headers.get('content-type') || '';
+        if (!tipo.startsWith('image/')) continue;
+        const buf = Buffer.from(await r.arrayBuffer());
+        if (buf.length > 15 * 1024 * 1024) continue;
+        const ext = tipo.includes('png') ? '.png' : tipo.includes('webp') ? '.webp' : '.jpg';
+        const nome = semColidir(dir, nomeLimpo(decodeURIComponent(url.split('/').pop().split('?')[0]), ext));
+        fs.writeFileSync(path.join(dir, nome), buf);
+        salvos.push(nome);
+      } catch { /* url quebrada, segue */ }
+    }
+
+    console.log(`[guarda-roupa] +${salvos.length} em ${req.body.destino}`);
+    res.json({ salvos, lista: lerPasta(req.body.destino) });
+  } catch (err) {
+    enviados.forEach(f => { try { fs.unlinkSync(f.path); } catch {} });
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/guarda-roupa/renomear', express.json(), (req, res) => {
+  const dir = pastaDoGuardaRoupa(req.body.destino);
+  const { de, para } = req.body;
+  if (!dir || !de || !para) return res.status(400).json({ error: 'faltou destino, de ou para' });
+  if (/[\\/]/.test(de) || de.includes('..')) return res.status(400).json({ error: 'nome inválido' });
+
+  const ext = path.extname(de);
+  const novo = semColidir(dir, nomeLimpo(para, ext));
+  try {
+    fs.renameSync(path.join(dir, de), path.join(dir, novo));
+    res.json({ novo, lista: lerPasta(req.body.destino) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/guarda-roupa/apagar', express.json(), (req, res) => {
+  const dir = pastaDoGuardaRoupa(req.body.destino);
+  const { file } = req.body;
+  if (!dir || !file || /[\\/]/.test(file) || file.includes('..'))
+    return res.status(400).json({ error: 'pedido inválido' });
+  try {
+    fs.unlinkSync(path.join(dir, file));
+    res.json({ lista: lerPasta(req.body.destino) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/variacoes/cenas', express.json(), async (req, res) => {
+  try {
+    const quantidade = Math.min(Math.max(parseInt(req.body.quantidade, 10) || 6, 1), 12);
+    const estilos = Array.isArray(req.body.estilos) ? req.body.estilos.filter(e => ESTILOS_VARIACAO[e]) : [];
+
+    const genero = DIRECAO_POR_GENERO[req.body.genero] || '';
+
+    const limite = estilos.length
+      ? `HARD CONSTRAINT: every single scene must use one of these settings and nothing else — ${estilos.map(e => ESTILOS_VARIACAO[e]).join(' / ')}. Do not invent a different location. Vary the angle, the light and the color instead, and reuse a setting if you run out.`
+      : 'You are free to invent any setting, as long as it fits the brand above.';
+
+    const instrucao = `${DNA_VYSER}
+
+${limite}
+
+Write ${quantidade} DIFFERENT scene briefs for an editorial photo shoot. Every one must be clearly distinct — different location, different angle, different light, different color. Do not repeat a setting.
+
+At least a third of the briefs must let the LOCATION dominate: the subject small in the frame and pushed off-centre, strong diagonal architecture, layers of depth, and a single saturated colour glowing somewhere deep in the scene. The rest can come closer.
+
+Pick locations that are visually STRIKING and specific — the kind of place a creative director scouts on purpose: a stairwell with brutalist concrete geometry, a car wash at night with water on glass, an empty parking deck with sodium lights in a row, a tunnel with tiled walls, a loading dock, scaffolding, a laundromat at 3am, a bus stop lit from inside. Avoid the obvious and the generic.
+
+For each one give TWO things:
+
+"prompt" — 1-2 sentences describing the SCENE: the location and what makes it interesting, where the photographer stands and how far away, the camera angle, the light and the color. State the framing explicitly (full body, waist-up, wide). Do not describe the person's face, the clothes or the sunglasses — those are decided elsewhere.
+
+"enquadramento" — one sentence fixing how close the camera is and how the body is cropped. This MUST change radically from brief to brief. Cycle through the whole range: full body with the location wide around them; waist-up; a tight head-and-shoulders crop; an extreme close-up where the face fills the frame and the top of the head is cut off; a crop tight on the eyes and the sunglasses; a wide-angle lens very close to the face so the features distort; the subject pushed far off to one side with the location taking most of the frame; the body cut in half by the edge of the frame; shot from directly overhead. Never give two briefs the same camera distance.
+
+"pose" — one sentence describing what the subject is DOING, different in every brief.
+
+The single most important rule: they look UNBOTHERED. Never tense, never heroic, never a statue holding a pose. Shoulders loose, weight dumped onto one leg, slouched, caught in the middle of something ordinary. Never "jaw set", "shoulders locked", "body tense", "staring hard at the camera".
+
+Their HANDS are always busy with something mundane: holding a drink, a phone at the ear, tugging the jacket collar, pushing the sunglasses up, thumb hooked in a pocket, gripping a railing, scratching the back of the head, carrying a bag.
+
+Draw from things like: sprawled on steps with the legs open, crouched on the heels looking at nothing, elbows hooked back over a railing, mid-stride looking away from the camera, sitting on a curb, leaning a shoulder on a wall with one foot flat against it, half-turned mid-conversation, back to the camera showing the jacket, sitting sideways on a barrier. Match it to what the location physically offers.
+
+NON-NEGOTIABLE: this is a sunglasses brand. The face must be in frame and the sunglasses clearly visible and readable in EVERY single brief. Never the back of the head, never turned fully away, never a crop that cuts the eyes out, never the face hidden behind a hand or an object. The body can be loose and the framing can be odd, but the sunglasses always read.
+
+${genero}
+
+Answer as JSON: {"cenas":[{"titulo":"<2-4 words, Portuguese>","prompt":"<the scene, English>","enquadramento":"<the framing, English>","pose":"<the pose, English>"}]}`;
+
+    const r = await client.chat.completions.create({
+      model: MODELO_TEXTO,
+      messages: [{ role: 'user', content: instrucao }],
+      response_format: { type: 'json_object' },
+    });
+
+    const { cenas } = JSON.parse(r.choices[0].message.content);
+    if (!Array.isArray(cenas) || !cenas.length) throw new Error('Não consegui montar as cenas.');
+
+    console.log(`[variacoes/cenas] ${cenas.length} cenas | estilos=${estilos.join(',') || 'livre'}`);
+    res.json({ cenas: cenas.slice(0, quantidade) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+function buildVariacaoPrompt({ cena, pose, enquadramento, direcao, produtos, roupa, calca, roupaIdx, calcaIdx, expressaoIdx }) {
+  const linhas = [
+    `Image 1 is the model. Preserve their face, skin and hair exactly — same person, recognizably.`,
+  ];
+  for (const p of produtos) {
+    linhas.push(p.inicio === p.fim
+      ? `Image ${p.inicio} shows ${p.descricao}.`
+      : `Images ${p.inicio} to ${p.fim} show ${p.descricao} from different angles.`);
+  }
+  if (roupaIdx) linhas.push(`Image ${roupaIdx} is the garment for the upper body.`);
+  if (calcaIdx) linhas.push(`Image ${calcaIdx} is the garment for the lower body.`);
+  if (expressaoIdx) linhas.push(`Image ${expressaoIdx} is a facial expression reference — copy only the expression, never the face or identity.`);
+
+  linhas.push('', `SCENE: ${cena}`);
+  if (enquadramento?.trim()) linhas.push(`FRAMING: ${enquadramento.trim()}`);
+  if (pose?.trim()) linhas.push(`POSE: ${pose.trim()}`);
+  linhas.push('', DNA_VYSER, '');
+  if (direcao) linhas.push(direcao, '');
+  linhas.push('Generate a photorealistic photo of the model in that scene.');
+  for (const p of produtos) linhas.push(`- ${p.comoVestir}, preserving its exact shape, color and details`);
+  if (roupaIdx) linhas.push(`- Wearing the exact garment shown in Image ${roupaIdx}${roupa?.trim() ? ` (${roupa.trim()})` : ''} — same cut, colour and details`);
+  else if (roupa?.trim()) linhas.push(`- Wearing: ${roupa.trim()}`);
+  if (calcaIdx) linhas.push(`- Bottoms: the exact garment shown in Image ${calcaIdx}${calca?.trim() ? ` (${calca.trim()})` : ''} — same cut, colour and details`);
+  else if (calca?.trim()) linhas.push(`- Bottoms: ${calca.trim()}`);
+  linhas.push('- Shot by a photographer standing several meters away — NOT a selfie, no outstretched arm, no phone in frame');
+  linhas.push('- Follow the FRAMING above exactly — the camera distance and the crop are the point');
+  linhas.push("- The face and the sunglasses must be clearly visible — never turned away, never cropped out, never covered");
+  if (pose?.trim()) linhas.push('- Commit fully to the pose described above — it is the point of the photo');
+
+  return linhas.join('\n');
+}
+
+app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
+  try {
+    const { modelFile, cena, pose, enquadramento, roupa, calca, expressionFile } = req.body;
+    if (!cena?.trim()) return res.status(400).json({ error: 'Cena vazia.' });
+    if (!modelFile)    return res.status(400).json({ error: 'Selecione um modelo.' });
+    if (/[\\/]/.test(modelFile) || modelFile.includes('..'))
+      return res.status(400).json({ error: 'Nome de modelo inválido.' });
+
+    const modelPath = path.join(__dirname, 'public/models', modelFile);
+    if (!fs.existsSync(modelPath)) return res.status(400).json({ error: 'Modelo não encontrado.' });
+
+    let catalogItems = [];
+    if (req.body.catalogItems) {
+      try {
+        catalogItems = JSON.parse(req.body.catalogItems);
+        if (!Array.isArray(catalogItems)) throw new Error();
+      } catch { return res.status(400).json({ error: 'catalogItems inválido.' }); }
+    }
+
+    const ratio = proporcaoEscolhida(req.body.ratio);
+
+    const mime = path.extname(modelFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+    const images = [await fileToOpenAI(modelPath, mime, 'model.jpg')];
+
+    const produtos = [];
+    for (const item of catalogItems) {
+      const inicio = images.length + 1;
+      for (let i = 0; i < item.urls.length; i++) {
+        images.push(await urlToOpenAI(item.urls[i], `produto-${images.length}.jpg`));
+      }
+      produtos.push({
+        inicio, fim: images.length,
+        descricao: descricaoDoProduto(item),
+        comoVestir: comoVestirProduto(item),
+      });
+    }
+
+    // peças do guarda-roupa entram como imagem, muito mais fiel que descrever
+    const anexarPeca = async (pasta, arquivo, rotulo) => {
+      if (!arquivo || /[\/]/.test(arquivo) || arquivo.includes('..')) return null;
+      const caminho = path.join(__dirname, 'public', pasta, arquivo);
+      if (!fs.existsSync(caminho)) return null;
+      const mimePeca = path.extname(arquivo).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+      images.push(await fileToOpenAI(caminho, mimePeca, `${rotulo}.jpg`));
+      return images.length;
+    };
+
+    const roupaIdx = await anexarPeca('roupas', req.body.roupaFile, 'roupa');
+    const calcaIdx = await anexarPeca('calcas', req.body.calcaFile, 'calca');
+
+    let expressaoIdx = null;
+    if (expressionFile) {
+      const exprPath = path.join(__dirname, 'public/expressions', expressionFile);
+      if (fs.existsSync(exprPath)) {
+        const em = path.extname(expressionFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+        images.push(await fileToOpenAI(exprPath, em, 'expression.jpg'));
+        expressaoIdx = images.length;
+      }
+    }
+
+    const direcao = DIRECAO_POR_GENERO[generoDoModelo(modelFile)] || '';
+    const prompt = buildVariacaoPrompt({ cena, pose, enquadramento, direcao, produtos, roupa, calca, roupaIdx, calcaIdx, expressaoIdx });
+    console.log(`[variacoes/gerar] model=${modelFile} produtos=${produtos.length} ratio=${ratio}`);
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2', image: images, prompt,
+      quality: 'medium', size: PROPORCOES[ratio].size,
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: await aplicarProporcao(b64, ratio) });
+  } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
