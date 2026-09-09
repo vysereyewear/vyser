@@ -379,9 +379,22 @@
     <div class="mini-upload-row">
       <div>
         <p class="section-label">Óculos <span style="font-weight:400;text-transform:none;color:#bbb;">(até 5 fotos)</span></p>
+        <div class="catalog-box" style="padding:10px; margin-bottom:10px;">
+          <div class="catalog-head">
+            <div class="pose-toggle">
+              <button class="pose-btn active" id="mod-tab-oculos" onclick="selectModGrupo('oculos')">Óculos</button>
+              <button class="pose-btn" id="mod-tab-bone" onclick="selectModGrupo('bone')">Bonés</button>
+              <button class="pose-btn" id="mod-tab-joia" onclick="selectModGrupo('joia')">Joias</button>
+            </div>
+          </div>
+          <input type="text" class="catalog-search" id="mod-search" placeholder="Buscar na loja..." oninput="setModBusca(this.value)" />
+          <div class="catalog-grid" id="mod-catalog-grid" style="max-height:190px;"></div>
+          <div class="catalog-colors" id="mod-catalog-colors"></div>
+          <div class="catalog-note" id="mod-catalog-note"></div>
+        </div>
         <input type="file" id="input-glasses" accept="image/*" multiple style="display:none" onchange="handleGlassesFiles(this.files)" />
         <div class="glasses-upload-area" id="upload-glasses-area" onclick="document.getElementById('input-glasses').click()">
-          📎 Anexar foto(s) dos óculos
+          📎 Ou anexe foto(s) na mão
         </div>
         <div class="glasses-thumbs" id="glasses-thumbs"></div>
       </div>
@@ -968,6 +981,69 @@
   let selectedModel     = null; // objeto { name, frente, ladinho }
   let selectedPose      = 'frente';
   let modelGlassesFiles = []; // array — suporta 1 a 5 fotos
+  let modCatalogUrls = [];    // óculos vindos do catálogo da loja
+  let modGrupo = 'oculos', modBusca = '', modProduto = null, modCor = null;
+
+  const totalOculosModelo = () => modCatalogUrls.length + modelGlassesFiles.length;
+
+  function selectModGrupo(g) {
+    modGrupo = g;
+    ['oculos', 'bone', 'joia'].forEach(x =>
+      document.getElementById(`mod-tab-${x}`).classList.toggle('active', x === g));
+    renderModCatalogo();
+  }
+
+  function setModBusca(v) { modBusca = v.trim().toLowerCase(); renderModCatalogo(); }
+
+  function renderModCatalogo() {
+    const grid = document.getElementById('mod-catalog-grid');
+    if (!grid || !catalogo) return;
+    grid.innerHTML = '';
+    catalogo.produtos
+      .filter(p => p.grupo === modGrupo && (!modBusca || p.titulo.toLowerCase().includes(modBusca)))
+      .forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'catalog-item' + (modProduto?.id === p.id ? ' selected' : '');
+        div.innerHTML = `<img src="${p.cores[0].frente}&width=200" loading="lazy" alt="${p.titulo}" /><span>${p.titulo}</span>`;
+        div.onclick = () => {
+          modProduto = modProduto?.id === p.id ? null : p;
+          modCor = null;
+          renderModCatalogo();
+        };
+        grid.appendChild(div);
+      });
+    renderModCores();
+  }
+
+  function renderModCores() {
+    const wrap = document.getElementById('mod-catalog-colors');
+    const nota = document.getElementById('mod-catalog-note');
+    wrap.innerHTML = '';
+    if (!modProduto) { nota.textContent = 'Escolha o produto da loja — a frente e o ladinho já entram como anexo.'; return; }
+    modProduto.cores.forEach(cor => {
+      const b = document.createElement('button');
+      b.className = 'catalog-color' + (modCor?.id === cor.id ? ' selected' : '');
+      b.textContent = cor.nome;
+      b.onclick = () => aplicarCorNoModelo(cor);
+      wrap.appendChild(b);
+    });
+    nota.innerHTML = modCor
+      ? `Anexadas: <b>frente</b>${modCor.ladinho ? ' e <b>ladinho</b>' : ' (sem ladinho — anexe na mão)'}`
+      : 'Escolha a cor.';
+  }
+
+  function aplicarCorNoModelo(cor) {
+    const jaEstava = modCor?.id === cor.id;
+    modCatalogUrls = [];
+    modCor = jaEstava ? null : cor;
+    if (modCor) {
+      modCatalogUrls = [modCor.frente, modCor.ladinho].filter(Boolean);
+      modelGlassesFiles = modelGlassesFiles.slice(0, 5 - modCatalogUrls.length);
+    }
+    renderModCores();
+    renderGlassesThumbs();
+    updateModelBtn();
+  }
   let modelClothingFile = null;
   let allModels         = [];
 
@@ -1020,7 +1096,7 @@
 
   function handleGlassesFiles(files) {
     for (const f of files) {
-      if (modelGlassesFiles.length >= 5) break;
+      if (totalOculosModelo() >= 5) break;
       modelGlassesFiles.push(f);
     }
     renderGlassesThumbs();
@@ -1032,7 +1108,7 @@
     const thumbsEl = document.getElementById('glasses-thumbs');
     thumbsEl.innerHTML = '';
 
-    if (modelGlassesFiles.length === 0) {
+    if (totalOculosModelo() === 0) {
       area.classList.remove('has-files');
       area.style.display = '';
       return;
@@ -1040,6 +1116,17 @@
 
     area.classList.add('has-files');
     area.style.display = 'none';
+
+    // as do catálogo vêm primeiro e saem trocando a cor, não pelo × de cada uma
+    modCatalogUrls.forEach(u => {
+      const div = document.createElement('div');
+      div.className = 'glasses-thumb';
+      div.title = 'Do catálogo da loja';
+      const img = document.createElement('img');
+      img.src = u;
+      div.appendChild(img);
+      thumbsEl.appendChild(div);
+    });
 
     modelGlassesFiles.forEach((f, i) => {
       const div = document.createElement('div');
@@ -1061,7 +1148,7 @@
     });
 
     // Botão + para adicionar mais (até 5)
-    if (modelGlassesFiles.length < 5) {
+    if (totalOculosModelo() < 5) {
       const addBtn = document.createElement('div');
       addBtn.className = 'glasses-add-btn';
       addBtn.title = 'Adicionar mais fotos';
@@ -1092,7 +1179,7 @@
       ? (selectedPose === 'ladinho' ? selectedModel.ladinho : selectedModel.frente)
       : null;
     document.getElementById('btn-model').disabled =
-      !(modelFile && modelGlassesFiles.length > 0 && modelClothingFile);
+      !(modelFile && totalOculosModelo() > 0 && modelClothingFile);
   }
 
   async function gerarComModelo() {
@@ -1116,6 +1203,7 @@
 
     // Captura valores atuais (podem mudar antes de terminar)
     const glassesSnap  = [...modelGlassesFiles];
+    const catalogSnap  = [...modCatalogUrls];
     const clothingSnap = modelClothingFile;
     const exprSnap     = selectedExpression;
 
@@ -1124,6 +1212,7 @@
       form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
       form.append('pose',     selectedPose);
       glassesSnap.forEach(f => form.append('glasses', f));
+      if (catalogSnap.length) form.append('catalogUrls', JSON.stringify(catalogSnap));
       form.append('clothing', clothingSnap);
       if (exprSnap) form.append('expressionFile', exprSnap);
       if (boneMode === 'builtin') {
@@ -1432,6 +1521,7 @@
       catalogo = await res.json();
       renderCatalogGrid();
       renderVarCatalogo();
+      renderModCatalogo();
     } catch (e) {
       document.getElementById('catalog-grid').innerHTML =
         `<span class="empty-models">${e.message}</span>`;

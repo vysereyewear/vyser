@@ -880,7 +880,21 @@ app.post('/api/generate-model', modelUpload.fields([
   const uploadedPaths = [...glassesFiles.map(f => f.path), clothingFile?.path, ...customBoneFiles.map(f => f.path)].filter(Boolean);
   try {
     const { modelFile, pose } = req.body;
-    if (!glassesFiles.length) return res.status(400).json({ error: 'Envie ao menos uma foto dos óculos.' });
+
+    // Óculos escolhidos no catálogo da loja entram junto com os anexados na mão
+    let catalogUrls = [];
+    if (req.body.catalogUrls) {
+      try {
+        catalogUrls = JSON.parse(req.body.catalogUrls);
+        if (!Array.isArray(catalogUrls)) throw new Error();
+      } catch {
+        return res.status(400).json({ error: 'catalogUrls inválido.' });
+      }
+    }
+    const totalOculos = glassesFiles.length + catalogUrls.length;
+
+    if (!totalOculos)   return res.status(400).json({ error: 'Selecione os óculos no catálogo ou envie ao menos uma foto.' });
+    if (totalOculos > 5) return res.status(400).json({ error: 'No máximo 5 fotos de óculos.' });
     if (!clothingFile)        return res.status(400).json({ error: 'Envie a foto da roupa.' });
     if (!modelFile)           return res.status(400).json({ error: 'Selecione um modelo.' });
 
@@ -896,9 +910,12 @@ app.post('/api/generate-model', modelUpload.fields([
     const modelRef = await fileToOpenAI(modelPath, mime, 'model.jpg');
     const images = [modelRef];
 
-    // Images 2 a N+1: óculos (1 ou mais)
+    // Images 2 a N+1: óculos — primeiro os do catálogo, depois os anexados
+    for (let i = 0; i < catalogUrls.length; i++) {
+      images.push(await urlToOpenAI(catalogUrls[i], `glasses-cat-${i + 1}.jpg`));
+    }
     for (let i = 0; i < glassesFiles.length; i++) {
-      images.push(await fileToOpenAI(glassesFiles[i].path, glassesFiles[i].mimetype, `glasses-${i+1}.jpg`));
+      images.push(await fileToOpenAI(glassesFiles[i].path, glassesFiles[i].mimetype, `glasses-${catalogUrls.length + i + 1}.jpg`));
     }
     const glassesEndIdx = images.length; // índice da última imagem de óculos
 
@@ -939,8 +956,8 @@ app.post('/api/generate-model', modelUpload.fields([
       }
     }
 
-    const prompt = buildModelPrompt(glassesFiles.length, outfitIdx, expressionIdx, boneStartIdx, boneCount);
-    console.log(`[generate-model] model=${modelFile} pose=${pose} glasses=${glassesFiles.length} expr=${!!expressionFile} bone=${customBoneFiles.length ? 'custom(' + customBoneFiles.length + ')' : boneSelected}`);
+    const prompt = buildModelPrompt(totalOculos, outfitIdx, expressionIdx, boneStartIdx, boneCount);
+    console.log(`[generate-model] model=${modelFile} pose=${pose} glasses=${totalOculos}(cat:${catalogUrls.length}) expr=${!!expressionFile} bone=${customBoneFiles.length ? 'custom(' + customBoneFiles.length + ')' : boneSelected}`);
 
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
