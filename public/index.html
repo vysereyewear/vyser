@@ -1209,7 +1209,7 @@
 
     try {
       const form = new FormData();
-      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
+      form.append('modelFile', modelFile);
       form.append('pose',     selectedPose);
       glassesSnap.forEach(f => form.append('glasses', f));
       if (catalogSnap.length) form.append('catalogUrls', JSON.stringify(catalogSnap));
@@ -2676,7 +2676,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
+      form.append('modelFile', modelFile);
       chainSnap.forEach(f => form.append('chain', f));
       form.append('keepOutfit', keepOutfitSnap ? 'true' : 'false');
       if (!keepOutfitSnap && outfitSnap) form.append('outfit', outfitSnap);
@@ -2861,7 +2861,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
+      form.append('modelFile', modelFile);
       itemSnap.forEach(f => form.append('bracelet', f));
       if (shirtFileSnap) form.append('shirt', shirtFileSnap);
       if (pantsFileSnap) form.append('pants', pantsFileSnap);
@@ -3045,7 +3045,7 @@
     try {
       const form = new FormData();
       form.append('referenceKey', referenceSnap);
-      form.append('modelFiles', JSON.stringify(modelosSnap.map(s => s.file)));
+      form.append('modelFile', modelFile);
       itemSnap.forEach(f => form.append('ring', f));
       if (shirtFileSnap) form.append('shirt', shirtFileSnap);
       if (pantsFileSnap) form.append('pants', pantsFileSnap);
