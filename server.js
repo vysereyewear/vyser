@@ -1401,12 +1401,23 @@ app.post('/api/generate-livre', creativeUpload.array('images', MAX_FOTOS_LIVRE),
       images.push(await fileToOpenAI(arquivos[i].path, arquivos[i].mimetype, `imagem-${i + 1}.jpg`));
     }
 
-    console.log(`[generate-livre] fotos=${images.length} size=${imageSize} prompt="${prompt.trim().slice(0, 80)}"`);
+    console.log(`[generate-livre] fotos=${images.length} size=${imageSize} fundo=${req.body.fundo || 'normal'} prompt="${prompt.trim().slice(0, 80)}"`);
     uploadedPaths.forEach(p => { try { fs.unlinkSync(p); } catch {} });
 
+    // Fundo transparente: a API devolve PNG com canal alfa de verdade. A frase
+    // extra só reforça o pedido — sem ela um prompt de cena ("na praia") briga
+    // com a transparência e o modelo decide sozinho o que é fundo.
+    const transparente = req.body.fundo === 'transparente';
+    const textoFinal = transparente
+      ? `${prompt.trim()}
+
+Isolate the subject on a fully transparent background, with no backdrop behind it.`
+      : prompt.trim();
+    const extras = transparente ? { background: 'transparent', output_format: 'png' } : {};
+
     const response = images.length
-      ? await client.images.edit({ model: 'gpt-image-2', image: images, prompt: prompt.trim(), quality: 'medium', size: imageSize })
-      : await client.images.generate({ model: 'gpt-image-2', prompt: prompt.trim(), quality: 'medium', size: imageSize });
+      ? await client.images.edit({ model: 'gpt-image-2', image: images, prompt: textoFinal, quality: 'medium', size: imageSize, ...extras })
+      : await client.images.generate({ model: 'gpt-image-2', prompt: textoFinal, quality: 'medium', size: imageSize, ...extras });
 
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');

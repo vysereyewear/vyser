@@ -281,6 +281,17 @@
       background: rgba(0,0,0,.6); color: #fff; border: none; border-radius: 4px;
       width: 17px; height: 17px; font-size: 10px; line-height: 17px; padding: 0; cursor: pointer;
     }
+    /* fundo xadrez: sem ele o PNG transparente some no card branco */
+    .xadrez {
+      background-color: #fff;
+      background-image:
+        linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+        linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+        linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+      background-size: 18px 18px;
+      background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+    }
     .grade-arrastando { outline: 2px dashed #6366f1; outline-offset: 4px; border-radius: 8px; }
 
     /* Spinner */
@@ -709,6 +720,13 @@
       <button class="pose-btn"        id="livre-size-9-16"   onclick="selectLivreSize('9:16')">📲 9:16</button>
       <button class="pose-btn"        id="livre-size-1-91-1" onclick="selectLivreSize('1.91:1')">🖼️ Paisagem</button>
     </div>
+
+    <p class="section-label" style="margin-bottom:8px;">Fundo</p>
+    <div class="pose-toggle" style="margin-bottom:6px;">
+      <button class="pose-btn active" id="livre-fundo-normal" onclick="selectLivreFundo('normal')">🖼️ Normal</button>
+      <button class="pose-btn" id="livre-fundo-transparente" onclick="selectLivreFundo('transparente')">▦ Transparente (PNG)</button>
+    </div>
+    <p class="catalog-note" id="livre-fundo-nota" style="margin:0 0 20px;"></p>
 
     <button class="btn-generate" id="btn-livre" onclick="gerarLivre()" disabled>
       ✨ Gerar
@@ -2166,6 +2184,16 @@
   let livreFiles  = [];
   let livrePrompt = '';
   let livreSize   = '1:1';
+  let livreFundo  = 'normal';
+
+  function selectLivreFundo(fundo) {
+    livreFundo = fundo;
+    document.getElementById('livre-fundo-normal').classList.toggle('active', fundo === 'normal');
+    document.getElementById('livre-fundo-transparente').classList.toggle('active', fundo === 'transparente');
+    document.getElementById('livre-fundo-nota').textContent = fundo === 'transparente'
+      ? 'Sai em PNG sem fundo. O app acrescenta uma linha pedindo o objeto isolado — se o prompt descrever um cenário, ele é descartado.'
+      : '';
+  }
 
   function openLivreUpload() {
     document.getElementById('input-livre').click();
@@ -2231,6 +2259,7 @@
   async function gerarLivre() {
     const n = document.querySelectorAll('.result-row, .result-single').length + 1;
     const promptSnap = livrePrompt;
+    const fundoSnap  = livreFundo;
     const filesSnap  = [...livreFiles];
     const sizeSnap   = livreSize;
     const label = filesSnap.length
@@ -2253,6 +2282,7 @@
     try {
       const form = new FormData();
       form.append('prompt', promptSnap);
+      if (fundoSnap === 'transparente') form.append('fundo', 'transparente');
       form.append('ratio', sizeSnap);
       filesSnap.forEach(f => form.append('images', f));
 
@@ -2263,7 +2293,7 @@
       const src = 'data:image/png;base64,' + data.image;
       document.getElementById(`card-livre-${n}`).innerHTML = `
         <h3>Livre</h3>
-        <img src="${src}" alt="Livre ${n}" />
+        <img src="${src}" alt="Livre ${n}" class="${fundoSnap === 'transparente' ? 'xadrez' : ''}" />
         <div class="card-actions">
           <a href="${src}" download="vyser-livre-${n}.png">⬇ Baixar</a>
           <button class="btn-retry" onclick="gerarLivre()">↺ Gerar de novo</button>
