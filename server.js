@@ -1604,13 +1604,19 @@ app.post('/api/variacoes/cenas', express.json(), async (req, res) => {
 
     const genero = DIRECAO_POR_GENERO[req.body.genero] || '';
 
+    // cenas que o usuário curtiu em rodadas anteriores viram gosto, não molde
+    const favoritos = Array.isArray(req.body.favoritos) ? req.body.favoritos.slice(-6) : [];
+    const gosto = favoritos.length
+      ? `\n\nTHE USER'S TASTE — scenes they marked as favourites in earlier rounds. Lean toward what these have in common (the kind of place, the framing, the mood), without copying any of them:\n${favoritos.map(f => `- ${[f.prompt, f.enquadramento, f.pose].filter(Boolean).join(' ')}`).join('\n')}`
+      : '';
+
     const limite = estilos.length
       ? `HARD CONSTRAINT: every single scene must use one of these settings and nothing else — ${estilos.map(e => ESTILOS_VARIACAO[e]).join(' / ')}. Do not invent a different location. Vary the angle, the light and the color instead, and reuse a setting if you run out.`
       : 'You are free to invent any setting, as long as it fits the brand above.';
 
     const instrucao = `${DNA_VYSER}
 
-${limite}
+${limite}${gosto}
 
 Write ${quantidade} DIFFERENT scene briefs for an editorial photo shoot. Every one must be clearly distinct — different location, different angle, different light, different color. Do not repeat a setting.
 
@@ -1647,7 +1653,7 @@ Answer as JSON: {"cenas":[{"titulo":"<2-4 words, Portuguese>","prompt":"<the sce
     const { cenas } = JSON.parse(r.choices[0].message.content);
     if (!Array.isArray(cenas) || !cenas.length) throw new Error('Não consegui montar as cenas.');
 
-    console.log(`[variacoes/cenas] ${cenas.length} cenas | estilos=${estilos.join(',') || 'livre'}`);
+    console.log(`[posts/cenas] ${cenas.length} cenas | estilos=${estilos.join(',') || 'livre'} | favoritos=${favoritos.length}`);
     res.json({ cenas: cenas.slice(0, quantidade) });
   } catch (err) {
     console.error(err);
@@ -1687,58 +1693,70 @@ function buildVariacaoPrompt({ cena, pose, enquadramento, direcao, produtos, rou
   return linhas.join('\n');
 }
 
+// Monta os anexos que se repetem em toda foto de post: modelo, produto e peças do
+// guarda-roupa. Empurra em `images` (que pode já vir com algo na frente, como a
+// foto 1 na hora de gerar a 2) e devolve os índices de cada coisa.
+async function anexarReferenciasDoPost(body, images) {
+  const { modelFile } = body;
+  if (!modelFile) throw Object.assign(new Error('Selecione um modelo.'), { status: 400 });
+  if (/[\\/]/.test(modelFile) || modelFile.includes('..'))
+    throw Object.assign(new Error('Nome de modelo inválido.'), { status: 400 });
+
+  const modelPath = path.join(__dirname, 'public/models', modelFile);
+  if (!fs.existsSync(modelPath)) throw Object.assign(new Error('Modelo não encontrado.'), { status: 400 });
+
+  let catalogItems = [];
+  if (body.catalogItems) {
+    try {
+      catalogItems = JSON.parse(body.catalogItems);
+      if (!Array.isArray(catalogItems)) throw new Error();
+    } catch { throw Object.assign(new Error('catalogItems inválido.'), { status: 400 }); }
+  }
+
+  const mime = path.extname(modelFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+  images.push(await fileToOpenAI(modelPath, mime, 'model.jpg'));
+  const modelIdx = images.length;
+
+  const produtos = [];
+  for (const item of catalogItems) {
+    const inicio = images.length + 1;
+    for (let i = 0; i < item.urls.length; i++) {
+      images.push(await urlToOpenAI(item.urls[i], `produto-${images.length}.jpg`));
+    }
+    produtos.push({
+      inicio, fim: images.length,
+      descricao: descricaoDoProduto(item),
+      comoVestir: comoVestirProduto(item),
+    });
+  }
+
+  // peças do guarda-roupa entram como imagem, muito mais fiel que descrever
+  const anexarPeca = async (pasta, arquivo, rotulo) => {
+    if (!arquivo || /[\\/]/.test(arquivo) || arquivo.includes('..')) return null;
+    const caminho = path.join(__dirname, 'public', pasta, arquivo);
+    if (!fs.existsSync(caminho)) return null;
+    const mimePeca = path.extname(arquivo).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+    images.push(await fileToOpenAI(caminho, mimePeca, `${rotulo}.jpg`));
+    return images.length;
+  };
+
+  const roupaIdx = await anexarPeca('roupas', body.roupaFile, 'roupa');
+  const calcaIdx = await anexarPeca('calcas', body.calcaFile, 'calca');
+
+  return { modelIdx, produtos, roupaIdx, calcaIdx, direcao: DIRECAO_POR_GENERO[generoDoModelo(modelFile)] || '' };
+}
+
 app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
   try {
-    const { modelFile, cena, pose, enquadramento, roupa, calca, expressionFile } = req.body;
+    const { cena, pose, enquadramento, roupa, calca, expressionFile } = req.body;
     if (!cena?.trim()) return res.status(400).json({ error: 'Cena vazia.' });
-    if (!modelFile)    return res.status(400).json({ error: 'Selecione um modelo.' });
-    if (/[\\/]/.test(modelFile) || modelFile.includes('..'))
-      return res.status(400).json({ error: 'Nome de modelo inválido.' });
-
-    const modelPath = path.join(__dirname, 'public/models', modelFile);
-    if (!fs.existsSync(modelPath)) return res.status(400).json({ error: 'Modelo não encontrado.' });
-
-    let catalogItems = [];
-    if (req.body.catalogItems) {
-      try {
-        catalogItems = JSON.parse(req.body.catalogItems);
-        if (!Array.isArray(catalogItems)) throw new Error();
-      } catch { return res.status(400).json({ error: 'catalogItems inválido.' }); }
-    }
 
     const ratio = proporcaoEscolhida(req.body.ratio);
-
-    const mime = path.extname(modelFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
-    const images = [await fileToOpenAI(modelPath, mime, 'model.jpg')];
-
-    const produtos = [];
-    for (const item of catalogItems) {
-      const inicio = images.length + 1;
-      for (let i = 0; i < item.urls.length; i++) {
-        images.push(await urlToOpenAI(item.urls[i], `produto-${images.length}.jpg`));
-      }
-      produtos.push({
-        inicio, fim: images.length,
-        descricao: descricaoDoProduto(item),
-        comoVestir: comoVestirProduto(item),
-      });
-    }
-
-    // peças do guarda-roupa entram como imagem, muito mais fiel que descrever
-    const anexarPeca = async (pasta, arquivo, rotulo) => {
-      if (!arquivo || /[\/]/.test(arquivo) || arquivo.includes('..')) return null;
-      const caminho = path.join(__dirname, 'public', pasta, arquivo);
-      if (!fs.existsSync(caminho)) return null;
-      const mimePeca = path.extname(arquivo).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
-      images.push(await fileToOpenAI(caminho, mimePeca, `${rotulo}.jpg`));
-      return images.length;
-    };
-
-    const roupaIdx = await anexarPeca('roupas', req.body.roupaFile, 'roupa');
-    const calcaIdx = await anexarPeca('calcas', req.body.calcaFile, 'calca');
+    const images = [];
+    const { produtos, roupaIdx, calcaIdx, direcao } = await anexarReferenciasDoPost(req.body, images);
 
     let expressaoIdx = null;
-    if (expressionFile) {
+    if (expressionFile && !/[\\/]/.test(expressionFile) && !expressionFile.includes('..')) {
       const exprPath = path.join(__dirname, 'public/expressions', expressionFile);
       if (fs.existsSync(exprPath)) {
         const em = path.extname(expressionFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
@@ -1747,9 +1765,8 @@ app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
       }
     }
 
-    const direcao = DIRECAO_POR_GENERO[generoDoModelo(modelFile)] || '';
     const prompt = buildVariacaoPrompt({ cena, pose, enquadramento, direcao, produtos, roupa, calca, roupaIdx, calcaIdx, expressaoIdx });
-    console.log(`[variacoes/gerar] model=${modelFile} produtos=${produtos.length} ratio=${ratio}`);
+    console.log(`[posts/foto1] model=${req.body.modelFile} produtos=${produtos.length} ratio=${ratio}`);
 
     const response = await client.images.edit({
       model: 'gpt-image-2', image: images, prompt,
@@ -1760,6 +1777,124 @@ app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
     res.json({ image: await aplicarProporcao(b64, ratio) });
+  } catch (err) {
+    if (!err.status) console.error(err);
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+// ── 2ª foto do post ──────────────────────────────────────────────────────────
+// Um carrossel é uma sequência da mesma sessão. A foto 1 vai anexada como
+// referência principal e a IA faz o "próximo clique": mesma pessoa, mesmo lugar,
+// mesma luz, com a pose e a câmera mexendo um pouco.
+function buildSegundaFotoPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, direcao }) {
+  const linhas = [
+    'Image 1 is photo 1 of an Instagram carousel post.',
+    `Image ${modelIdx} is the model — the person in Image 1. Keep them identical.`,
+  ];
+  for (const p of produtos) {
+    linhas.push(p.inicio === p.fim
+      ? `Image ${p.inicio} shows ${p.descricao}.`
+      : `Images ${p.inicio} to ${p.fim} show ${p.descricao} from different angles.`);
+  }
+  if (roupaIdx) linhas.push(`Image ${roupaIdx} is the upper-body garment they are wearing.`);
+  if (calcaIdx) linhas.push(`Image ${calcaIdx} is the lower-body garment they are wearing.`);
+
+  linhas.push('',
+    'Generate photo 2 of the SAME post: the next frame from the same shoot, taken seconds after Image 1.',
+    '',
+    'KEEP EXACTLY THE SAME as Image 1: the person, the location, the lighting and the flash look, the colour grade, the grain, the time of day, the outfit and the sunglasses.',
+    '',
+    'CHANGE ONLY A LITTLE, the way a photographer shooting a burst moves around the subject:',
+    '- the pose shifts: hands in a different place, weight moved to the other leg, head turned slightly, a small change of expression',
+    '- the camera moves one step: a little closer or further, slightly higher or lower, or a few degrees around the subject',
+    'It must not be the same picture, but it must obviously belong to the same set.',
+    '',
+    '- The face and the sunglasses must stay clearly visible — never turned away, never cropped out, never covered',
+    '- Preserve the exact shape, colour and details of the sunglasses');
+  if (direcao) linhas.push('', direcao);
+
+  return linhas.join('\n');
+}
+
+const uploadNaMemoria = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } });
+
+app.post('/api/variacoes/variar', uploadNaMemoria.single('base'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Falta a foto 1 do post.' });
+
+    const ratio = proporcaoEscolhida(req.body.ratio);
+    const images = [await toFile(req.file.buffer, 'foto-1.png', { type: req.file.mimetype || 'image/png' })];
+    const refs = await anexarReferenciasDoPost(req.body, images);
+
+    const prompt = buildSegundaFotoPrompt(refs);
+    console.log(`[posts/foto2] model=${req.body.modelFile} ratio=${ratio}`);
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2', image: images, prompt,
+      quality: 'medium', size: PROPORCOES[ratio].size,
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: await aplicarProporcao(b64, ratio) });
+  } catch (err) {
+    if (!err.status) console.error(err);
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+// ── Legenda do post ──────────────────────────────────────────────────────────
+// O feed da VYSER segue um molde fixo: uma linha curta em inglês que reage à foto,
+// uma linha em branco e a assinatura. As linhas abaixo são legendas reais do feed.
+const LEGENDAS_DO_FEED = [
+  'Sat down, still moving.',
+  "Some things don't need color.",
+  'Not staged. Just real.',
+  'Not for the algorithm.',
+  'Catch me if you can.',
+  'Black on black. Nothing else needed.',
+  'Built for the after-hours.',
+];
+const ASSINATURAS = ['VYSER — Look different.', 'VYSER — see it differently.', 'VYSER — out now.'];
+
+app.post('/api/variacoes/legenda', express.json({ limit: '5mb' }), async (req, res) => {
+  try {
+    const { imagem } = req.body;
+    if (!imagem) return res.status(400).json({ error: 'Falta a imagem.' });
+    const evitar = Array.isArray(req.body.evitar) ? req.body.evitar.slice(-20) : [];
+
+    const instrucao = `You write Instagram captions for VYSER, a streetwear sunglasses brand.
+
+Every caption has exactly two parts:
+1. One short line in English, 2 to 7 words — sometimes two very short sentences. Dry, confident, understated, a little cryptic. It reacts to something concrete in THIS photo — the pose, the place, the light, the colour, the attitude — without describing it literally.
+2. One of these sign-offs, word for word: ${ASSINATURAS.map(a => `"${a}"`).join(', ')}.
+
+Never mention sunglasses, glasses, eyewear, a product name, a price. No hashtags, no emojis, no exclamation marks.
+
+These are real lines from the brand's feed. Match this voice exactly, but do NOT reuse any of them:
+${LEGENDAS_DO_FEED.map(l => `- ${l}`).join('\n')}
+${evitar.length ? `\nAlso do not reuse any of these:\n${evitar.map(l => `- ${l}`).join('\n')}\n` : ''}
+Answer as JSON: {"linha":"<the short line>","assinatura":"<one of the sign-offs>"}`;
+
+    const r = await client.chat.completions.create({
+      model: MODELO_TEXTO,
+      messages: [{ role: 'user', content: [
+        { type: 'text', text: instrucao },
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imagem}` } },
+      ]}],
+      response_format: { type: 'json_object' },
+    });
+
+    const { linha, assinatura } = JSON.parse(r.choices[0].message.content);
+    if (!linha?.trim()) throw new Error('Não consegui escrever a legenda.');
+
+    // o modelo às vezes muda uma vírgula na assinatura; o molde é fixo
+    const assinaturaFinal = ASSINATURAS.find(a => a.toLowerCase() === (assinatura || '').trim().toLowerCase())
+      || ASSINATURAS[Math.floor(Math.random() * ASSINATURAS.length)];
+
+    res.json({ linha: linha.trim(), legenda: `${linha.trim()}\n\n${assinaturaFinal}` });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

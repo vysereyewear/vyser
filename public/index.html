@@ -292,6 +292,32 @@
       background-size: 18px 18px;
       background-position: 0 0, 0 9px, 9px -9px, -9px 0;
     }
+    /* Posts: foto 1 e 2 lado a lado, curtir, legenda */
+    .post-fotos { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
+    .post-foto { position: relative; }
+    .post-foto img { width: 100%; border-radius: 10px; display: block; }
+    .post-num {
+      position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,.65); color: #fff;
+      font-size: .65rem; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+    }
+    .post-acoes { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
+    .post-acoes a { color: #6366f1; font-size: .8rem; font-weight: 600; text-decoration: none; }
+    .post-btn {
+      border: 2px solid #e5e7eb; background: #fff; border-radius: 8px; padding: 6px 10px;
+      font-size: .78rem; font-weight: 600; color: #555; cursor: pointer; transition: all .15s;
+    }
+    .post-btn:hover { border-color: #6366f1; color: #6366f1; }
+    .post-btn.curtido { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+    .post-btn:disabled { opacity: .5; cursor: default; }
+    .result-card.curtido { box-shadow: 0 0 0 3px #fecaca, 0 2px 12px rgba(0,0,0,.07); }
+    .post-legenda { margin-top: 12px; text-align: left; }
+    .post-legenda textarea {
+      width: 100%; min-height: 70px; border: 2px solid #e5e7eb; border-radius: 8px; padding: 8px;
+      font-family: inherit; font-size: .82rem; resize: vertical; white-space: pre-wrap;
+    }
+    .post-legenda-acoes { display: flex; gap: 14px; justify-content: flex-end; margin-top: 4px; }
+    .post-legenda-acoes button { border: none; background: none; color: #6366f1; font-weight: 600; font-size: .78rem; cursor: pointer; padding: 0; }
+    .post-legenda-acoes button:disabled { color: #bbb; cursor: default; }
     .grade-arrastando { outline: 2px dashed #6366f1; outline-offset: 4px; border-radius: 8px; }
 
     /* Spinner */
@@ -317,7 +343,7 @@
     <button class="mode-tab" onclick="setMode('criativos')">🎨 Criativos</button>
     <button class="mode-tab" onclick="setMode('joias')">💎 Joias</button>
     <button class="mode-tab" onclick="setMode('livre')">✨ Livre</button>
-    <button class="mode-tab" onclick="setMode('variacoes')">🎞️ Variações</button>
+    <button class="mode-tab" onclick="setMode('variacoes')">📱 Posts</button>
   </div>
 
   <!-- Upload -->
@@ -736,10 +762,10 @@
   </div><!-- /section-livre -->
 
   <div id="section-variacoes" style="display:none;">
-  <!-- Variacoes: varias fotos, cada uma num contexto diferente, no DNA da marca -->
+  <!-- Posts: varias fotos, cada uma num contexto diferente, no DNA da marca, com 2a foto e legenda -->
   <div class="upload-card">
-    <p class="section-title">🎞️ Variações</p>
-    <p class="section-sub">Gera várias fotos de uma vez, cada uma num contexto diferente — na pegada streetwear noturna da VYSER</p>
+    <p class="section-title">📱 Posts</p>
+    <p class="section-sub">Cada foto sai num contexto diferente, na pegada streetwear noturna da VYSER — com 2ª foto pro carrossel e legenda pronta</p>
 
     <p class="section-label" style="margin-bottom:8px;">Modo</p>
     <div class="pose-toggle" style="margin-bottom:16px;">
@@ -810,8 +836,9 @@
       </div>
     </div>
 
+    <p class="catalog-note" id="var-favoritos-nota" style="margin:0 0 10px;"></p>
     <button class="btn-generate" id="btn-variacoes" onclick="gerarVariacoes()" disabled>
-      🎞️ Gerar variações
+      📱 Gerar posts
     </button>
     <div class="status" id="status-variacoes"></div>
   </div>
@@ -2071,6 +2098,181 @@
 
   const sorteia = arr => arr[Math.floor(Math.random() * arr.length)];
 
+  // ── Posts gerados: foto 1, 2ª foto, legenda e curtida ──
+  // Guarda o que foi usado em cada foto (modelo e peças sorteados inclusive), pra
+  // 2ª foto do carrossel sair com a mesma pessoa e a mesma roupa.
+  const postsState = {};
+  const FAVORITOS_KEY = 'vyser-posts-favoritos';
+
+  const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  function lerFavoritos() {
+    try { return JSON.parse(localStorage.getItem(FAVORITOS_KEY)) || []; } catch { return []; }
+  }
+  function gravarFavoritos(lista) {
+    try { localStorage.setItem(FAVORITOS_KEY, JSON.stringify(lista.slice(-30))); } catch {}
+  }
+
+  function atualizarNotaFavoritos() {
+    const nota = document.getElementById('var-favoritos-nota');
+    if (!nota) return;
+    const n = lerFavoritos().length;
+    nota.innerHTML = n
+      ? `❤️ ${n} cena${n > 1 ? 's' : ''} curtida${n > 1 ? 's' : ''} guiando as próximas rodadas · <a href="#" id="var-limpar-favoritos">limpar</a>`
+      : 'Curta as fotos que acertarem — as próximas rodadas puxam pro mesmo gosto.';
+    const limpar = document.getElementById('var-limpar-favoritos');
+    if (limpar) limpar.onclick = (e) => {
+      e.preventDefault();
+      gravarFavoritos([]);
+      Object.values(postsState).forEach(p => { p.curtido = false; });
+      Object.keys(postsState).forEach(renderPost);
+      atualizarNotaFavoritos();
+    };
+  }
+
+  // a legenda lê a foto; manda uma miniatura em JPEG em vez do PNG de 2 MB
+  function miniaturaJpeg(b64png, lado = 640) {
+    return new Promise((ok, erro) => {
+      const img = new Image();
+      img.onload = () => {
+        const escala = Math.min(1, lado / Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * escala);
+        cv.height = Math.round(img.height * escala);
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        ok(cv.toDataURL('image/jpeg', 0.82).split(',')[1]);
+      };
+      img.onerror = erro;
+      img.src = 'data:image/png;base64,' + b64png;
+    });
+  }
+
+  function renderPost(key) {
+    const p = postsState[key];
+    const card = document.getElementById(key);
+    if (!p || !card) return;
+
+    card.classList.toggle('curtido', p.curtido);
+    // com duas fotos o card ocupa duas colunas, senão elas ficam minúsculas
+    card.style.gridColumn = (p.foto2 || p.gerandoFoto2) ? 'span 2' : '';
+
+    const foto = (b64, num) => `
+      <div class="post-foto">
+        <img src="data:image/png;base64,${b64}" alt="Foto ${num}" />
+        <span class="post-num">${num}/2</span>
+      </div>`;
+    const slot2 = p.gerandoFoto2
+      ? `<div class="post-foto"><div class="loading-placeholder"><div class="spinner-dark"></div>Gerando 2ª foto...</div></div>`
+      : (p.foto2 ? foto(p.foto2, 2) : '');
+
+    card.innerHTML = `
+      <h3>${esc(p.cena.titulo)}</h3>
+      <div class="post-fotos">${foto(p.foto1, 1)}${slot2}</div>
+      ${p.erroFoto2 ? `<div class="card-error" style="margin-top:8px;">❌ ${esc(p.erroFoto2)}</div>` : ''}
+      <div class="post-acoes">
+        <button class="post-btn ${p.curtido ? 'curtido' : ''}" data-acao="curtir">${p.curtido ? '❤️ Gostei' : '🤍 Gostei'}</button>
+        <button class="post-btn" data-acao="foto2" ${p.gerandoFoto2 ? 'disabled' : ''}>${p.foto2 ? '🔁 Outra 2ª foto' : '➕ Gerar 2ª foto'}</button>
+      </div>
+      <div class="post-acoes" style="gap:16px;">
+        <a href="data:image/png;base64,${p.foto1}" download="vyser-post-${key}-1.png">⬇ Foto 1</a>
+        ${p.foto2 ? `<a href="data:image/png;base64,${p.foto2}" download="vyser-post-${key}-2.png">⬇ Foto 2</a>` : ''}
+      </div>
+      <div class="post-legenda">
+        <textarea placeholder="${p.erroLegenda ? 'Não consegui escrever: ' + esc(p.erroLegenda) : 'Escrevendo a legenda...'}">${esc(p.legenda)}</textarea>
+        <div class="post-legenda-acoes">
+          <button data-acao="outra-legenda" ${p.gerandoLegenda ? 'disabled' : ''}>${p.gerandoLegenda ? 'Escrevendo...' : '↻ Outra legenda'}</button>
+          <button data-acao="copiar">📋 Copiar</button>
+        </div>
+      </div>`;
+
+    const ta = card.querySelector('textarea');
+    ta.oninput = () => { p.legenda = ta.value; };
+
+    const acoes = {
+      curtir: () => curtirPost(key),
+      foto2: () => gerarSegundaFoto(key),
+      'outra-legenda': () => gerarLegenda(key),
+    };
+    card.querySelectorAll('[data-acao]').forEach(b => {
+      b.onclick = b.dataset.acao === 'copiar' ? () => copiarLegenda(key, b) : acoes[b.dataset.acao];
+    });
+  }
+
+  function curtirPost(key) {
+    const p = postsState[key];
+    p.curtido = !p.curtido;
+    const favs = lerFavoritos().filter(f => f.id !== key);
+    if (p.curtido) {
+      favs.push({ id: key, titulo: p.cena.titulo, prompt: p.cena.prompt, enquadramento: p.cena.enquadramento, pose: p.cena.pose });
+    }
+    gravarFavoritos(favs);
+    renderPost(key);
+    atualizarNotaFavoritos();
+  }
+
+  async function gerarSegundaFoto(key) {
+    const p = postsState[key];
+    p.gerandoFoto2 = true;
+    p.erroFoto2 = null;
+    renderPost(key);
+    try {
+      const base = await (await fetch('data:image/png;base64,' + p.foto1)).blob();
+      const form = new FormData();
+      form.append('base', base, 'foto-1.png');
+      form.append('modelFile', p.modelo);
+      form.append('catalogItems', JSON.stringify([p.item]));
+      form.append('ratio', p.ratio);
+      if (p.rf) form.append('roupaFile', p.rf);
+      if (p.cf) form.append('calcaFile', p.cf);
+
+      const d = await (await fetch('/api/variacoes/variar', { method: 'POST', body: form })).json();
+      if (d.error) throw new Error(d.error);
+      p.foto2 = d.image;
+    } catch (e) {
+      p.erroFoto2 = e.message;
+    }
+    p.gerandoFoto2 = false;
+    renderPost(key);
+  }
+
+  async function gerarLegenda(key) {
+    const p = postsState[key];
+    p.gerandoLegenda = true;
+    p.erroLegenda = null;
+    renderPost(key);
+    try {
+      const imagem = await miniaturaJpeg(p.foto1);
+      // não repetir as linhas já usadas nesta leva
+      const evitar = Object.values(postsState).map(x => x.linha).filter(Boolean);
+      const res = await fetch('/api/variacoes/legenda', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imagem, evitar }),
+      });
+      const d = await res.json();
+      if (d.error) throw new Error(d.error);
+      p.legenda = d.legenda;
+      p.linha = d.linha;
+    } catch (e) {
+      p.erroLegenda = e.message;
+    }
+    p.gerandoLegenda = false;
+    renderPost(key);
+  }
+
+  async function copiarLegenda(key, btn) {
+    try {
+      await navigator.clipboard.writeText(postsState[key].legenda || '');
+      btn.textContent = '✅ Copiada';
+    } catch {
+      btn.textContent = 'Não copiou';
+    }
+    setTimeout(() => { btn.textContent = '📋 Copiar'; }, 1500);
+  }
+
   async function gerarVariacoes() {
     const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 6, 1), 12);
     const status = document.getElementById('status-variacoes');
@@ -2083,7 +2285,11 @@
       const res = await fetch('/api/variacoes/cenas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantidade: qtd, estilos: varEstilos, genero: varModo === 'mesma' ? varModelo?.genero : null }),
+        body: JSON.stringify({
+          quantidade: qtd, estilos: varEstilos,
+          genero: varModo === 'mesma' ? varModelo?.genero : null,
+          favoritos: lerFavoritos(),
+        }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -2096,15 +2302,15 @@
 
     status.textContent = `${cenas.length} cenas prontas — gerando as fotos...`;
 
-    const n = document.querySelectorAll('.result-row, .result-single').length + 1;
+    const rodada = Date.now().toString(36);
     const wrap = document.createElement('div');
     wrap.className = 'result-single';
     wrap.innerHTML = `
-      <div class="result-row-label">Variações — ${varProduto.titulo} (${varCor.nome})</div>
-      <div class="results-grid" id="var-grid-${n}">
+      <div class="result-row-label">Posts — ${varProduto.titulo} (${varCor.nome})</div>
+      <div class="results-grid" id="var-grid-${rodada}">
         ${cenas.map((c, i) => `
-          <div class="result-card" id="var-card-${n}-${i}">
-            <h3>${c.titulo}</h3>
+          <div class="result-card" id="post-${rodada}-${i}">
+            <h3>${esc(c.titulo)}</h3>
             <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
           </div>`).join('')}
       </div>`;
@@ -2122,7 +2328,8 @@
     const trabalhador = async () => {
       while (proxima < cenas.length) {
         const i = proxima++;
-        const card = document.getElementById(`var-card-${n}-${i}`);
+        const key = `post-${rodada}-${i}`;
+        const card = document.getElementById(key);
         try {
           const modelo = varModo === 'aleatorio'
             ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
@@ -2154,15 +2361,14 @@
           const data = await res.json();
           if (data.error) throw new Error(data.error);
 
-          const src = 'data:image/png;base64,' + data.image;
-          card.innerHTML = `
-            <h3>${cenas[i].titulo}</h3>
-            <img src="${src}" alt="${cenas[i].titulo}" />
-            <div class="card-actions">
-              <a href="${src}" download="vyser-variacao-${n}-${i + 1}.png">⬇ Baixar</a>
-            </div>`;
+          postsState[key] = {
+            cena: cenas[i], modelo, item, rf, cf, ratio: varSize,
+            foto1: data.image, foto2: null, legenda: '', linha: null, curtido: false,
+          };
+          renderPost(key);
+          gerarLegenda(key); // não espera: a legenda chega sozinha enquanto as outras fotos geram
         } catch (e) {
-          card.innerHTML = `<h3>${cenas[i].titulo}</h3><div class="card-error">❌ ${e.message}</div>`;
+          card.innerHTML = `<h3>${esc(cenas[i].titulo)}</h3><div class="card-error">❌ ${esc(e.message)}</div>`;
         }
         prontas++;
         status.textContent = `${prontas} de ${cenas.length} prontas...`;
@@ -2170,12 +2376,13 @@
     };
 
     await Promise.all([trabalhador(), trabalhador(), trabalhador()]);
-    status.textContent = `✅ ${cenas.length} variações geradas.`;
+    status.textContent = `✅ ${cenas.length} posts gerados.`;
     btn.disabled = false;
   }
 
   renderVarEstilos();
   loadVarExpressoes();
+  atualizarNotaFavoritos();
   loadGuardaRoupa();
 
   // ── Seção Livre ──────────────────────────────────────────
