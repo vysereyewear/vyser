@@ -767,18 +767,34 @@
     <p class="section-title">📱 Posts</p>
     <p class="section-sub">Cada foto sai num contexto diferente, na pegada streetwear noturna da VYSER — com 2ª foto pro carrossel e legenda pronta</p>
 
+    <div class="pose-toggle" style="margin:4px 0 20px;">
+      <button class="pose-btn active" id="posts-tipo-criar" onclick="selectPostsTipo('criar')">✨ Criar cenas</button>
+      <button class="pose-btn" id="posts-tipo-referencia" onclick="selectPostsTipo('referencia')">🖼️ Por referência</button>
+    </div>
+
+    <div id="posts-ref-wrap" style="display:none;">
+      <p class="section-label">Foto de referência</p>
+      <div class="mini-upload" id="posts-ref-upload" onclick="document.getElementById('posts-ref-input').click()">
+        <input type="file" id="posts-ref-input" accept="image/*" onchange="handlePostsRef(this.files[0])" />
+        🖼️ Anexe, arraste ou cole (Ctrl+V) a foto de referência
+      </div>
+      <p class="catalog-note" style="margin:6px 0 20px;">A foto é recriada igual — lugar, pose, ângulo e luz — trocando só a pessoa, o produto e o que você escolher abaixo.</p>
+    </div>
+
     <p class="section-label" style="margin-bottom:8px;">Modo</p>
     <div class="pose-toggle" style="margin-bottom:16px;">
       <button class="pose-btn active" id="var-modo-mesma" onclick="selectVarModo('mesma')">👤 Mesma pessoa</button>
       <button class="pose-btn" id="var-modo-aleatorio" onclick="selectVarModo('aleatorio')">🎲 Tudo aleatório</button>
     </div>
 
+    <div id="posts-so-criar-pose">
     <p class="section-label" style="margin-bottom:8px;">Pose</p>
     <div class="pose-toggle" style="margin-bottom:6px;">
       <button class="pose-btn active" id="var-genero-h" onclick="selectVarGenero('h')">♂ Masculina</button>
       <button class="pose-btn" id="var-genero-m" onclick="selectVarGenero('m')">♀ Feminina</button>
     </div>
     <p class="catalog-note" id="var-genero-nota" style="margin:0 0 16px;"></p>
+    </div>
 
     <div id="var-modelo-wrap">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
@@ -823,9 +839,11 @@
       <div class="expr-none" id="var-expr-random" onclick="selectVarExpressao('aleatorio')">🎲<br>Aleatória</div>
     </div>
 
+    <div id="posts-so-criar-estilos">
     <p class="section-label" style="margin-bottom:8px;">Estilos de cenário <span style="font-weight:400;text-transform:none;color:#bbb;">(marque para prender — vazio = livre)</span></p>
     <div class="catalog-colors" id="var-estilos" style="margin-bottom:6px;"></div>
     <p class="catalog-note" id="var-estilos-nota" style="margin:0 0 20px;"></p>
+    </div>
 
     <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:20px;">
       <div style="width:140px;">
@@ -843,6 +861,12 @@
       </div>
     </div>
 
+    <div id="posts-ref-extra-wrap" style="display:none;">
+      <p class="section-label">Instruções extras <span style="font-weight:400;text-transform:none;color:#bbb;">(opcional)</span></p>
+      <textarea id="posts-ref-extra" placeholder="Ex: deixe de noite, remova o carro do fundo, troque o boné por nada..."
+        style="width:100%; min-height:70px; padding:10px 12px; border:2px solid #e5e7eb; border-radius:10px; font-family:inherit; font-size:0.9rem; resize:vertical; margin-bottom:16px;"
+        oninput="postsRefExtra = this.value"></textarea>
+    </div>
     <p class="catalog-note" id="var-favoritos-nota" style="margin:0 0 10px;"></p>
     <button class="btn-generate" id="btn-variacoes" onclick="gerarVariacoes()" disabled>
       📱 Gerar posts
@@ -2001,7 +2025,7 @@
       div.onclick = () => selectPeca(tipo, valor);
       grid.appendChild(div);
     };
-    fixo(null, 'Sem<br>peça', `var-${tipo}-none`);
+    fixo(null, postsTipo === 'referencia' ? 'Manter<br>da ref.' : 'Sem<br>peça', `var-${tipo}-none`);
     if (lista.length) fixo('aleatorio', '🎲<br>Aleatória', `var-${tipo}-random`);
 
     lista.forEach(p => {
@@ -2112,11 +2136,71 @@
     renderPecas(tipo);
   }
 
+  // ── Posts por referência ──
+  // A foto de referência dita lugar, pose, ângulo e luz; o app troca a pessoa,
+  // o produto e (se escolhido) a roupa. O produto é opcional aqui.
+  let postsTipo = 'criar';
+  let postsRefFile = null;
+  let postsRefExtra = '';
+
+  function selectPostsTipo(tipo) {
+    postsTipo = tipo;
+    const ref = tipo === 'referencia';
+    document.getElementById('posts-tipo-criar').classList.toggle('active', !ref);
+    document.getElementById('posts-tipo-referencia').classList.toggle('active', ref);
+    document.getElementById('posts-ref-wrap').style.display = ref ? '' : 'none';
+    document.getElementById('posts-ref-extra-wrap').style.display = ref ? '' : 'none';
+    document.getElementById('posts-so-criar-pose').style.display = ref ? 'none' : '';
+    document.getElementById('posts-so-criar-estilos').style.display = ref ? 'none' : '';
+    document.getElementById('var-favoritos-nota').style.display = ref ? 'none' : '';
+    document.getElementById('btn-variacoes').innerHTML = ref ? '🖼️ Gerar da referência' : '📱 Gerar posts';
+    // "Sem peça" vira "Manter da ref." na referência
+    renderPecas('roupa');
+    renderPecas('calca');
+    updateVariacoesBtn();
+  }
+
+  function handlePostsRef(file) {
+    if (!file) return;
+    postsRefFile = file;
+    const el = document.getElementById('posts-ref-upload');
+    el.classList.add('has-file');
+    el.innerHTML = `
+      <input type="file" id="posts-ref-input" accept="image/*" onchange="handlePostsRef(this.files[0])" />
+      <img class="preview-img" src="${URL.createObjectURL(file)}" />
+      <div class="change-hint">🔄 Clique, arraste ou cole outra</div>`;
+    updateVariacoesBtn();
+  }
+
+  function ligarReferenciaArrastar() {
+    const el = document.getElementById('posts-ref-upload');
+    if (!el) return;
+    el.onmouseenter = () => { ultimaGradeDePeca = 'referencia'; };
+    el.ondragover = (e) => { e.preventDefault(); el.classList.add('grade-arrastando'); };
+    el.ondragleave = () => el.classList.remove('grade-arrastando');
+    el.ondrop = async (e) => {
+      e.preventDefault();
+      el.classList.remove('grade-arrastando');
+      const arq = [...(e.dataTransfer.files || [])].find(f => f.type.startsWith('image/'));
+      if (arq) return handlePostsRef(arq);
+      const url = (e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain') || '').trim();
+      if (!url.startsWith('http')) return;
+      try {
+        const blob = await (await fetch(url)).blob();
+        if (blob.type.startsWith('image/')) handlePostsRef(new File([blob], 'referencia', { type: blob.type }));
+      } catch {
+        alert('Não deu pra puxar essa imagem direto do site. Salve e arraste o arquivo, ou copie e cole com Ctrl+V.');
+      }
+    };
+  }
+
   function updateVariacoesBtn() {
     const btn = document.getElementById('btn-variacoes');
     if (!btn) return;
     const modeloOk = varModo === 'aleatorio' || !!varModelo;
-    btn.disabled = !(modeloOk && varCor);
+    btn.disabled = postsTipo === 'referencia'
+      ? !(modeloOk && postsRefFile)
+      : !(modeloOk && varCor);
   }
 
   const sorteia = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -2228,7 +2312,7 @@
     const p = postsState[key];
     p.curtido = !p.curtido;
     const favs = lerFavoritos().filter(f => f.id !== key);
-    if (p.curtido) {
+    if (p.curtido && p.cena.prompt) {
       favs.push({ id: key, titulo: p.cena.titulo, prompt: p.cena.prompt, enquadramento: p.cena.enquadramento, pose: p.cena.pose });
     }
     gravarFavoritos(favs);
@@ -2247,7 +2331,7 @@
       form.append('base', base, 'foto-1.png');
       form.append('modelFile', p.modelo);
       if (p.genero) form.append('genero', p.genero);
-      form.append('catalogItems', JSON.stringify([p.item]));
+      if (p.item) form.append('catalogItems', JSON.stringify([p.item]));
       form.append('ratio', p.ratio);
       if (p.rf) form.append('roupaFile', p.rf);
       if (p.cf) form.append('calcaFile', p.cf);
@@ -2300,6 +2384,93 @@
     setTimeout(() => { btn.textContent = '📋 Copiar'; }, 1500);
   }
 
+  // Mesma lógica de levas do "Criar cenas", mas cada foto recria a referência.
+  // "Quantas fotos" aqui são versões da mesma referência.
+  async function gerarPostsReferencia() {
+    const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 1, 1), 12);
+    const escolha = {
+      modo: varModo, modelo: varModelo, produto: varProduto, cor: varCor,
+      expressao: varExpressao, ratio: varSize, referencia: postsRefFile, extra: postsRefExtra,
+      roupa: varRoupa, calca: varCalca, roupaFile: varRoupaFile, calcaFile: varCalcaFile,
+    };
+
+    const rodada = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    const titulo = escolha.cor ? `${esc(escolha.produto.titulo)} (${esc(escolha.cor.nome)})` : 'produto da referência';
+    const wrap = document.createElement('div');
+    wrap.className = 'result-single';
+    wrap.innerHTML = `
+      <div class="result-row-label">Posts por referência — ${titulo} · <span id="leva-${rodada}">0 de ${qtd} prontas</span></div>
+      <div class="results-grid">
+        ${Array.from({ length: qtd }, (_, i) => `
+          <div class="result-card" id="post-${rodada}-${i}">
+            <h3>Referência${qtd > 1 ? ` ${i + 1}` : ''}</h3>
+            <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+          </div>`).join('')}
+      </div>`;
+    document.getElementById('results-list').prepend(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const progresso = document.getElementById(`leva-${rodada}`);
+
+    const item = escolha.cor ? {
+      titulo: escolha.produto.titulo, grupo: escolha.produto.grupo, subtipo: escolha.produto.subtipo || null,
+      cor: escolha.cor.nome, urls: [escolha.cor.frente, escolha.cor.ladinho].filter(Boolean),
+    } : null;
+
+    levasAtivas++;
+    atualizarStatusLevas();
+    try {
+      let proxima = 0, prontas = 0;
+      const trabalhador = async () => {
+        while (proxima < qtd) {
+          const i = proxima++;
+          const key = `post-${rodada}-${i}`;
+          const card = document.getElementById(key);
+          try {
+            const modelo = escolha.modo === 'aleatorio'
+              ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
+              : escolha.modelo.file;
+            const expr = escolha.expressao === 'aleatorio' ? sorteia(window.varExpressoesDisponiveis || [null]) : escolha.expressao;
+            const escolhePeca = (valor, lista) => valor === 'aleatorio' ? sorteia(lista)?.file : valor;
+            const rf = escolhePeca(escolha.roupaFile, guardaRoupa.roupas);
+            const cf = escolhePeca(escolha.calcaFile, guardaRoupa.calcas);
+
+            const form = new FormData();
+            form.append('referencia', escolha.referencia);
+            form.append('modelFile', modelo);
+            if (item) form.append('catalogItems', JSON.stringify([item]));
+            form.append('ratio', escolha.ratio);
+            if (escolha.roupa.trim()) form.append('roupa', escolha.roupa);
+            if (escolha.calca.trim()) form.append('calca', escolha.calca);
+            if (rf) form.append('roupaFile', rf);
+            if (cf) form.append('calcaFile', cf);
+            if (expr) form.append('expressionFile', expr);
+            if (escolha.extra.trim()) form.append('extraText', escolha.extra);
+
+            const d = await (await fetch('/api/posts/referencia', { method: 'POST', body: form })).json();
+            if (d.error) throw new Error(d.error);
+
+            postsState[key] = {
+              cena: { titulo: `Referência${qtd > 1 ? ` ${i + 1}` : ''}` },
+              modelo, item, rf, cf, ratio: escolha.ratio,
+              foto1: d.image, foto2: null, legenda: '', linha: null, curtido: false, posesUsadas: [],
+            };
+            renderPost(key);
+            gerarLegenda(key);
+          } catch (e) {
+            card.innerHTML = `<h3>Referência</h3><div class="card-error">❌ ${esc(e.message)}</div>`;
+          }
+          prontas++;
+          progresso.textContent = `${prontas} de ${qtd} prontas`;
+        }
+      };
+      await Promise.all([trabalhador(), trabalhador(), trabalhador()]);
+      progresso.textContent = `✅ ${qtd} pronta${qtd > 1 ? 's' : ''}`;
+    } finally {
+      levasAtivas--;
+      atualizarStatusLevas();
+    }
+  }
+
   // Várias levas podem rodar ao mesmo tempo: o botão não trava, e cada leva
   // congela as escolhas do momento do clique — mudar o modelo ou o óculos logo
   // depois já vale só pra próxima.
@@ -2313,6 +2484,7 @@
   }
 
   async function gerarVariacoes() {
+    if (postsTipo === 'referencia') return gerarPostsReferencia();
     const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 6, 1), 12);
 
     const escolha = {
@@ -2434,6 +2606,7 @@
 
   renderVarEstilos();
   selectVarGenero('h');
+  ligarReferenciaArrastar();
   loadVarExpressoes();
   atualizarNotaFavoritos();
   loadGuardaRoupa();
@@ -2567,10 +2740,12 @@
   // Cole uma imagem (Ctrl+V) direto na área de upload clicada por último, quando a aba Criativos estiver aberta
   document.addEventListener('paste', (e) => {
     const variacoesVisible = document.getElementById('section-variacoes').style.display !== 'none';
-    if (variacoesVisible && ultimaGradeDePeca) {
+    const alvoColar = ultimaGradeDePeca || (postsTipo === 'referencia' ? 'referencia' : null);
+    if (variacoesVisible && alvoColar) {
       for (const item of e.clipboardData?.items || []) {
         if (item.type.startsWith('image/')) {
-          enviarPecas(ultimaGradeDePeca, [item.getAsFile()]);
+          if (alvoColar === 'referencia') handlePostsRef(item.getAsFile());
+          else enviarPecas(alvoColar, [item.getAsFile()]);
           e.preventDefault();
           return;
         }

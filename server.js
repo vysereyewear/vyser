@@ -1871,6 +1871,99 @@ Answer as JSON: {"pose":"<one sentence, English>"}` },
   }
 });
 
+// ── Post por referência ─────────────────────────────────────────────────────
+// Em vez de inventar a cena, recria uma foto de referência trocando só o que é
+// nosso: a pessoa, o produto, a roupa se pedida, a expressão. Enquadramento, pose,
+// lugar e luz vêm da referência. As instruções extras passam por cima dela.
+function buildReferenciaPostPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, roupa, calca, expressaoIdx, extraText, direcao }) {
+  const linhas = [
+    'Image 1 is the REFERENCE photo.',
+    `Image ${modelIdx} is the model.`,
+  ];
+  for (const p of produtos) {
+    linhas.push(p.inicio === p.fim
+      ? `Image ${p.inicio} shows ${p.descricao}.`
+      : `Images ${p.inicio} to ${p.fim} show ${p.descricao} from different angles.`);
+  }
+  if (roupaIdx) linhas.push(`Image ${roupaIdx} is a garment for the upper body.`);
+  if (calcaIdx) linhas.push(`Image ${calcaIdx} is a garment for the lower body.`);
+  if (expressaoIdx) linhas.push(`Image ${expressaoIdx} is a facial expression reference.`);
+
+  linhas.push('',
+    'Recreate Image 1 as faithfully as possible — the same location and background, the same composition, camera angle, camera distance and framing, the same pose and body position, the same lighting, flash and colour grade, the same mood — and change ONLY what is listed below.',
+    '',
+    '- CAMERA DISTANCE AND CROP ARE LOCKED: the head must be the same size and in the same place in the frame as in Image 1. If Image 1 is a chest-up shot, the result is a chest-up shot — never pull the camera back, never show more of the body or more of the room than Image 1 shows.',
+    `- Replace the person in Image 1 with the model from Image ${modelIdx}. Preserve the model's face, skin and hair exactly. Keep the pose of the person in Image 1.`);
+
+  for (const p of produtos) {
+    linhas.push(`- ${p.comoVestir}, preserving its exact shape, colour and details. If Image 1 has no eyewear, add it`);
+  }
+  if (!produtos.length) linhas.push('- Keep any eyewear and accessories exactly as in Image 1');
+
+  if (roupaIdx) linhas.push(`- Upper body: replace the top with the exact garment in Image ${roupaIdx}${roupa?.trim() ? ` (${roupa.trim()})` : ''} — same cut, colour and details`);
+  else if (roupa?.trim()) linhas.push(`- Upper body: dress the model in ${roupa.trim()}`);
+  else linhas.push('- Upper body: keep exactly the clothing worn in Image 1');
+
+  if (calcaIdx) linhas.push(`- Lower body: replace it with the exact garment in Image ${calcaIdx}${calca?.trim() ? ` (${calca.trim()})` : ''} — same cut, colour and details`);
+  else if (calca?.trim()) linhas.push(`- Lower body: ${calca.trim()}`);
+  else linhas.push('- Lower body: keep exactly the clothing worn in Image 1');
+
+  if (expressaoIdx) {
+    linhas.push(`- Facial expression: copy only the expression from Image ${expressaoIdx} (mouth, eyes, brows) onto the model — never its face or identity`);
+  }
+
+  linhas.push('- The sunglasses must be clearly visible, sharp and not covered by anything');
+
+  if (extraText?.trim()) {
+    linhas.push('', `ADDITIONAL CHANGES — apply these on top of the reference. Where they conflict with Image 1, these win: ${extraText.trim()}`);
+  }
+
+  // referência com uma mulher e modelo homem (ou o contrário): mantém a pose, ajusta o corpo
+  if (direcao) linhas.push('', `Keep the pose from Image 1, but adapt the body language to the model where needed. ${direcao}`);
+
+  return linhas.join('\n');
+}
+
+app.post('/api/posts/referencia', uploadNaMemoria.single('referencia'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Anexe a foto de referência.' });
+
+    const ratio = proporcaoEscolhida(req.body.ratio);
+    const images = [await toFile(req.file.buffer, 'referencia.png', { type: req.file.mimetype || 'image/png' })];
+    const refs = await anexarReferenciasDoPost(req.body, images);
+
+    let expressaoIdx = null;
+    const { expressionFile } = req.body;
+    if (expressionFile && !/[\\/]/.test(expressionFile) && !expressionFile.includes('..')) {
+      const exprPath = path.join(__dirname, 'public/expressions', expressionFile);
+      if (fs.existsSync(exprPath)) {
+        const em = path.extname(expressionFile).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+        images.push(await fileToOpenAI(exprPath, em, 'expression.jpg'));
+        expressaoIdx = images.length;
+      }
+    }
+
+    const prompt = buildReferenciaPostPrompt({
+      ...refs, expressaoIdx,
+      roupa: req.body.roupa, calca: req.body.calca, extraText: req.body.extraText,
+    });
+    console.log(`[posts/referencia] model=${req.body.modelFile} produtos=${refs.produtos.length} extra=${!!req.body.extraText} ratio=${ratio}`);
+
+    const response = await client.images.edit({
+      model: 'gpt-image-2', image: images, prompt,
+      quality: 'medium', size: PROPORCOES[ratio].size,
+    });
+
+    const b64 = response.data[0].b64_json;
+    if (!b64) throw new Error('OpenAI não retornou imagem.');
+
+    res.json({ image: await aplicarProporcao(b64, ratio) });
+  } catch (err) {
+    if (!err.status) console.error(err);
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
 // ── Legenda do post ──────────────────────────────────────────────────────────
 // O feed da VYSER segue um molde fixo: uma linha curta em inglês que reage à foto,
 // uma linha em branco e a assinatura. As linhas abaixo são legendas reais do feed.
