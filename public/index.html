@@ -2227,10 +2227,13 @@
       form.append('ratio', p.ratio);
       if (p.rf) form.append('roupaFile', p.rf);
       if (p.cf) form.append('calcaFile', p.cf);
+      // cada "Outra 2ª foto" pede uma pose que ainda não saiu
+      form.append('posesUsadas', JSON.stringify(p.posesUsadas || []));
 
       const d = await (await fetch('/api/variacoes/variar', { method: 'POST', body: form })).json();
       if (d.error) throw new Error(d.error);
       p.foto2 = d.image;
+      if (d.pose) p.posesUsadas = [...(p.posesUsadas || []), d.pose];
     } catch (e) {
       p.erroFoto2 = e.message;
     }
@@ -2273,111 +2276,132 @@
     setTimeout(() => { btn.textContent = '📋 Copiar'; }, 1500);
   }
 
+  // Várias levas podem rodar ao mesmo tempo: o botão não trava, e cada leva
+  // congela as escolhas do momento do clique — mudar o modelo ou o óculos logo
+  // depois já vale só pra próxima.
+  let levasAtivas = 0;
+
+  function atualizarStatusLevas() {
+    const status = document.getElementById('status-variacoes');
+    status.textContent = levasAtivas
+      ? `⏳ ${levasAtivas} leva${levasAtivas > 1 ? 's' : ''} gerando — pode mandar mais`
+      : '';
+  }
+
   async function gerarVariacoes() {
     const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 6, 1), 12);
-    const status = document.getElementById('status-variacoes');
-    const btn = document.getElementById('btn-variacoes');
-    btn.disabled = true;
-    status.textContent = 'Escrevendo as cenas...';
 
-    let cenas;
-    try {
-      const res = await fetch('/api/variacoes/cenas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          quantidade: qtd, estilos: varEstilos,
-          genero: varModo === 'mesma' ? varModelo?.genero : null,
-          favoritos: lerFavoritos(),
-        }),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      cenas = data.cenas;
-    } catch (e) {
-      status.textContent = `❌ ${e.message}`;
-      btn.disabled = false;
-      return;
-    }
+    const escolha = {
+      modo: varModo, modelo: varModelo, produto: varProduto, cor: varCor,
+      estilos: [...varEstilos], expressao: varExpressao, ratio: varSize,
+      roupa: varRoupa, calca: varCalca, roupaFile: varRoupaFile, calcaFile: varCalcaFile,
+    };
 
-    status.textContent = `${cenas.length} cenas prontas — gerando as fotos...`;
-
-    const rodada = Date.now().toString(36);
+    const rodada = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
     const wrap = document.createElement('div');
     wrap.className = 'result-single';
     wrap.innerHTML = `
-      <div class="result-row-label">Posts — ${varProduto.titulo} (${varCor.nome})</div>
-      <div class="results-grid" id="var-grid-${rodada}">
-        ${cenas.map((c, i) => `
-          <div class="result-card" id="post-${rodada}-${i}">
-            <h3>${esc(c.titulo)}</h3>
-            <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
-          </div>`).join('')}
-      </div>`;
+      <div class="result-row-label">Posts — ${esc(escolha.produto.titulo)} (${esc(escolha.cor.nome)}) · <span id="leva-${rodada}">escrevendo as cenas...</span></div>
+      <div class="results-grid" id="var-grid-${rodada}"></div>`;
     document.getElementById('results-list').prepend(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const progresso = document.getElementById(`leva-${rodada}`);
 
-    const item = {
-      titulo: varProduto.titulo, grupo: varProduto.grupo, subtipo: varProduto.subtipo || null,
-      cor: varCor.nome, urls: [varCor.frente, varCor.ladinho].filter(Boolean),
-    };
+    levasAtivas++;
+    atualizarStatusLevas();
 
-    // 3 por vez: mantém as fotos aparecendo aos poucos sem estourar a API
-    let proxima = 0;
-    let prontas = 0;
-    const trabalhador = async () => {
-      while (proxima < cenas.length) {
-        const i = proxima++;
-        const key = `post-${rodada}-${i}`;
-        const card = document.getElementById(key);
-        try {
-          const modelo = varModo === 'aleatorio'
-            ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
-            : varModelo.file;
-          const expr = varExpressao === 'aleatorio' ? sorteia(window.varExpressoesDisponiveis || [null]) : varExpressao;
-
-          const form = new FormData();
-          form.append('modelFile', modelo);
-          form.append('cena', cenas[i].prompt);
-          if (cenas[i].pose) form.append('pose', cenas[i].pose);
-          if (cenas[i].enquadramento) form.append('enquadramento', cenas[i].enquadramento);
-          form.append('catalogItems', JSON.stringify([item]));
-          form.append('ratio', varSize);
-          if (varRoupa.trim()) form.append('roupa', varRoupa);
-          if (varCalca.trim()) form.append('calca', varCalca);
-
-          // no modo aleatório a peça também é sorteada, e por foto
-          const escolhePeca = (valor, lista) => {
-            if (valor === 'aleatorio' || (varModo === 'aleatorio' && !valor && lista.length)) return sorteia(lista)?.file;
-            return valor;
-          };
-          const rf = escolhePeca(varRoupaFile, guardaRoupa.roupas);
-          const cf = escolhePeca(varCalcaFile, guardaRoupa.calcas);
-          if (rf) form.append('roupaFile', rf);
-          if (cf) form.append('calcaFile', cf);
-          if (expr) form.append('expressionFile', expr);
-
-          const res = await fetch('/api/variacoes/gerar', { method: 'POST', body: form });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-
-          postsState[key] = {
-            cena: cenas[i], modelo, item, rf, cf, ratio: varSize,
-            foto1: data.image, foto2: null, legenda: '', linha: null, curtido: false,
-          };
-          renderPost(key);
-          gerarLegenda(key); // não espera: a legenda chega sozinha enquanto as outras fotos geram
-        } catch (e) {
-          card.innerHTML = `<h3>${esc(cenas[i].titulo)}</h3><div class="card-error">❌ ${esc(e.message)}</div>`;
-        }
-        prontas++;
-        status.textContent = `${prontas} de ${cenas.length} prontas...`;
+    try {
+      let cenas;
+      try {
+        const res = await fetch('/api/variacoes/cenas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            quantidade: qtd, estilos: escolha.estilos,
+            genero: escolha.modo === 'mesma' ? escolha.modelo?.genero : null,
+            favoritos: lerFavoritos(),
+          }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        cenas = data.cenas;
+      } catch (e) {
+        progresso.textContent = `❌ ${e.message}`;
+        return;
       }
-    };
 
-    await Promise.all([trabalhador(), trabalhador(), trabalhador()]);
-    status.textContent = `✅ ${cenas.length} posts gerados.`;
-    btn.disabled = false;
+      document.getElementById(`var-grid-${rodada}`).innerHTML = cenas.map((c, i) => `
+        <div class="result-card" id="post-${rodada}-${i}">
+          <h3>${esc(c.titulo)}</h3>
+          <div class="loading-placeholder"><div class="spinner-dark"></div>Gerando...</div>
+        </div>`).join('');
+      progresso.textContent = `0 de ${cenas.length} prontas`;
+
+      const item = {
+        titulo: escolha.produto.titulo, grupo: escolha.produto.grupo, subtipo: escolha.produto.subtipo || null,
+        cor: escolha.cor.nome, urls: [escolha.cor.frente, escolha.cor.ladinho].filter(Boolean),
+      };
+
+      // 3 por vez dentro da leva: as fotos aparecem aos poucos sem estourar a API
+      let proxima = 0;
+      let prontas = 0;
+      const trabalhador = async () => {
+        while (proxima < cenas.length) {
+          const i = proxima++;
+          const key = `post-${rodada}-${i}`;
+          const card = document.getElementById(key);
+          try {
+            const modelo = escolha.modo === 'aleatorio'
+              ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
+              : escolha.modelo.file;
+            const expr = escolha.expressao === 'aleatorio' ? sorteia(window.varExpressoesDisponiveis || [null]) : escolha.expressao;
+
+            const form = new FormData();
+            form.append('modelFile', modelo);
+            form.append('cena', cenas[i].prompt);
+            if (cenas[i].pose) form.append('pose', cenas[i].pose);
+            if (cenas[i].enquadramento) form.append('enquadramento', cenas[i].enquadramento);
+            form.append('catalogItems', JSON.stringify([item]));
+            form.append('ratio', escolha.ratio);
+            if (escolha.roupa.trim()) form.append('roupa', escolha.roupa);
+            if (escolha.calca.trim()) form.append('calca', escolha.calca);
+
+            // no modo aleatório a peça também é sorteada, e por foto
+            const escolhePeca = (valor, lista) => {
+              if (valor === 'aleatorio' || (escolha.modo === 'aleatorio' && !valor && lista.length)) return sorteia(lista)?.file;
+              return valor;
+            };
+            const rf = escolhePeca(escolha.roupaFile, guardaRoupa.roupas);
+            const cf = escolhePeca(escolha.calcaFile, guardaRoupa.calcas);
+            if (rf) form.append('roupaFile', rf);
+            if (cf) form.append('calcaFile', cf);
+            if (expr) form.append('expressionFile', expr);
+
+            const res = await fetch('/api/variacoes/gerar', { method: 'POST', body: form });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            postsState[key] = {
+              cena: cenas[i], modelo, item, rf, cf, ratio: escolha.ratio,
+              foto1: data.image, foto2: null, legenda: '', linha: null, curtido: false,
+              posesUsadas: cenas[i].pose ? [cenas[i].pose] : [],
+            };
+            renderPost(key);
+            gerarLegenda(key); // não espera: a legenda chega sozinha enquanto as outras fotos geram
+          } catch (e) {
+            card.innerHTML = `<h3>${esc(cenas[i].titulo)}</h3><div class="card-error">❌ ${esc(e.message)}</div>`;
+          }
+          prontas++;
+          progresso.textContent = `${prontas} de ${cenas.length} prontas`;
+        }
+      };
+
+      await Promise.all([trabalhador(), trabalhador(), trabalhador()]);
+      progresso.textContent = `✅ ${cenas.length} pronta${cenas.length > 1 ? 's' : ''}`;
+    } finally {
+      levasAtivas--;
+      atualizarStatusLevas();
+    }
   }
 
   renderVarEstilos();

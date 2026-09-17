@@ -1442,7 +1442,7 @@ const DNA_VYSER = `VYSER is a streetwear sunglasses brand. Its photography is ED
 
 CRITICAL — this is never a selfie. The camera is held by a photographer standing several meters away from the subject. Never an outstretched arm, never a phone held by the subject, never a face filling the frame from arm's length.
 
-- FRAMING VARIES WILDLY between shots. Some are full body with the location wide open around the subject; others are tight — the face filling the frame, a crop that cuts the head at the top, a hand entering the frame near the lens, the body cut off by the frame edge. Never shoot two photos at the same distance.
+- THE PERSON IS CLOSE AND BIG IN THE FRAME. The camera is near them: most shots are waist-up, three-quarter body, or tighter — the face filling the frame, a crop that cuts the head at the top, a hand entering the frame near the lens, the body cut off by the frame edge. Even a full-body shot has the person filling almost the whole height of the frame. Never a small figure in a big empty place. Vary the distance between shots, but always within this close range.
 - The subject is POSED and placed in the scene by a photographer — leaning, crouching, walking, standing against architecture. Deliberate, styled, aware of the camera.
 - Locations are scouted and striking: places a crew would pick for a shoot because of their architecture, texture, scale or light. Not a generic room.
 - Hard direct flash, high contrast, visible grain — the harsh look of on-location fashion editorial. Never soft beauty lighting.
@@ -1455,7 +1455,7 @@ LIFE AROUND THE SUBJECT. The street keeps moving while the shot happens: passers
 
 MOSTLY NIGHT, BUT NOT ALWAYS. Roughly one shot in four is daylight instead — hard midday sun with black shadows, or flat overcast grey. Same harshness, different source.
 
-DEPTH AND COMPOSITION. The strongest VYSER images are built like this: the architecture dominates and the subject is small and pushed off to one side; the frame has three layers of depth (something close in the foreground, the subject in the middle, something glowing far behind); strong diagonals from the structure cut across the frame; and one single saturated colour appears deep in the scene as a small accent against an otherwise desaturated palette. Reach for this construction often.
+DEPTH AND COMPOSITION. The person dominates the frame, and the location reads around and behind them: strong diagonals from the structure, something glowing further back, and often one single saturated colour appearing in the background as a small accent against an otherwise desaturated palette.
 
 AVOID THE CGI LOOK. A real photo is imperfect: the subject is off-centre, the composition is not symmetric, the flash blows out some highlights and crushes some shadows to black, there is lens distortion up close, skin has texture and shine, edges are not perfectly clean. Never a subject standing dead centre in a tidy symmetrical frame — that reads instantly as computer generated.`;
 
@@ -1620,7 +1620,7 @@ ${limite}${gosto}
 
 Write ${quantidade} DIFFERENT scene briefs for an editorial photo shoot. Every one must be clearly distinct — different location, different angle, different light, different color. Do not repeat a setting.
 
-At least a third of the briefs must let the LOCATION dominate: the subject small in the frame and pushed off-centre, strong diagonal architecture, layers of depth, and a single saturated colour glowing somewhere deep in the scene. The rest can come closer.
+The PERSON must dominate every frame — close to the camera, big in the picture. The location is what you see around and behind them, never a wide shot where they become small.
 
 Pick locations that are visually STRIKING and specific — the kind of place a creative director scouts on purpose: a stairwell with brutalist concrete geometry, a car wash at night with water on glass, an empty parking deck with sodium lights in a row, a tunnel with tiled walls, a loading dock, scaffolding, a laundromat at 3am, a bus stop lit from inside. Avoid the obvious and the generic.
 
@@ -1628,7 +1628,7 @@ For each one give TWO things:
 
 "prompt" — 1-2 sentences describing the SCENE: the location and what makes it interesting, where the photographer stands and how far away, the camera angle, the light and the color. State the framing explicitly (full body, waist-up, wide). Do not describe the person's face, the clothes or the sunglasses — those are decided elsewhere.
 
-"enquadramento" — one sentence fixing how close the camera is and how the body is cropped. This MUST change radically from brief to brief. Cycle through the whole range: full body with the location wide around them; waist-up; a tight head-and-shoulders crop; an extreme close-up where the face fills the frame and the top of the head is cut off; a crop tight on the eyes and the sunglasses; a wide-angle lens very close to the face so the features distort; the subject pushed far off to one side with the location taking most of the frame; the body cut in half by the edge of the frame; shot from directly overhead. Never give two briefs the same camera distance.
+"enquadramento" — one sentence fixing how close the camera is and how the body is cropped. The camera is always CLOSE to the person. Change it from brief to brief within this range: waist-up; three-quarter body with the person filling the frame; a tight head-and-shoulders crop; an extreme close-up where the face fills the frame and the top of the head is cut off; a wide-angle lens very close to the face so the features distort; shot from directly overhead with the body filling the frame; the body cut off by the edge of the frame. A full-body shot is allowed only occasionally, and then the person fills nearly the whole height of the frame. Never a small figure in a wide space.
 
 "pose" — one sentence describing what the subject is DOING, different in every brief.
 
@@ -1787,9 +1787,9 @@ app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
 // Um carrossel é uma sequência da mesma sessão. A foto 1 vai anexada como
 // referência principal e a IA faz o "próximo clique": mesma pessoa, mesmo lugar,
 // mesma luz, com a pose e a câmera mexendo um pouco.
-function buildSegundaFotoPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, direcao }) {
+function buildSegundaFotoPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, direcao, novaPose }) {
   const linhas = [
-    'Image 1 is photo 1 of an Instagram carousel post.',
+    'Image 1 is photo 1 of an Instagram carousel post. Use it ONLY as the reference for the person, the location, the light, the outfit and the sunglasses — NOT for the pose.',
     `Image ${modelIdx} is the model — the person in Image 1. Keep them identical.`,
   ];
   for (const p of produtos) {
@@ -1801,15 +1801,15 @@ function buildSegundaFotoPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, direca
   if (calcaIdx) linhas.push(`Image ${calcaIdx} is the lower-body garment they are wearing.`);
 
   linhas.push('',
-    'Generate photo 2 of the SAME post: the next frame from the same shoot, taken seconds after Image 1.',
+    'Generate photo 2 of the SAME post: same shoot, same place, same night, but the model has been directed into a COMPLETELY DIFFERENT POSE.',
     '',
-    'KEEP EXACTLY THE SAME as Image 1: the person, the location, the lighting and the flash look, the colour grade, the grain, the time of day, the outfit and the sunglasses.',
+    `NEW POSE: ${novaPose}`,
     '',
-    'CHANGE ONLY A LITTLE, the way a photographer shooting a burst moves around the subject:',
-    '- the pose shifts: hands in a different place, weight moved to the other leg, head turned slightly, a small change of expression',
-    '- the camera moves one step: a little closer or further, slightly higher or lower, or a few degrees around the subject',
-    'It must not be the same picture, but it must obviously belong to the same set.',
+    'The pose must be obviously different from Image 1 at first glance — a different body position, different arms and hands, a different angle to the camera. Do not reproduce the posture of Image 1.',
     '',
+    'KEEP THE SAME as Image 1: the person and their face, the location, the lighting and flash look, the colour grade, the grain, the outfit and the sunglasses.',
+    '',
+    '- The camera stays close: the person is big in the frame',
     '- The face and the sunglasses must stay clearly visible — never turned away, never cropped out, never covered',
     '- Preserve the exact shape, colour and details of the sunglasses');
   if (direcao) linhas.push('', direcao);
@@ -1827,8 +1827,31 @@ app.post('/api/variacoes/variar', uploadNaMemoria.single('base'), async (req, re
     const images = [await toFile(req.file.buffer, 'foto-1.png', { type: req.file.mimetype || 'image/png' })];
     const refs = await anexarReferenciasDoPost(req.body, images);
 
-    const prompt = buildSegundaFotoPrompt(refs);
-    console.log(`[posts/foto2] model=${req.body.modelFile} ratio=${ratio}`);
+    // Pedir só "outra pose" faz a IA devolver quase a mesma foto. Um modelo de
+    // texto olha a foto 1 e dirige uma pose concreta, bem diferente, que caiba ali.
+    const miniatura = (await sharp(req.file.buffer).resize(640, 640, { fit: 'inside' }).jpeg({ quality: 82 }).toBuffer()).toString('base64');
+    const evitarPoses = Array.isArray(req.body.posesUsadas) ? req.body.posesUsadas
+      : (req.body.posesUsadas ? JSON.parse(req.body.posesUsadas) : []);
+    const direcaoPose = await client.chat.completions.create({
+      model: MODELO_TEXTO,
+      messages: [{ role: 'user', content: [
+        { type: 'text', text: `This is photo 1 of a streetwear fashion shoot. Direct the model into the pose for photo 2 of the same carousel.
+
+Describe, in one sentence, a pose that is COMPLETELY DIFFERENT from the pose in this photo: a different body position (standing vs crouching vs sitting vs leaning vs walking), different arms and hands, a different angle to the camera. It must be physically possible in this exact location, and keep the face and sunglasses visible.
+
+The attitude is unbothered and relaxed, hands busy with something ordinary. Never tense or heroic.
+${refs.direcao}
+${evitarPoses.length ? `Do not use any of these poses, already tried:\n${evitarPoses.map(x => `- ${x}`).join('\n')}` : ''}
+
+Answer as JSON: {"pose":"<one sentence, English>"}` },
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${miniatura}` } },
+      ]}],
+      response_format: { type: 'json_object' },
+    });
+    const novaPose = JSON.parse(direcaoPose.choices[0].message.content).pose;
+
+    const prompt = buildSegundaFotoPrompt({ ...refs, novaPose });
+    console.log(`[posts/foto2] model=${req.body.modelFile} ratio=${ratio} pose="${novaPose}"`);
 
     const response = await client.images.edit({
       model: 'gpt-image-2', image: images, prompt,
@@ -1838,7 +1861,7 @@ app.post('/api/variacoes/variar', uploadNaMemoria.single('base'), async (req, re
     const b64 = response.data[0].b64_json;
     if (!b64) throw new Error('OpenAI não retornou imagem.');
 
-    res.json({ image: await aplicarProporcao(b64, ratio) });
+    res.json({ image: await aplicarProporcao(b64, ratio), pose: novaPose });
   } catch (err) {
     if (!err.status) console.error(err);
     res.status(err.status || 500).json({ error: err.message });
