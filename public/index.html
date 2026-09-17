@@ -773,6 +773,13 @@
       <button class="pose-btn" id="var-modo-aleatorio" onclick="selectVarModo('aleatorio')">🎲 Tudo aleatório</button>
     </div>
 
+    <p class="section-label" style="margin-bottom:8px;">Pose</p>
+    <div class="pose-toggle" style="margin-bottom:6px;">
+      <button class="pose-btn active" id="var-genero-h" onclick="selectVarGenero('h')">♂ Masculina</button>
+      <button class="pose-btn" id="var-genero-m" onclick="selectVarGenero('m')">♀ Feminina</button>
+    </div>
+    <p class="catalog-note" id="var-genero-nota" style="margin:0 0 16px;"></p>
+
     <div id="var-modelo-wrap">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
         <p class="section-label" style="margin-bottom:0;">Modelo</p>
@@ -1821,8 +1828,23 @@
   let varQuantidade  = 6;
   let varSize        = '4:5';
 
+  // A pose é escolhida no botão. No "Mesma pessoa" ela acompanha o modelo clicado
+  // (dá pra trocar depois); no aleatório, só sorteia modelos daquele gênero.
+  let varGenero = 'h';
+
+  function selectVarGenero(g) {
+    varGenero = g;
+    document.getElementById('var-genero-h').classList.toggle('active', g === 'h');
+    document.getElementById('var-genero-m').classList.toggle('active', g === 'm');
+    const qual = g === 'h' ? 'masculina' : 'feminina';
+    document.getElementById('var-genero-nota').textContent = varModo === 'aleatorio'
+      ? `Direção de pose ${qual}, e o sorteio só pega ${g === 'h' ? 'modelos homens' : 'modelas mulheres'}.`
+      : `Direção de pose ${qual} em todas as fotos.`;
+  }
+
   function selectVarModo(modo) {
     varModo = modo;
+    selectVarGenero(varGenero);
     document.getElementById('var-modo-mesma').classList.toggle('active', modo === 'mesma');
     document.getElementById('var-modo-aleatorio').classList.toggle('active', modo === 'aleatorio');
     // no aleatório o modelo é sorteado por foto, então a grade some
@@ -1855,6 +1877,7 @@
       div.innerHTML = `<img src="/models/${preview}" alt="${m.name}" />`;
       if (arquivo) div.onclick = () => {
         varModelo = varModelo?.file === arquivo ? null : { nome: m.name, file: arquivo, genero: m.genero };
+        if (varModelo?.genero) selectVarGenero(varModelo.genero);
         renderVarModelGrid();
         updateVariacoesBtn();
       };
@@ -2223,6 +2246,7 @@
       const form = new FormData();
       form.append('base', base, 'foto-1.png');
       form.append('modelFile', p.modelo);
+      if (p.genero) form.append('genero', p.genero);
       form.append('catalogItems', JSON.stringify([p.item]));
       form.append('ratio', p.ratio);
       if (p.rf) form.append('roupaFile', p.rf);
@@ -2292,7 +2316,7 @@
     const qtd = Math.min(Math.max(parseInt(varQuantidade, 10) || 6, 1), 12);
 
     const escolha = {
-      modo: varModo, modelo: varModelo, produto: varProduto, cor: varCor,
+      modo: varModo, modelo: varModelo, produto: varProduto, cor: varCor, genero: varGenero,
       estilos: [...varEstilos], expressao: varExpressao, ratio: varSize,
       roupa: varRoupa, calca: varCalca, roupaFile: varRoupaFile, calcaFile: varCalcaFile,
     };
@@ -2318,7 +2342,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             quantidade: qtd, estilos: escolha.estilos,
-            genero: escolha.modo === 'mesma' ? escolha.modelo?.genero : null,
+            genero: escolha.genero,
             favoritos: lerFavoritos(),
           }),
         });
@@ -2351,13 +2375,17 @@
           const key = `post-${rodada}-${i}`;
           const card = document.getElementById(key);
           try {
+            // no aleatório, sorteia só quem é do gênero da pose escolhida
+            const doGenero = allModels.filter(m => (m.frente || m.ladinho) && m.genero === escolha.genero);
+            const candidatos = doGenero.length ? doGenero : allModels.filter(m => m.frente || m.ladinho);
             const modelo = escolha.modo === 'aleatorio'
-              ? sorteia(allModels.filter(m => m.frente || m.ladinho).flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
+              ? sorteia(candidatos.flatMap(m => [m.frente, m.ladinho].filter(Boolean)))
               : escolha.modelo.file;
             const expr = escolha.expressao === 'aleatorio' ? sorteia(window.varExpressoesDisponiveis || [null]) : escolha.expressao;
 
             const form = new FormData();
             form.append('modelFile', modelo);
+            form.append('genero', escolha.genero);
             form.append('cena', cenas[i].prompt);
             if (cenas[i].pose) form.append('pose', cenas[i].pose);
             if (cenas[i].enquadramento) form.append('enquadramento', cenas[i].enquadramento);
@@ -2382,7 +2410,7 @@
             if (data.error) throw new Error(data.error);
 
             postsState[key] = {
-              cena: cenas[i], modelo, item, rf, cf, ratio: escolha.ratio,
+              cena: cenas[i], modelo, item, rf, cf, ratio: escolha.ratio, genero: escolha.genero,
               foto1: data.image, foto2: null, legenda: '', linha: null, curtido: false,
               posesUsadas: cenas[i].pose ? [cenas[i].pose] : [],
             };
@@ -2405,6 +2433,7 @@
   }
 
   renderVarEstilos();
+  selectVarGenero('h');
   loadVarExpressoes();
   atualizarNotaFavoritos();
   loadGuardaRoupa();

@@ -1442,7 +1442,7 @@ const DNA_VYSER = `VYSER is a streetwear sunglasses brand. Its photography is ED
 
 CRITICAL — this is never a selfie. The camera is held by a photographer standing several meters away from the subject. Never an outstretched arm, never a phone held by the subject, never a face filling the frame from arm's length.
 
-- THE PERSON IS CLOSE AND BIG IN THE FRAME. The camera is near them: most shots are waist-up, three-quarter body, or tighter — the face filling the frame, a crop that cuts the head at the top, a hand entering the frame near the lens, the body cut off by the frame edge. Even a full-body shot has the person filling almost the whole height of the frame. Never a small figure in a big empty place. Vary the distance between shots, but always within this close range.
+- THE SUNGLASSES ARE THE POINT OF EVERY PHOTO. The camera is close to the face: head-and-shoulders or chest-up, sometimes tighter. The face sits in the CENTRE of the frame, and the sunglasses are the sharpest, most detailed thing in the picture — big enough to read the shape of the frame, the lenses and the reflections. Never waist-down, never full body, never a small figure in a big place.
 - The subject is POSED and placed in the scene by a photographer — leaning, crouching, walking, standing against architecture. Deliberate, styled, aware of the camera.
 - Locations are scouted and striking: places a crew would pick for a shoot because of their architecture, texture, scale or light. Not a generic room.
 - Hard direct flash, high contrast, visible grain — the harsh look of on-location fashion editorial. Never soft beauty lighting.
@@ -1455,9 +1455,9 @@ LIFE AROUND THE SUBJECT. The street keeps moving while the shot happens: passers
 
 MOSTLY NIGHT, BUT NOT ALWAYS. Roughly one shot in four is daylight instead — hard midday sun with black shadows, or flat overcast grey. Same harshness, different source.
 
-DEPTH AND COMPOSITION. The person dominates the frame, and the location reads around and behind them: strong diagonals from the structure, something glowing further back, and often one single saturated colour appearing in the background as a small accent against an otherwise desaturated palette.
+DEPTH AND COMPOSITION. The face and the sunglasses are centred and fill a large part of the frame; the location reads behind them, softer and further back: diagonals from the structure, something glowing in the background, and often one single saturated colour as a small accent against an otherwise desaturated palette.
 
-AVOID THE CGI LOOK. A real photo is imperfect: the subject is off-centre, the composition is not symmetric, the flash blows out some highlights and crushes some shadows to black, there is lens distortion up close, skin has texture and shine, edges are not perfectly clean. Never a subject standing dead centre in a tidy symmetrical frame — that reads instantly as computer generated.`;
+AVOID THE CGI LOOK. A real photo is imperfect: the flash blows out some highlights and crushes some shadows to black, there is lens distortion up close, skin has texture, pores and shine, stray hairs, the head is slightly tilted, the camera is a little crooked. Never a clean, perfectly lit, plastic-looking render.`;
 
 // Homens e mulheres são dirigidos de forma diferente numa produção de moda
 const DIRECAO_POR_GENERO = {
@@ -1620,7 +1620,7 @@ ${limite}${gosto}
 
 Write ${quantidade} DIFFERENT scene briefs for an editorial photo shoot. Every one must be clearly distinct — different location, different angle, different light, different color. Do not repeat a setting.
 
-The PERSON must dominate every frame — close to the camera, big in the picture. The location is what you see around and behind them, never a wide shot where they become small.
+The SUNGLASSES are the focus of every frame: the camera is close to the face, the face is centred, and the sunglasses are big and sharp. The location is what you see behind the head and shoulders, never a wide shot.
 
 Pick locations that are visually STRIKING and specific — the kind of place a creative director scouts on purpose: a stairwell with brutalist concrete geometry, a car wash at night with water on glass, an empty parking deck with sodium lights in a row, a tunnel with tiled walls, a loading dock, scaffolding, a laundromat at 3am, a bus stop lit from inside. Avoid the obvious and the generic.
 
@@ -1628,7 +1628,7 @@ For each one give TWO things:
 
 "prompt" — 1-2 sentences describing the SCENE: the location and what makes it interesting, where the photographer stands and how far away, the camera angle, the light and the color. State the framing explicitly (full body, waist-up, wide). Do not describe the person's face, the clothes or the sunglasses — those are decided elsewhere.
 
-"enquadramento" — one sentence fixing how close the camera is and how the body is cropped. The camera is always CLOSE to the person. Change it from brief to brief within this range: waist-up; three-quarter body with the person filling the frame; a tight head-and-shoulders crop; an extreme close-up where the face fills the frame and the top of the head is cut off; a wide-angle lens very close to the face so the features distort; shot from directly overhead with the body filling the frame; the body cut off by the edge of the frame. A full-body shot is allowed only occasionally, and then the person fills nearly the whole height of the frame. Never a small figure in a wide space.
+"enquadramento" — one sentence fixing how close the camera is. Always CLOSE, with the face CENTRED in the frame and the sunglasses in sharp focus. Change it from brief to brief within this range: chest-up; head-and-shoulders; a tight crop where the face fills the frame and the top of the head is cut off; an extreme close-up on the face and the sunglasses; a wide-angle lens very close to the face so the features distort slightly; from slightly above looking down into the face; from slightly below looking up at the face. Never waist-down, never full body.
 
 "pose" — one sentence describing what the subject is DOING, different in every brief.
 
@@ -1636,7 +1636,7 @@ The single most important rule: they look UNBOTHERED. Never tense, never heroic,
 
 Their HANDS are always busy with something mundane: holding a drink, a phone at the ear, tugging the jacket collar, pushing the sunglasses up, thumb hooked in a pocket, gripping a railing, scratching the back of the head, carrying a bag.
 
-Draw from things like: sprawled on steps with the legs open, crouched on the heels looking at nothing, elbows hooked back over a railing, mid-stride looking away from the camera, sitting on a curb, leaning a shoulder on a wall with one foot flat against it, half-turned mid-conversation, back to the camera showing the jacket, sitting sideways on a barrier. Match it to what the location physically offers.
+The camera only sees the head, shoulders and hands, so the pose has to read from the chest up: a hand pushing the sunglasses up or pulling them down the nose, fingers on the temple of the frame, chin down looking over the top of the lenses, head tipped back, a shoulder raised toward the camera, leaning in toward the lens, looking back over the shoulder, a drink or a cigarette near the mouth, a hand in the hair, the collar of the jacket pulled up. Hands can enter the frame, but never cover the sunglasses.
 
 NON-NEGOTIABLE: this is a sunglasses brand. The face must be in frame and the sunglasses clearly visible and readable in EVERY single brief. Never the back of the head, never turned fully away, never a crop that cuts the eyes out, never the face hidden behind a hand or an object. The body can be loose and the framing can be odd, but the sunglasses always read.
 
@@ -1687,6 +1687,7 @@ function buildVariacaoPrompt({ cena, pose, enquadramento, direcao, produtos, rou
   else if (calca?.trim()) linhas.push(`- Bottoms: ${calca.trim()}`);
   linhas.push('- Shot by a photographer standing several meters away — NOT a selfie, no outstretched arm, no phone in frame');
   linhas.push('- Follow the FRAMING above exactly — the camera distance and the crop are the point');
+  linhas.push('- The face is centred in the frame and the sunglasses are the sharpest, most detailed element of the photo');
   linhas.push("- The face and the sunglasses must be clearly visible — never turned away, never cropped out, never covered");
   if (pose?.trim()) linhas.push('- Commit fully to the pose described above — it is the point of the photo');
 
@@ -1743,7 +1744,9 @@ async function anexarReferenciasDoPost(body, images) {
   const roupaIdx = await anexarPeca('roupas', body.roupaFile, 'roupa');
   const calcaIdx = await anexarPeca('calcas', body.calcaFile, 'calca');
 
-  return { modelIdx, produtos, roupaIdx, calcaIdx, direcao: DIRECAO_POR_GENERO[generoDoModelo(modelFile)] || '' };
+  // a pose escolhida no botão manda; sem ela, cai no gênero cadastrado do modelo
+  const genero = DIRECAO_POR_GENERO[body.genero] ? body.genero : generoDoModelo(modelFile);
+  return { modelIdx, produtos, roupaIdx, calcaIdx, direcao: DIRECAO_POR_GENERO[genero] || '' };
 }
 
 app.post('/api/variacoes/gerar', creativeUpload.none(), async (req, res) => {
@@ -1809,7 +1812,7 @@ function buildSegundaFotoPrompt({ modelIdx, produtos, roupaIdx, calcaIdx, direca
     '',
     'KEEP THE SAME as Image 1: the person and their face, the location, the lighting and flash look, the colour grade, the grain, the outfit and the sunglasses.',
     '',
-    '- The camera stays close: the person is big in the frame',
+    '- The camera stays close on the face: head-and-shoulders or tighter, the face centred, the sunglasses big and in sharp focus',
     '- The face and the sunglasses must stay clearly visible — never turned away, never cropped out, never covered',
     '- Preserve the exact shape, colour and details of the sunglasses');
   if (direcao) linhas.push('', direcao);
@@ -1837,7 +1840,7 @@ app.post('/api/variacoes/variar', uploadNaMemoria.single('base'), async (req, re
       messages: [{ role: 'user', content: [
         { type: 'text', text: `This is photo 1 of a streetwear fashion shoot. Direct the model into the pose for photo 2 of the same carousel.
 
-Describe, in one sentence, a pose that is COMPLETELY DIFFERENT from the pose in this photo: a different body position (standing vs crouching vs sitting vs leaning vs walking), different arms and hands, a different angle to the camera. It must be physically possible in this exact location, and keep the face and sunglasses visible.
+Describe, in one sentence, a pose that is COMPLETELY DIFFERENT from the pose in this photo. The camera will be close — head and shoulders — so the difference has to read from the chest up: different hands (touching the sunglasses, in the hair, holding something near the face), a different head angle, looking somewhere else, leaning toward or away from the lens. It must fit this exact location, and the face stays centred with the sunglasses fully visible — hands never cover them.
 
 The attitude is unbothered and relaxed, hands busy with something ordinary. Never tense or heroic.
 ${refs.direcao}
