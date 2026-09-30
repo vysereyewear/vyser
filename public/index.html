@@ -1103,9 +1103,14 @@
       b.onclick = () => aplicarCorNoModelo(cor);
       wrap.appendChild(b);
     });
-    nota.innerHTML = modCor
-      ? `Anexadas: <b>frente</b>${modCor.ladinho ? ' e <b>ladinho</b>' : ' (sem ladinho — anexe na mão)'}`
-      : 'Escolha a cor.';
+    if (!modCor) { nota.textContent = 'Escolha a cor.'; return; }
+    const anexadas = [
+      modCatalogUrls.includes(modCor.frente) && 'frente',
+      modCatalogUrls.includes(modCor.ladinho) && 'ladinho',
+    ].filter(Boolean);
+    nota.innerHTML = anexadas.length
+      ? `Anexadas: ${anexadas.map(x => `<b>${x}</b>`).join(' e ')}${!modCor.ladinho ? ' (esse produto não tem ladinho)' : ''}`
+      : 'Nenhuma foto anexada — clique na cor de novo pra trazer de volta.';
   }
 
   function aplicarCorNoModelo(cor) {
@@ -1193,14 +1198,24 @@
     area.classList.add('has-files');
     area.style.display = 'none';
 
-    // as do catálogo vêm primeiro e saem trocando a cor, não pelo × de cada uma
-    modCatalogUrls.forEach(u => {
+    // as do catálogo vêm primeiro; o × tira só aquela foto, sem largar a cor
+    modCatalogUrls.forEach((u, i) => {
       const div = document.createElement('div');
       div.className = 'glasses-thumb';
-      div.title = 'Do catálogo da loja';
+      div.title = u === modCor?.frente ? 'Frente (do catálogo)' : 'Ladinho (do catálogo)';
       const img = document.createElement('img');
       img.src = u;
-      div.appendChild(img);
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.title = 'Remover esta foto';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        modCatalogUrls.splice(i, 1);
+        renderGlassesThumbs();
+        renderModCores();
+        updateModelBtn();
+      };
+      div.append(img, btn);
       thumbsEl.appendChild(div);
     });
 
